@@ -1,7 +1,9 @@
+import Navbar from "@/components/landing-page/Navbar";
+
 export default function Home() {
 	return (
-		<main className="flex min-h-screen flex-col items-center justify-between p-24">
-			<h1>Vision Fly</h1>
+		<main className="h-auto w-full">
+			<Navbar />
 		</main>
 	);
 }

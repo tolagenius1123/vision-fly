@@ -9,7 +9,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-	title: "Vision Fly",
+	title: "Vision Fly - Get Cheap Flights Around The World",
 	description: "Next Generation Aviation Service",
 };
 
