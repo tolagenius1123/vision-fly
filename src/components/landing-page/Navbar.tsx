@@ -4,7 +4,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Button from "./Button";
 import MobileNav from "./MobileNav";
-import VisionFlyIcon from "../../assets/icons/vision-fly-icon.png";
+// import VisionFlyIcon from "../../assets/icons/vision-fly-icon.png";
+import VisionFlyIcon from "@/assets/icons/vision-fly-icon.png";
 
 type NavbarProps = {};
 
