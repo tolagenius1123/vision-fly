@@ -4,8 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Button from "./Button";
 import MobileNav from "./MobileNav";
-// import VisionFlyIcon from "../../assets/icons/vision-fly-icon.png";
-import VisionFlyIcon from "../../../public/vision-fly-icon.png";
+import VisionFlyIcon from "@/assets/images/vision.svg";
 
 type NavbarProps = {};
 
@@ -14,7 +13,7 @@ const Navbar = ({}: NavbarProps) => {
 	const router = useRouter();
 
 	return (
-		<div className="w-full py-4 px-10 md:px-20 flex items-center justify-between fixed top-0 z-30 shadow-lg bg-white">
+		<div className="w-full py-2 px-10 md:px-20 flex items-center justify-between fixed top-0 z-30 shadow-lg bg-white">
 			<div>
 				<Image
 					src={VisionFlyIcon}

@@ -185,10 +185,10 @@ const BookFlight = () => {
 				<p className="text-customBlue text-xl md:text-2xl font-semibold">
 					FLY WITH VISION FLY🚀🚀🚀
 				</p>
-				<h1 className="text-customBlue text-2xl md:text-4xl font-bold">
+				<h1 className="text-customBlue text-2xl md:text-4xl font-bold mt-2">
 					Search & Book Flights
 				</h1>
-				<div className="">
+				<div className="mt-3">
 					<div className="w-[300px] md:w-[500px] flex items-center gap-2 p-2 rounded-lg shadow-sm bg-slate-200">
 						<div
 							className={cn(
