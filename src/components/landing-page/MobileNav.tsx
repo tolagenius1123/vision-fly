@@ -30,7 +30,7 @@ export default function MobileNav() {
 								href="/#home"
 								className={`font-medium hover:text-lightGreen ${
 									pathName === "/#home"
-										? "text-customGreen"
+										? "text-customBlue"
 										: "text-customBlack"
 								}`}
 							>
@@ -39,49 +39,59 @@ export default function MobileNav() {
 							<Link
 								href="/#services"
 								className={`font-medium hover:text-lightGreen ${
-									pathName === "/#services"
-										? "text-customGreen"
+									pathName === "/"
+										? "text-customBlue"
 										: "text-customBlack"
 								}`}
 							>
-								<SheetClose>Our Services</SheetClose>
+								<SheetClose>About Us</SheetClose>
 							</Link>
 							<Link
-								href="/#testimonials"
+								href="/"
 								className={`font-medium hover:text-lightGreen ${
-									pathName === "/#testimonials"
-										? "text-customGreen"
+									pathName === "/"
+										? "text-customBlue"
 										: "text-customBlack"
 								}`}
 							>
-								<SheetClose>Testimonials</SheetClose>
+								<SheetClose>Private Charter</SheetClose>
 							</Link>
 							<Link
-								href="/#about"
+								href=""
 								className={`font-medium hover:text-lightGreen ${
-									pathName === "/#about"
-										? "text-customGreen"
+									pathName === "/"
+										? "text-customBlue"
 										: "text-customBlack"
 								}`}
 							>
-								<SheetClose>About us</SheetClose>
+								<SheetClose>Vacation Packages</SheetClose>
 							</Link>
 							<Link
-								href="/#contact"
+								href="/"
 								className={`font-medium hover:text-lightGreen ${
-									pathName === "/#contact"
-										? "text-customGreen"
+									pathName === "/"
+										? "text-customBlue"
 										: "text-customBlack"
 								}`}
 							>
-								<SheetClose>Get in touch</SheetClose>
+								<SheetClose>Aircraft Purchase</SheetClose>
+							</Link>
+							<Link
+								href="/"
+								className={`font-medium hover:text-lightGreen ${
+									pathName === "/"
+										? "text-customBlue"
+										: "text-customBlack"
+								}`}
+							>
+								<SheetClose>Aircraft Management</SheetClose>
 							</Link>
 						</div>
 						<Button
 							btnType="button"
-							btnStyles="bg-customGreen w-[150px] hover:bg-lightGreen py-2 rounded-3xl text-white cursor-pointer"
-							btnContent="Book service"
-							handleSubmit={() => router.push("/book-service")}
+							btnStyles="bg-customBlue w-[150px] hover:bg-lightGreen py-2 rounded-3xl text-white cursor-pointer"
+							btnContent="Book Flight"
+							handleSubmit={() => router.push("/")}
 						/>
 					</div>
 					{/* <div className="mt-5">
