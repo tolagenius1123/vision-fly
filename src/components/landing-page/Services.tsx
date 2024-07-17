@@ -28,7 +28,7 @@ const Services = () => {
 						little as 8 hours, your private jet will be ready to
 						take you there. Imagine no longer worrying about the
 						quality of your aircraft, safety or travel experience;
-						it's your jet and it's ready when you are.
+						its your jet and its ready when you are.
 					</p>
 					<div className="flex items-center gap-3 mt-4 bg-customBlue hover:bg-[#205063] w-[205px] px-6 py-3 rounded-3xl text-white cursor-pointer">
 						Charter Flights <ArrowRight className="animate-arrow" />
