@@ -41,13 +41,13 @@ const Services = () => {
 						Purchasing an Aircraft
 					</h1>
 					<p className="mt-4">
-						We’ll do the research for you, we’ll keep you educated
-						on the best brands and options, and we’ll secure the
-						absolute best price for used aircraft. Flightpath
-						provides insightful purchase planning, a consulting
-						service that keeps your best interests in mind, plus a
-						detailed needs analysis, travel history analysis,
-						financial analysis, and much more.
+						We will do the research for you, we will keep you
+						educated on the best brands and options, and we will
+						secure the absolute best price for used aircraft.
+						Flightpath provides insightful purchase planning, a
+						consulting service that keeps your best interests in
+						mind, plus a detailed needs analysis, travel history
+						analysis, financial analysis, and much more.
 					</p>
 					<div className="flex items-center gap-3 mt-4 bg-customBlue hover:bg-[#205063] w-[205px] px-6 py-3 rounded-3xl text-white cursor-pointer">
 						Purchase a jet <ArrowRight className="animate-arrow" />
