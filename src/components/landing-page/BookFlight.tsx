@@ -1,10 +1,8 @@
 "use client";
 import { cn, formatDate } from "@/lib/utils";
 import { FormEvent, useEffect, useState } from "react";
-
 import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
-
+import { ArrowRight, Calendar as CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import {
 	Popover,
@@ -12,8 +10,18 @@ import {
 	PopoverTrigger,
 } from "@/components/ui/popover";
 import Button from "./Button";
-import { v4 as uuidv4 } from "uuid";
 import { TailSpin } from "react-loader-spinner";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+	DialogClose,
+} from "@/components/ui/dialog";
+import toast from "react-hot-toast";
 
 const BookFlight = () => {
 	const [tab, setTab] = useState<number>(1);
@@ -26,12 +34,7 @@ const BookFlight = () => {
 	const [destinationAirport, setDestinationAirport] = useState<Airport>();
 	const [isLoading, setIsLoading] = useState(false);
 	const [flightsData, setFlightsData] = useState<any>();
-
-	// const todaysDate = new Date();
 	const formattedDate = formatDate(date);
-
-	// const todayTs = todaysDate.getTime();
-	// const dateTs = date?.getTime();
 
 	const fetchAirportsFrom = async (searchText: string) => {
 		try {
@@ -68,95 +71,6 @@ const BookFlight = () => {
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		setIsLoading(true);
-
-		// if (!searchFromText || searchToText){}
-
-		// const flightSearch = {
-		// 	opIds: ["54b7e593e636e96f3af16ce1"],
-		// 	rUDBR: false,
-		// 	from: originAirport?.title,
-		// 	to: destinationAirport?.title,
-		// 	fromId: originAirport?._id,
-		// 	toId: destinationAirport?._id,
-		// 	fromLat: originAirport?.lat,
-		// 	fromLng: originAirport?.lng,
-		// 	toLat: destinationAirport?.lat,
-		// 	toLng: destinationAirport?.lng,
-		// 	ts: todayTs,
-		// 	fromDate: formattedDate,
-		// 	returnDate: null,
-		// 	trip: "oneWay",
-		// 	promoteOpIds: true,
-		// 	legs: [
-		// 		{
-		// 			fromAirport: {
-		// 				_id: originAirport?._id,
-		// 				city: originAirport?.city,
-		// 				elevation: originAirport?.elevation,
-		// 				name: originAirport?.name,
-		// 				title: originAirport?.title,
-		// 				loc: originAirport?.loc,
-		// 				country: originAirport?.country,
-		// 				region: originAirport?.region,
-		// 				iata: originAirport?.iata,
-		// 				continent: originAirport?.continent,
-		// 				icao: originAirport?.icao,
-		// 				lat: originAirport?.lat,
-		// 				lng: originAirport?.lng,
-		// 				type: originAirport?.type,
-		// 				id: originAirport?.id,
-		// 				length_ft: originAirport?.length_ft,
-		// 				width_ft: originAirport?.width_ft,
-		// 				surface: originAirport?.surface,
-		// 				lastUpdated: originAirport?.lastUpdated,
-		// 				sstr: originAirport?.sstr,
-		// 				tzCode: originAirport?.tzCode,
-		// 			},
-		// 			toAirport: {
-		// 				_id: destinationAirport?._id,
-		// 				city: destinationAirport?.city,
-		// 				elevation: destinationAirport?.elevation,
-		// 				name: destinationAirport?.name,
-		// 				title: destinationAirport?.title,
-		// 				loc: destinationAirport?.loc,
-		// 				country: destinationAirport?.country,
-		// 				region: destinationAirport?.region,
-		// 				iata: destinationAirport?.iata,
-		// 				continent: destinationAirport?.continent,
-		// 				icao: destinationAirport?.icao,
-		// 				lat: destinationAirport?.lat,
-		// 				lng: destinationAirport?.lng,
-		// 				type: destinationAirport?.type,
-		// 				id: destinationAirport?.id,
-		// 				length_ft: destinationAirport?.length_ft,
-		// 				width_ft: destinationAirport?.width_ft,
-		// 				surface: destinationAirport?.surface,
-		// 				lastUpdated: destinationAirport?.surface,
-		// 				sstr: destinationAirport?.sstr,
-		// 				tzCode: destinationAirport?.tzCode,
-		// 			},
-		// 			fromDate: formattedDate,
-		// 			returnDate: null,
-		// 			dateOpened: false,
-		// 			returnDateOpened: false,
-		// 			depTime: null,
-		// 			returnDepTime: null,
-		// 			from: originAirport?.title,
-		// 			to: destinationAirport?.title,
-		// 			fromId: originAirport?._id,
-		// 			toId: destinationAirport?._id,
-		// 			fromLat: originAirport?.lat,
-		// 			fromLng: originAirport?.lng,
-		// 			toLat: destinationAirport?.lat,
-		// 			toLng: destinationAirport?.lng,
-		// 			ts: dateTs,
-		// 			fromDateStr: formattedDate,
-		// 		},
-		// 	],
-		// 	source: "eq",
-		// 	checkRunways: true,
-		// 	matchOneWays: true,
-		// };
 
 		const flightSearch = {
 			tripDetails: [
@@ -207,13 +121,17 @@ const BookFlight = () => {
 		setIsLoading(false);
 	};
 
-	console.log(flightsData);
+	const sendEmail = () => {
+		toast.success(
+			"Flight Inquiry was successfull, our admin will reach out to you in within 24 hours"
+		);
+	};
 
 	return (
 		<div className="w-full px-20 pt-[50px] md:pt-[100px] pb-[50px] md:pb-[150px] bg-slate-50">
 			<div className="flex flex-col gap-2 text-center justify-center items-center">
 				<p className="text-customBlue text-xl md:text-2xl font-semibold">
-					FLY WITH VISION FLY🚀🚀🚀
+					FLY WITH VISION FLY
 				</p>
 				<h1 className="text-customBlue text-2xl md:text-4xl font-bold mt-2">
 					Search & Book Flights
@@ -529,12 +447,12 @@ const BookFlight = () => {
 								flightsData?.map((flightData: any) => (
 									<div key={flightData.id}>
 										<div className="mt-4 w-[300px] md:w-[500px] rounded-xl text-customBlue bg-slate-200 shadow-md py-4 px-6">
-											<h1 className="font-semibold text-sm md:text-lg">
+											<h1 className="font-semibold text-lg">
 												{flightData.airlineName}
 											</h1>
 											<div className="flex items-center gap-3 justify-around mt-2">
-												<div className="">
-													<p className="text-sm font-medium">
+												<div className="text-[12px] md:text-sm">
+													<p className="font-medium">
 														{
 															flightData
 																.airOriginDestinationList[0]
@@ -546,7 +464,7 @@ const BookFlight = () => {
 																?.originCityCode
 														}
 													</p>
-													<p className="text-sm font-medium">
+													<p className="font-medium">
 														{
 															flightData
 																.airOriginDestinationList[0]
@@ -563,15 +481,15 @@ const BookFlight = () => {
 														}
 													</h2>
 													<div className="w-10 md:w-20 h-[1px] bg-black"></div>
-													<h2 className="font-semibold text-[10px] md:text-lg">
+													<h2 className="font-semibold text-[12px] md:text-lg">
 														{
 															flightData.minimumNumberOfStops
 														}{" "}
 														Stop
 													</h2>
 												</div>
-												<div className="">
-													<p className="text-sm font-medium">
+												<div className="text-[12px] md:text-sm">
+													<p className="font-medium">
 														{
 															flightData
 																.airOriginDestinationList[0]
@@ -584,7 +502,7 @@ const BookFlight = () => {
 																?.arrivalAirportCode
 														}
 													</p>
-													<p className="text-sm font-medium">
+													<p className="font-medium">
 														{
 															flightData
 																.airOriginDestinationList[0]
@@ -598,9 +516,69 @@ const BookFlight = () => {
 													Price: N
 													{flightData.amountInKobo}
 												</h2>
-												<button className="bg-customBlue text-white rounded-lg py-2 px-3 cursor-pointer hover:bg-[#205063]">
-													Inquire
-												</button>
+												<Dialog>
+													<DialogTrigger asChild>
+														<button className="bg-customBlue text-white rounded-lg py-2 px-3 cursor-pointer hover:bg-[#205063] flex items-center justify-around">
+															<div className="flex items-center gap-2">
+																Inquire
+																<ArrowRight className="animate-arrow" />
+															</div>
+														</button>
+													</DialogTrigger>
+													<DialogContent className="max-w-[425px] rounded-md">
+														<DialogHeader>
+															<DialogTitle>
+																Let us have your
+																details
+															</DialogTitle>
+															<DialogDescription>
+																We will get back
+																to you on your
+																enquiry as soon
+																as possible
+															</DialogDescription>
+														</DialogHeader>
+														<div className="grid gap-4 py-4">
+															<div className="flex flex-col gap-2">
+																<label className="text-left font-bold text-customBlue">
+																	Email
+																</label>
+																<input
+																	name="email"
+																	type="email"
+																	placeholder="Enter a valid email..."
+																	className="text-sm rounded-lg h-[35px] md:h-[40px] border border-customBlue px-2 placeholder:text-sm focus:border-2 focus:border-customBlue focus:outline-none"
+																/>
+															</div>
+															<div className="flex flex-col gap-2">
+																<label className="text-left font-bold text-customBlue">
+																	Phone number
+																</label>
+																<input
+																	name="email"
+																	type="text"
+																	placeholder="Enter a valid phone number..."
+																	className="text-sm rounded-lg h-[35px] md:h-[40px] border border-customBlue px-2 placeholder:text-sm focus:border-2 focus:border-customBlue focus:outline-none"
+																/>
+															</div>
+														</div>
+														<DialogFooter>
+															<DialogClose>
+																<button
+																	type="button"
+																	onClick={() =>
+																		sendEmail()
+																	}
+																	className="bg-customBlue text-white rounded-lg py-2 px-3 cursor-pointer hover:bg-[#205063] flex items-center justify-around"
+																>
+																	<div className="flex items-center gap-2">
+																		Send
+																	</div>
+																</button>
+															</DialogClose>
+														</DialogFooter>
+													</DialogContent>
+												</Dialog>
 											</div>
 										</div>
 									</div>
