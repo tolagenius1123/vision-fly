@@ -1,5 +1,5 @@
 "use client";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import { FormEvent, useEffect, useState } from "react";
 
 import { format } from "date-fns";
@@ -25,12 +25,13 @@ const BookFlight = () => {
 	const [originAirport, setOriginAirport] = useState<Airport>();
 	const [destinationAirport, setDestinationAirport] = useState<Airport>();
 	const [isLoading, setIsLoading] = useState(false);
+	const [flightsData, setFlightsData] = useState<any>();
 
-	const todaysDate = new Date();
-	const formattedDate = todaysDate.toISOString();
+	// const todaysDate = new Date();
+	const formattedDate = formatDate(date);
 
-	const todayTs = todaysDate.getTime();
-	const dateTs = date?.getTime();
+	// const todayTs = todaysDate.getTime();
+	// const dateTs = date?.getTime();
 
 	const fetchAirportsFrom = async (searchText: string) => {
 		try {
@@ -38,7 +39,6 @@ const BookFlight = () => {
 				`https://openpoint.co/airports?text=${searchText}&useSstr=1`
 			);
 			let data = await response.json();
-			console.log(data.airports);
 			setAirportsFrom(data.airports);
 		} catch (error) {
 			console.log(error);
@@ -51,7 +51,6 @@ const BookFlight = () => {
 				`https://openpoint.co/airports?text=${searchText}&useSstr=1`
 			);
 			let data = await response.json();
-			console.log(data.airports);
 			setAirportsTo(data.airports);
 		} catch (error) {
 			console.log(error);
@@ -67,117 +66,148 @@ const BookFlight = () => {
 	}, [searchToText]);
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-		setIsLoading(true);
 		e.preventDefault();
+		setIsLoading(true);
 
 		// if (!searchFromText || searchToText){}
 
+		// const flightSearch = {
+		// 	opIds: ["54b7e593e636e96f3af16ce1"],
+		// 	rUDBR: false,
+		// 	from: originAirport?.title,
+		// 	to: destinationAirport?.title,
+		// 	fromId: originAirport?._id,
+		// 	toId: destinationAirport?._id,
+		// 	fromLat: originAirport?.lat,
+		// 	fromLng: originAirport?.lng,
+		// 	toLat: destinationAirport?.lat,
+		// 	toLng: destinationAirport?.lng,
+		// 	ts: todayTs,
+		// 	fromDate: formattedDate,
+		// 	returnDate: null,
+		// 	trip: "oneWay",
+		// 	promoteOpIds: true,
+		// 	legs: [
+		// 		{
+		// 			fromAirport: {
+		// 				_id: originAirport?._id,
+		// 				city: originAirport?.city,
+		// 				elevation: originAirport?.elevation,
+		// 				name: originAirport?.name,
+		// 				title: originAirport?.title,
+		// 				loc: originAirport?.loc,
+		// 				country: originAirport?.country,
+		// 				region: originAirport?.region,
+		// 				iata: originAirport?.iata,
+		// 				continent: originAirport?.continent,
+		// 				icao: originAirport?.icao,
+		// 				lat: originAirport?.lat,
+		// 				lng: originAirport?.lng,
+		// 				type: originAirport?.type,
+		// 				id: originAirport?.id,
+		// 				length_ft: originAirport?.length_ft,
+		// 				width_ft: originAirport?.width_ft,
+		// 				surface: originAirport?.surface,
+		// 				lastUpdated: originAirport?.lastUpdated,
+		// 				sstr: originAirport?.sstr,
+		// 				tzCode: originAirport?.tzCode,
+		// 			},
+		// 			toAirport: {
+		// 				_id: destinationAirport?._id,
+		// 				city: destinationAirport?.city,
+		// 				elevation: destinationAirport?.elevation,
+		// 				name: destinationAirport?.name,
+		// 				title: destinationAirport?.title,
+		// 				loc: destinationAirport?.loc,
+		// 				country: destinationAirport?.country,
+		// 				region: destinationAirport?.region,
+		// 				iata: destinationAirport?.iata,
+		// 				continent: destinationAirport?.continent,
+		// 				icao: destinationAirport?.icao,
+		// 				lat: destinationAirport?.lat,
+		// 				lng: destinationAirport?.lng,
+		// 				type: destinationAirport?.type,
+		// 				id: destinationAirport?.id,
+		// 				length_ft: destinationAirport?.length_ft,
+		// 				width_ft: destinationAirport?.width_ft,
+		// 				surface: destinationAirport?.surface,
+		// 				lastUpdated: destinationAirport?.surface,
+		// 				sstr: destinationAirport?.sstr,
+		// 				tzCode: destinationAirport?.tzCode,
+		// 			},
+		// 			fromDate: formattedDate,
+		// 			returnDate: null,
+		// 			dateOpened: false,
+		// 			returnDateOpened: false,
+		// 			depTime: null,
+		// 			returnDepTime: null,
+		// 			from: originAirport?.title,
+		// 			to: destinationAirport?.title,
+		// 			fromId: originAirport?._id,
+		// 			toId: destinationAirport?._id,
+		// 			fromLat: originAirport?.lat,
+		// 			fromLng: originAirport?.lng,
+		// 			toLat: destinationAirport?.lat,
+		// 			toLng: destinationAirport?.lng,
+		// 			ts: dateTs,
+		// 			fromDateStr: formattedDate,
+		// 		},
+		// 	],
+		// 	source: "eq",
+		// 	checkRunways: true,
+		// 	matchOneWays: true,
+		// };
+
 		const flightSearch = {
-			opIds: ["54b7e593e636e96f3af16ce1"],
-			rUDBR: false,
-			from: originAirport?.title,
-			to: destinationAirport?.title,
-			fromId: originAirport?._id,
-			toId: destinationAirport?._id,
-			fromLat: originAirport?.lat,
-			fromLng: originAirport?.lng,
-			toLat: destinationAirport?.lat,
-			toLng: destinationAirport?.lng,
-			ts: todayTs,
-			fromDate: formattedDate,
-			returnDate: null,
-			trip: "oneWay",
-			promoteOpIds: true,
-			legs: [
+			tripDetails: [
 				{
-					fromAirport: {
-						_id: originAirport?._id,
-						city: originAirport?.city,
-						elevation: originAirport?.elevation,
-						name: originAirport?.name,
-						title: originAirport?.title,
-						loc: originAirport?.loc,
-						country: originAirport?.country,
-						region: originAirport?.region,
-						iata: originAirport?.iata,
-						continent: originAirport?.continent,
-						icao: originAirport?.icao,
-						lat: originAirport?.lat,
-						lng: originAirport?.lng,
-						type: originAirport?.type,
-						id: originAirport?.id,
-						length_ft: originAirport?.length_ft,
-						width_ft: originAirport?.width_ft,
-						surface: originAirport?.surface,
-						lastUpdated: originAirport?.lastUpdated,
-						sstr: originAirport?.sstr,
-						tzCode: originAirport?.tzCode,
-					},
-					toAirport: {
-						_id: destinationAirport?._id,
-						city: destinationAirport?.city,
-						elevation: destinationAirport?.elevation,
-						name: destinationAirport?.name,
-						title: destinationAirport?.title,
-						loc: destinationAirport?.loc,
-						country: destinationAirport?.country,
-						region: destinationAirport?.region,
-						iata: destinationAirport?.iata,
-						continent: destinationAirport?.continent,
-						icao: destinationAirport?.icao,
-						lat: destinationAirport?.lat,
-						lng: destinationAirport?.lng,
-						type: destinationAirport?.type,
-						id: destinationAirport?.id,
-						length_ft: destinationAirport?.length_ft,
-						width_ft: destinationAirport?.width_ft,
-						surface: destinationAirport?.surface,
-						lastUpdated: destinationAirport?.surface,
-						sstr: destinationAirport?.sstr,
-						tzCode: destinationAirport?.tzCode,
-					},
-					fromDate: formattedDate,
-					returnDate: null,
-					dateOpened: false,
-					returnDateOpened: false,
-					depTime: null,
-					returnDepTime: null,
-					from: originAirport?.title,
-					to: destinationAirport?.title,
-					fromId: originAirport?._id,
-					toId: destinationAirport?._id,
-					fromLat: originAirport?.lat,
-					fromLng: originAirport?.lng,
-					toLat: destinationAirport?.lat,
-					toLng: destinationAirport?.lng,
-					ts: dateTs,
-					fromDateStr: formattedDate,
+					originAirportCode: originAirport?.iata,
+					destinationAirportCode: destinationAirport?.iata,
+					departureDate: formattedDate,
+					departureCity: originAirport?.city,
+					arrivalCity: destinationAirport?.city,
+					cabinType: "ECONOMY",
 				},
 			],
-			source: "eq",
-			checkRunways: true,
-			matchOneWays: true,
+			flightType: "ONE_WAY",
+			numberOfAdult: 1,
+			numberOfChildren: 0,
+			numberOfInfant: 0,
+			uniqueSession: "frJ6zU1bGSLdJ86",
+			directFlight: true,
+			refundable: false,
+			isDayFlight: true,
+			prefferedAirlineCodes: [],
+			departureCity: originAirport?.city,
+			arrivalCity: destinationAirport?.city,
 		};
 
 		try {
-			const response = await fetch("https://flyeasy.co/api/search", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(flightSearch),
-			});
+			const response = await fetch(
+				"https://api.travelbeta.com/v1/api/flight",
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						"X-Api-Key": "24c9mti53ykc31z1t5u5",
+					},
+					body: JSON.stringify(flightSearch),
+				}
+			);
 			const data = await response.json();
 			console.log(data);
+			setFlightsData(data?.data?.airPricedIternaryList);
 		} catch (error) {
 			console.log(error);
 		}
 
-		setSearchFromText("");
-		setSearchToText("");
-		setDate(undefined);
+		// setSearchFromText("");
+		// setSearchToText("");
+		// setDate(undefined);
 		setIsLoading(false);
 	};
+
+	console.log(flightsData);
 
 	return (
 		<div className="w-full px-20 pt-[50px] md:pt-[100px] pb-[50px] md:pb-[150px] bg-slate-50">
@@ -490,15 +520,94 @@ const BookFlight = () => {
 				)}
 
 				{/* Search Data */}
-				{/* <div className="mt-5">
+				<div className="mt-5">
 					{isLoading ? (
-						<TailSpin color="#065777" radius={"10px"} />
+						<TailSpin color="#065777" height="50px" width="50px" />
 					) : (
-						<div>
-							<h1>Data was fetched successfully!</h1>
-						</div>
+						<>
+							{flightsData &&
+								flightsData?.map((flightData: any) => (
+									<div key={flightData.id}>
+										<div className="mt-4 w-[300px] md:w-[500px] rounded-xl text-customBlue bg-slate-200 shadow-md py-4 px-6">
+											<h1 className="font-semibold text-sm md:text-lg">
+												{flightData.airlineName}
+											</h1>
+											<div className="flex items-center gap-3 justify-around mt-2">
+												<div className="">
+													<p className="text-sm font-medium">
+														{
+															flightData
+																.airOriginDestinationList[0]
+																?.firstDepartureTime
+														}{" "}
+														{
+															flightData
+																.airOriginDestinationList[0]
+																?.originCityCode
+														}
+													</p>
+													<p className="text-sm font-medium">
+														{
+															flightData
+																.airOriginDestinationList[0]
+																?.originCity
+														}
+													</p>
+												</div>
+												<div className="">
+													<h2 className="font-semibold text-sm md:text-lg">
+														{
+															flightData
+																.airOriginDestinationList[0]
+																?.totalFlightTimeInMs
+														}
+													</h2>
+													<div className="w-10 md:w-20 h-[1px] bg-black"></div>
+													<h2 className="font-semibold text-[10px] md:text-lg">
+														{
+															flightData.minimumNumberOfStops
+														}{" "}
+														Stop
+													</h2>
+												</div>
+												<div className="">
+													<p className="text-sm font-medium">
+														{
+															flightData
+																.airOriginDestinationList[0]
+																?.lastArrivalTime
+														}{" "}
+														{
+															flightData
+																.airOriginDestinationList[0]
+																?.routeSegmentList[1]
+																?.arrivalAirportCode
+														}
+													</p>
+													<p className="text-sm font-medium">
+														{
+															flightData
+																.airOriginDestinationList[0]
+																?.destinationCity
+														}
+													</p>
+												</div>
+											</div>
+											<div className="mt-2 flex flex-col gap-2">
+												<h2 className="font-semibold">
+													Price: N
+													{flightData.amountInKobo}
+												</h2>
+												<button className="bg-customBlue text-white rounded-lg py-2 px-3 cursor-pointer hover:bg-[#205063]">
+													Inquire
+												</button>
+											</div>
+										</div>
+									</div>
+								))}
+						</>
 					)}
-				</div> */}
+				</div>
 			</div>
 		</div>
 	);
