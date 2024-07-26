@@ -74,9 +74,9 @@ const Services = () => {
 						own
 					</h2>
 					<p className="font-medium md:font-semibold text-center">
-						Visionfly's management offerings follow the same
+						Visionfly&aposs management offerings follow the same
 						standard as our travel services, and seamlessly tie into
-						them as well. It's all about creating a hands-free
+						them as well. It&aposs all about creating a hands-free
 						experience for you. When we talk about our private
 						flights we like to say that they allow our customers to
 						travel on autopilot; our management services are no
