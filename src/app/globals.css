@@ -105,6 +105,16 @@
 	background-repeat: no-repeat;
 }
 
+.aircraftManagementBackgroundPic {
+	/* background-image: url(../assets/images/air-engine.jpg); */
+	/* background-image: url(../assets/images/air-clouds.jpg); */
+	background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+		url(../assets/images/aircraft-management.jpg);
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
 .animate-arrow {
 	animation: moveForward 1s infinite;
 }

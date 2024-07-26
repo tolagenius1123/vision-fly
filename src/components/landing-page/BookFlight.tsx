@@ -1,6 +1,11 @@
 "use client";
-import { cn, formatDate } from "@/lib/utils";
-import { FormEvent, useEffect, useState } from "react";
+import {
+	cn,
+	convertMinutesToHoursAndMinutes,
+	formatDate,
+	formatKoboToNaira,
+} from "@/lib/utils";
+import { FormEvent, useEffect, useState, useRef } from "react";
 import { format } from "date-fns";
 import { ArrowRight, Calendar as CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
@@ -22,6 +27,7 @@ import {
 	DialogClose,
 } from "@/components/ui/dialog";
 import toast from "react-hot-toast";
+import emailjs from "@emailjs/browser";
 
 const BookFlight = () => {
 	const [tab, setTab] = useState<number>(1);
@@ -33,8 +39,16 @@ const BookFlight = () => {
 	const [originAirport, setOriginAirport] = useState<Airport>();
 	const [destinationAirport, setDestinationAirport] = useState<Airport>();
 	const [isLoading, setIsLoading] = useState(false);
+	const [isEmailSending, setIsEmailSending] = useState(false);
 	const [flightsData, setFlightsData] = useState<any>();
 	const formattedDate = formatDate(date);
+
+	const form = useRef<HTMLFormElement>(null);
+	const [name, setName] = useState("");
+	const [email, setEmail] = useState("");
+	const [phoneNumber, setPhoneNumber] = useState("");
+
+	const [isDialogOpen, setIsDialogOpen] = useState(false);
 
 	const fetchAirportsFrom = async (searchText: string) => {
 		try {
@@ -121,10 +135,37 @@ const BookFlight = () => {
 		setIsLoading(false);
 	};
 
-	const sendEmail = () => {
-		toast.success(
-			"Flight Inquiry was successfull, our admin will reach out to you in within 24 hours"
-		);
+	const sendEmail = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		if (!name || !email || !phoneNumber) {
+			toast.error("All fields are required");
+			return;
+		}
+
+		setIsEmailSending(true);
+
+		if (form.current) {
+			emailjs
+				.sendForm(
+					"service_7orcrts",
+					"template_4hjop5w",
+					form.current,
+					"9uKWP4-VHkg3gLRx2"
+				)
+				.then(
+					() => {
+						setIsDialogOpen(false);
+						toast.success(
+							"Flight Inquiry was successful, our admin will reach out to you within 24 hours"
+						);
+					},
+					(error: any) => {
+						console.log("FAILED...", error.text);
+					}
+				);
+		}
+		setIsEmailSending(false);
 	};
 
 	return (
@@ -180,6 +221,7 @@ const BookFlight = () => {
 								type="text"
 								placeholder="Enter a City or Airport..."
 								className="text-sm rounded-lg h-[35px] md:h-[40px] border border-customBlue px-2 placeholder:text-sm focus:border-2 focus:border-customBlue focus:outline-none"
+								autoComplete="off"
 							/>
 							{airportsFrom.length > 1 && (
 								<div className="absolute z-10 top-[110px] w-[80%] max-h-[300px] p-2 flex flex-col gap-2 overflow-y-scroll bg-white rounded-lg">
@@ -217,6 +259,7 @@ const BookFlight = () => {
 								type="text"
 								placeholder="Enter a City or Airport..."
 								className="text-sm rounded-lg h-[35px] md:h-[40px] border border-customBlue px-2 placeholder:text-sm focus:border-2 focus:border-customBlue focus:outline-none"
+								autoComplete="off"
 							/>
 							{airportsTo.length > 0 && (
 								<div className="absolute z-10 top-[195px] w-[80%] max-h-[300px] p-2 flex flex-col gap-2 overflow-y-scroll bg-white rounded-lg">
@@ -285,81 +328,28 @@ const BookFlight = () => {
 					</form>
 				)}
 				{tab === 2 && (
-					<form
-						onSubmit={handleSubmit}
-						className="h-auto bg-slate-200 w-[300px] md:w-[500px] rounded-xl shadow-lg py-8 px-6 relative"
-					>
+					<form className="h-auto bg-slate-200 w-[300px] md:w-[500px] rounded-xl shadow-lg py-8 px-6 relative">
 						<div className="flex flex-col gap-2 ">
 							<label className="text-left font-bold text-customBlue">
 								FLYING FROM
 							</label>
 							<input
-								value={searchFromText}
-								onChange={(e) =>
-									setSearchFromText(e.target.value)
-								}
 								name="currentAirport"
 								type="text"
 								placeholder="Enter a City or Airport..."
 								className="text-sm rounded-lg h-[35px] md:h-[40px] border border-customBlue px-2 placeholder:text-sm focus:border-2 focus:border-customBlue focus:outline-none"
 							/>
-							{airportsFrom.length > 1 && (
-								<div className="absolute z-10 top-[110px] w-[80%] max-h-[300px] p-2 flex flex-col gap-2 overflow-y-scroll bg-white rounded-lg">
-									{airportsFrom?.map(
-										(airportFrom: Airport) => (
-											<div
-												key={airportFrom._id}
-												className="bg-slate-200 text-sm text-customBlue p-2 rounded-lg cursor-pointer hover:bg-slate-300"
-												onClick={() => {
-													setOriginAirport(
-														airportFrom
-													);
-													setSearchFromText(
-														airportFrom.title
-													);
-												}}
-											>
-												{airportFrom.title}
-											</div>
-										)
-									)}
-								</div>
-							)}
 						</div>
 						<div className="flex flex-col gap-2 mt-5">
 							<label className="text-left font-bold text-customBlue">
 								FLYING TO
 							</label>
 							<input
-								value={searchToText}
-								onChange={(e) =>
-									setSearchToText(e.target.value)
-								}
 								name="currentAirport"
 								type="text"
 								placeholder="Enter a City or Airport..."
 								className="text-sm rounded-lg h-[35px] md:h-[40px] border border-customBlue px-2 placeholder:text-sm focus:border-2 focus:border-customBlue focus:outline-none"
 							/>
-							{airportsTo.length > 0 && (
-								<div className="absolute z-10 top-[195px] w-[80%] max-h-[300px] p-2 flex flex-col gap-2 overflow-y-scroll bg-white rounded-lg">
-									{airportsTo?.map((airportTo) => (
-										<div
-											key={airportTo._id}
-											className="bg-slate-200 text-sm text-customBlue p-2 rounded-lg cursor-pointer hover:bg-slate-300"
-											onClick={() => {
-												setDestinationAirport(
-													airportTo
-												);
-												setSearchToText(
-													airportTo.title
-												);
-											}}
-										>
-											{airportTo.title}
-										</div>
-									))}
-								</div>
-							)}
 						</div>
 						<div className="mt-5 flex flex-col gap-2">
 							<label className="text-left font-bold text-customBlue">
@@ -458,11 +448,11 @@ const BookFlight = () => {
 																.airOriginDestinationList[0]
 																?.firstDepartureTime
 														}{" "}
-														{
+														{/* {
 															flightData
 																.airOriginDestinationList[0]
 																?.originCityCode
-														}
+														} */}
 													</p>
 													<p className="font-medium">
 														{
@@ -474,11 +464,11 @@ const BookFlight = () => {
 												</div>
 												<div className="">
 													<h2 className="font-semibold text-sm md:text-lg">
-														{
+														{convertMinutesToHoursAndMinutes(
 															flightData
 																.airOriginDestinationList[0]
 																?.totalFlightTimeInMs
-														}
+														)}
 													</h2>
 													<div className="w-10 md:w-20 h-[1px] bg-black"></div>
 													<h2 className="font-semibold text-[12px] md:text-lg">
@@ -513,10 +503,17 @@ const BookFlight = () => {
 											</div>
 											<div className="mt-2 flex flex-col gap-2">
 												<h2 className="font-semibold">
-													Price: N
-													{flightData.amountInKobo}
+													Price:
+													{formatKoboToNaira(
+														flightData.amountInKobo
+													)}
 												</h2>
-												<Dialog>
+												<Dialog
+													open={isDialogOpen}
+													onOpenChange={
+														setIsDialogOpen
+													}
+												>
 													<DialogTrigger asChild>
 														<button className="bg-customBlue text-white rounded-lg py-2 px-3 cursor-pointer hover:bg-[#205063] flex items-center justify-around">
 															<div className="flex items-center gap-2">
@@ -538,45 +535,145 @@ const BookFlight = () => {
 																as possible
 															</DialogDescription>
 														</DialogHeader>
-														<div className="grid gap-4 py-4">
-															<div className="flex flex-col gap-2">
-																<label className="text-left font-bold text-customBlue">
-																	Email
-																</label>
+														<form
+															ref={form}
+															onSubmit={sendEmail}
+														>
+															<div className="grid gap-4 py-4">
+																<div className="flex flex-col gap-2">
+																	<label className="text-left font-bold text-customBlue">
+																		Name
+																	</label>
+																	<input
+																		name="name"
+																		type="text"
+																		placeholder="Enter a valid email..."
+																		className="text-sm rounded-lg h-[35px] md:h-[40px] border border-customBlue px-2 placeholder:text-sm focus:border-2 focus:border-customBlue focus:outline-none"
+																		value={
+																			name
+																		}
+																		onChange={(
+																			e
+																		) =>
+																			setName(
+																				e
+																					.target
+																					.value
+																			)
+																		}
+																	/>
+																</div>
+																<div className="flex flex-col gap-2">
+																	<label className="text-left font-bold text-customBlue">
+																		Email
+																	</label>
+																	<input
+																		name="email"
+																		type="email"
+																		placeholder="Enter a valid email..."
+																		className="text-sm rounded-lg h-[35px] md:h-[40px] border border-customBlue px-2 placeholder:text-sm focus:border-2 focus:border-customBlue focus:outline-none"
+																		value={
+																			email
+																		}
+																		onChange={(
+																			e
+																		) =>
+																			setEmail(
+																				e
+																					.target
+																					.value
+																			)
+																		}
+																	/>
+																</div>
+																<div className="flex flex-col gap-2">
+																	<label className="text-left font-bold text-customBlue">
+																		Phone
+																		number
+																	</label>
+																	<input
+																		name="phoneNumber"
+																		type="text"
+																		placeholder="Enter a valid phone number..."
+																		className="text-sm rounded-lg h-[35px] md:h-[40px] border border-customBlue px-2 placeholder:text-sm focus:border-2 focus:border-customBlue focus:outline-none"
+																		value={
+																			phoneNumber
+																		}
+																		onChange={(
+																			e
+																		) =>
+																			setPhoneNumber(
+																				e
+																					.target
+																					.value
+																			)
+																		}
+																	/>
+																</div>
 																<input
-																	name="email"
-																	type="email"
-																	placeholder="Enter a valid email..."
-																	className="text-sm rounded-lg h-[35px] md:h-[40px] border border-customBlue px-2 placeholder:text-sm focus:border-2 focus:border-customBlue focus:outline-none"
-																/>
-															</div>
-															<div className="flex flex-col gap-2">
-																<label className="text-left font-bold text-customBlue">
-																	Phone number
-																</label>
-																<input
-																	name="email"
-																	type="text"
-																	placeholder="Enter a valid phone number..."
-																	className="text-sm rounded-lg h-[35px] md:h-[40px] border border-customBlue px-2 placeholder:text-sm focus:border-2 focus:border-customBlue focus:outline-none"
-																/>
-															</div>
-														</div>
-														<DialogFooter>
-															<DialogClose>
-																<button
-																	type="button"
-																	onClick={() =>
-																		sendEmail()
+																	type="hidden"
+																	name="airline"
+																	value={
+																		flightData.airlineName
 																	}
-																	className="bg-customBlue text-white rounded-lg py-2 px-3 cursor-pointer hover:bg-[#205063] flex items-center justify-around"
-																>
-																	<div className="flex items-center gap-2">
-																		Send
-																	</div>
-																</button>
-															</DialogClose>
-														</DialogFooter>
+																/>
+																<input
+																	type="hidden"
+																	name="origin"
+																	value={
+																		flightData
+																			.airOriginDestinationList[0]
+																			?.originCity
+																	}
+																/>
+																<input
+																	type="hidden"
+																	name="destination"
+																	value={
+																		flightData
+																			.airOriginDestinationList[0]
+																			?.destinationCity
+																	}
+																/>
+																<input
+																	type="hidden"
+																	name="destination"
+																	value={
+																		flightData
+																			.airOriginDestinationList[0]
+																			?.destinationCity
+																	}
+																/>
+																<input
+																	type="hidden"
+																	name="price"
+																	value={formatKoboToNaira(
+																		flightData.amountInKobo
+																	)}
+																/>
+																<input
+																	type="hidden"
+																	name="flightTime"
+																	value={convertMinutesToHoursAndMinutes(
+																		flightData
+																			.airOriginDestinationList[0]
+																			?.totalFlightTimeInMs
+																	)}
+																/>
+															</div>
+															{/* <DialogClose> */}
+															<button
+																type="submit"
+																className="bg-customBlue text-white rounded-lg py-2 px-3 cursor-pointer hover:bg-[#205063] flex items-center justify-around"
+															>
+																<div className="flex items-center gap-2">
+																	{isEmailSending
+																		? "Sending.."
+																		: "Send"}
+																</div>
+															</button>
+															{/* </DialogClose> */}
+														</form>
 													</DialogContent>
 												</Dialog>
 											</div>
