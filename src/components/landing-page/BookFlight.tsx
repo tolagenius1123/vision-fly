@@ -43,6 +43,8 @@ const BookFlight = () => {
 	const [flightsData, setFlightsData] = useState<any>();
 	const formattedDate = formatDate(date);
 
+	const todaysDate = new Date();
+
 	const form = useRef<HTMLFormElement>(null);
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
@@ -82,8 +84,22 @@ const BookFlight = () => {
 		fetchAirportsTo(searchToText);
 	}, [searchToText]);
 
+	const handleDateSelect = (selectedDate: any) => {
+		if (selectedDate >= todaysDate) {
+			setDate(selectedDate);
+		} else {
+			toast.error("Please select a date that is today or later.");
+		}
+	};
+
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+
+		if (!searchFromText || !searchToText) {
+			toast.error("All fields are required");
+			return;
+		}
+
 		setIsLoading(true);
 
 		const flightSearch = {
@@ -306,7 +322,7 @@ const BookFlight = () => {
 									<Calendar
 										mode="single"
 										selected={date}
-										onSelect={setDate}
+										onSelect={handleDateSelect}
 										initialFocus
 									/>
 								</PopoverContent>

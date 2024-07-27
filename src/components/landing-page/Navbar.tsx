@@ -14,14 +14,14 @@ const Navbar = ({}: NavbarProps) => {
 
 	return (
 		<div className="w-full py-2 px-10 md:px-20 flex items-center justify-between fixed top-0 z-30 shadow-lg bg-white">
-			<div>
+			<Link href="/">
 				<Image
 					src={VisionFlyIcon}
 					alt="vision-fly-icon"
 					height={90}
 					width={90}
 				/>
-			</div>
+			</Link>
 			<div className="hidden md:flex items-center gap-14">
 				<div className="flex items-center gap-8">
 					<Link

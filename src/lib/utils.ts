@@ -18,7 +18,7 @@ export function formatDate(date: any | undefined) {
 }
 
 export function formatKoboToNaira(amountInKobo: number) {
-	const amountInNaira = amountInKobo / 100;
+	const amountInNaira = amountInKobo / 100 + 10000;
 
 	const formattedAmount = amountInNaira.toLocaleString();
 
