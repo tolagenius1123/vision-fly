@@ -25,14 +25,14 @@ const Navbar = ({}: NavbarProps) => {
 			<div className="hidden md:flex items-center gap-14">
 				<div className="flex items-center gap-8">
 					<Link
-						href="/"
+						href="/empty-leg"
 						className={`custom-link font-medium text-customBlue text-sm ${
-							pathName === "/"
+							pathName === "/empty-leg"
 								? "text-customGreen"
 								: "text-customBlack"
 						}`}
 					>
-						About Us
+						Empty Leg
 					</Link>
 					<Link
 						href="/"
