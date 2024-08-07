@@ -5,7 +5,7 @@ import {
 	formatDate,
 	formatKoboToNaira,
 } from "@/lib/utils";
-import { FormEvent, useEffect, useState, useRef } from "react";
+import { FormEvent, useEffect, useState, useRef, ChangeEvent } from "react";
 import { format } from "date-fns";
 import { ArrowRight, Calendar as CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
@@ -20,22 +20,28 @@ import {
 	Dialog,
 	DialogContent,
 	DialogDescription,
-	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-	DialogClose,
 } from "@/components/ui/dialog";
 import toast from "react-hot-toast";
 import emailjs from "@emailjs/browser";
+import { Controller, useForm } from "react-hook-form";
+import FlightBooking from "../reusesable/FlightBooking";
+import dayjs from "dayjs";
+import { useRouter } from "next/navigation";
 
 const BookFlight = () => {
+	const router = useRouter();
 	const [tab, setTab] = useState<number>(1);
 	const [airportsFrom, setAirportsFrom] = useState<Airport[]>([]);
 	const [airportsTo, setAirportsTo] = useState<Airport[]>([]);
 	const [searchFromText, setSearchFromText] = useState("");
 	const [searchToText, setSearchToText] = useState("");
 	const [date, setDate] = useState<Date>();
+	const [dateOfBirth, setDateOfBirth] = useState<
+		dayjs.Dayjs | null | undefined
+	>();
 	const [originAirport, setOriginAirport] = useState<Airport>();
 	const [destinationAirport, setDestinationAirport] = useState<Airport>();
 	const [isLoading, setIsLoading] = useState(false);
@@ -43,13 +49,24 @@ const BookFlight = () => {
 	const [isEmailSending, setIsEmailSending] = useState(false);
 	const [flightsData, setFlightsData] = useState<any>();
 	const formattedDate = formatDate(date);
+	const [step, setStep] = useState(1);
 
 	const todaysDate = new Date();
 
 	const form = useRef<HTMLFormElement>(null);
-	const [name, setName] = useState("");
-	const [email, setEmail] = useState("");
-	const [phoneNumber, setPhoneNumber] = useState("");
+	const [oneWayPassengerInfo, setOneWayPassengerInfo] =
+		useState<FlightBookingInfo>({
+			title: "",
+			surname: "",
+			firstName: "",
+			middleName: "",
+			dateOfBirth: "",
+			email: "",
+			phoneNumber: "",
+		});
+
+	const [title, setTitle] = useState("");
+	const [nationality, setNationality] = useState("");
 
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -94,6 +111,10 @@ const BookFlight = () => {
 		} else {
 			toast.error("Please select a date that is today or later.");
 		}
+	};
+
+	const handleDateOfBirthSelect = (selectedDate: any) => {
+		setDateOfBirth(selectedDate);
 	};
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -151,13 +172,27 @@ const BookFlight = () => {
 		setIsLoading(false);
 	};
 
+	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.currentTarget;
+		setOneWayPassengerInfo((prev) => ({ ...prev, [name]: value }));
+	};
+
 	const sendEmail = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		if (!name || !email || !phoneNumber) {
+		if (
+			!oneWayPassengerInfo.firstName ||
+			!oneWayPassengerInfo.surname ||
+			!oneWayPassengerInfo.email ||
+			!oneWayPassengerInfo.phoneNumber ||
+			!title ||
+			!nationality
+		) {
 			toast.error("All fields are required");
 			return;
 		}
+
+		console.log({ ...oneWayPassengerInfo, title, nationality });
 
 		setIsEmailSending(true);
 
@@ -173,14 +208,18 @@ const BookFlight = () => {
 					() => {
 						setIsDialogOpen(false);
 						toast.success(
-							"Flight Inquiry was successful, our admin will reach out to you within 24 hours"
+							"Booking order has been registered successfully"
 						);
+						setTimeout(() => {
+							router.push("/booking-success");
+						}, 2000);
 					},
 					(error: any) => {
 						console.log("FAILED...", error.text);
 					}
 				);
 		}
+
 		setIsEmailSending(false);
 	};
 
@@ -508,11 +547,6 @@ const BookFlight = () => {
 																		.airOriginDestinationList[0]
 																		?.firstDepartureTime
 																}{" "}
-																{/* {
-															flightData
-																.airOriginDestinationList[0]
-																?.originCityCode
-														} */}
 															</p>
 															<p className="font-medium">
 																{
@@ -523,15 +557,15 @@ const BookFlight = () => {
 															</p>
 														</div>
 														<div className="">
-															<h2 className="font-semibold text-sm md:text-lg">
+															<h2 className="font-semibold text-sm">
 																{convertMinutesToHoursAndMinutes(
 																	flightData
 																		.airOriginDestinationList[0]
 																		?.totalFlightTimeInMs
 																)}
 															</h2>
-															<div className="w-10 md:w-20 h-[1px] bg-black"></div>
-															<h2 className="font-semibold text-[12px] md:text-lg">
+															<div className="w-full h-[1px] bg-black"></div>
+															<h2 className="font-semibold text-sm">
 																{
 																	flightData.minimumNumberOfStops
 																}{" "}
@@ -584,167 +618,62 @@ const BookFlight = () => {
 																	</div>
 																</button>
 															</DialogTrigger>
-															<DialogContent className="max-w-[425px] rounded-md">
-																<DialogHeader>
-																	<DialogTitle>
-																		Let us
-																		have
-																		your
-																		details
-																	</DialogTitle>
-																	<DialogDescription>
-																		We will
-																		get back
-																		to you
-																		on your
-																		enquiry
-																		as soon
-																		as
-																		possible
-																	</DialogDescription>
-																</DialogHeader>
-																<form
-																	ref={form}
-																	onSubmit={
-																		sendEmail
-																	}
-																>
-																	<div className="grid gap-4 py-4">
-																		<div className="flex flex-col gap-2">
-																			<label className="text-left font-bold text-customBlue">
-																				Name
-																			</label>
-																			<input
-																				name="name"
-																				type="text"
-																				placeholder="Enter a valid email..."
-																				className="text-sm rounded-lg h-[35px] md:h-[40px] border border-customBlue px-2 placeholder:text-sm focus:border-2 focus:border-customBlue focus:outline-none"
-																				value={
-																					name
-																				}
-																				onChange={(
-																					e
-																				) =>
-																					setName(
-																						e
-																							.target
-																							.value
-																					)
-																				}
-																			/>
-																		</div>
-																		<div className="flex flex-col gap-2">
-																			<label className="text-left font-bold text-customBlue">
-																				Email
-																			</label>
-																			<input
-																				name="email"
-																				type="email"
-																				placeholder="Enter a valid email..."
-																				className="text-sm rounded-lg h-[35px] md:h-[40px] border border-customBlue px-2 placeholder:text-sm focus:border-2 focus:border-customBlue focus:outline-none"
-																				value={
-																					email
-																				}
-																				onChange={(
-																					e
-																				) =>
-																					setEmail(
-																						e
-																							.target
-																							.value
-																					)
-																				}
-																			/>
-																		</div>
-																		<div className="flex flex-col gap-2">
-																			<label className="text-left font-bold text-customBlue">
-																				Phone
-																				number
-																			</label>
-																			<input
-																				name="phoneNumber"
-																				type="text"
-																				placeholder="Enter a valid phone number..."
-																				className="text-sm rounded-lg h-[35px] md:h-[40px] border border-customBlue px-2 placeholder:text-sm focus:border-2 focus:border-customBlue focus:outline-none"
-																				value={
-																					phoneNumber
-																				}
-																				onChange={(
-																					e
-																				) =>
-																					setPhoneNumber(
-																						e
-																							.target
-																							.value
-																					)
-																				}
-																			/>
-																		</div>
-																		<input
-																			type="hidden"
-																			name="airline"
-																			value={
-																				flightData.airlineName
-																			}
-																		/>
-																		<input
-																			type="hidden"
-																			name="origin"
-																			value={
-																				flightData
-																					.airOriginDestinationList[0]
-																					?.originCity
-																			}
-																		/>
-																		<input
-																			type="hidden"
-																			name="destination"
-																			value={
-																				flightData
-																					.airOriginDestinationList[0]
-																					?.destinationCity
-																			}
-																		/>
-																		<input
-																			type="hidden"
-																			name="destination"
-																			value={
-																				flightData
-																					.airOriginDestinationList[0]
-																					?.destinationCity
-																			}
-																		/>
-																		<input
-																			type="hidden"
-																			name="price"
-																			value={formatKoboToNaira(
-																				flightData.amountInKobo
-																			)}
-																		/>
-																		<input
-																			type="hidden"
-																			name="flightTime"
-																			value={convertMinutesToHoursAndMinutes(
-																				flightData
-																					.airOriginDestinationList[0]
-																					?.totalFlightTimeInMs
-																			)}
-																		/>
-																	</div>
-																	{/* <DialogClose> */}
-																	<button
-																		type="submit"
-																		className="bg-customBlue text-white rounded-lg py-2 px-3 cursor-pointer hover:bg-[#205063] flex items-center justify-around"
-																	>
-																		<div className="flex items-center gap-2">
-																			{isEmailSending
-																				? "Sending.."
-																				: "Send"}
-																		</div>
-																	</button>
-																	{/* </DialogClose> */}
-																</form>
-															</DialogContent>
+															<FlightBooking
+																form={form}
+																handleChange={
+																	handleChange
+																}
+																sendEmail={
+																	sendEmail
+																}
+																title={title}
+																setTitle={
+																	setTitle
+																}
+																nationality={
+																	nationality
+																}
+																setNationality={
+																	setNationality
+																}
+																dob={
+																	dateOfBirth
+																}
+																setDob={
+																	setDateOfBirth
+																}
+																passengerInfo={
+																	oneWayPassengerInfo
+																}
+																isLoading={
+																	isEmailSending
+																}
+																airlineName={
+																	flightData.airlineName
+																}
+																originCity={
+																	flightData
+																		.airOriginDestinationList[0]
+																		?.originCity
+																}
+																destinationCity={
+																	flightData
+																		.airOriginDestinationList[0]
+																		?.destinationCity
+																}
+																amount={
+																	flightData.amountInKobo
+																}
+																flightTime={
+																	flightData
+																		.airOriginDestinationList[0]
+																		?.totalFlightTimeInMs
+																}
+																step={step}
+																setStep={
+																	setStep
+																}
+															/>
 														</Dialog>
 													</div>
 												</div>
@@ -952,11 +881,6 @@ const BookFlight = () => {
 																			.airOriginDestinationList[0]
 																			?.firstDepartureTime
 																	}{" "}
-																	{/* {
-															flightData
-																.airOriginDestinationList[0]
-																?.originCityCode
-														} */}
 																</p>
 																<p className="font-medium">
 																	{
@@ -967,15 +891,15 @@ const BookFlight = () => {
 																</p>
 															</div>
 															<div className="">
-																<h2 className="font-semibold text-sm md:text-lg">
+																<h2 className="font-semibold text-sm">
 																	{convertMinutesToHoursAndMinutes(
 																		flightData
 																			.airOriginDestinationList[0]
 																			?.totalFlightTimeInMs
 																	)}
 																</h2>
-																<div className="w-10 md:w-20 h-[1px] bg-black"></div>
-																<h2 className="font-semibold text-[12px] md:text-lg">
+																<div className="w-full h-[1px] bg-black"></div>
+																<h2 className="font-semibold text-sm">
 																	{
 																		flightData.minimumNumberOfStops
 																	}{" "}
@@ -1113,149 +1037,6 @@ const BookFlight = () => {
 																			possible
 																		</DialogDescription>
 																	</DialogHeader>
-																	<form
-																		ref={
-																			form
-																		}
-																		onSubmit={
-																			sendEmail
-																		}
-																	>
-																		<div className="grid gap-4 py-4">
-																			<div className="flex flex-col gap-2">
-																				<label className="text-left font-bold text-customBlue">
-																					Name
-																				</label>
-																				<input
-																					name="name"
-																					type="text"
-																					placeholder="Enter a valid email..."
-																					className="text-sm rounded-lg h-[35px] md:h-[40px] border border-customBlue px-2 placeholder:text-sm focus:border-2 focus:border-customBlue focus:outline-none"
-																					value={
-																						name
-																					}
-																					onChange={(
-																						e
-																					) =>
-																						setName(
-																							e
-																								.target
-																								.value
-																						)
-																					}
-																				/>
-																			</div>
-																			<div className="flex flex-col gap-2">
-																				<label className="text-left font-bold text-customBlue">
-																					Email
-																				</label>
-																				<input
-																					name="email"
-																					type="email"
-																					placeholder="Enter a valid email..."
-																					className="text-sm rounded-lg h-[35px] md:h-[40px] border border-customBlue px-2 placeholder:text-sm focus:border-2 focus:border-customBlue focus:outline-none"
-																					value={
-																						email
-																					}
-																					onChange={(
-																						e
-																					) =>
-																						setEmail(
-																							e
-																								.target
-																								.value
-																						)
-																					}
-																				/>
-																			</div>
-																			<div className="flex flex-col gap-2">
-																				<label className="text-left font-bold text-customBlue">
-																					Phone
-																					number
-																				</label>
-																				<input
-																					name="phoneNumber"
-																					type="text"
-																					placeholder="Enter a valid phone number..."
-																					className="text-sm rounded-lg h-[35px] md:h-[40px] border border-customBlue px-2 placeholder:text-sm focus:border-2 focus:border-customBlue focus:outline-none"
-																					value={
-																						phoneNumber
-																					}
-																					onChange={(
-																						e
-																					) =>
-																						setPhoneNumber(
-																							e
-																								.target
-																								.value
-																						)
-																					}
-																				/>
-																			</div>
-																			<input
-																				type="hidden"
-																				name="airline"
-																				value={
-																					flightData.airlineName
-																				}
-																			/>
-																			<input
-																				type="hidden"
-																				name="origin"
-																				value={
-																					flightData
-																						.airOriginDestinationList[0]
-																						?.originCity
-																				}
-																			/>
-																			<input
-																				type="hidden"
-																				name="destination"
-																				value={
-																					flightData
-																						.airOriginDestinationList[0]
-																						?.destinationCity
-																				}
-																			/>
-																			<input
-																				type="hidden"
-																				name="destination"
-																				value={
-																					flightData
-																						.airOriginDestinationList[0]
-																						?.destinationCity
-																				}
-																			/>
-																			<input
-																				type="hidden"
-																				name="price"
-																				value={formatKoboToNaira(
-																					flightData.amountInKobo
-																				)}
-																			/>
-																			<input
-																				type="hidden"
-																				name="flightTime"
-																				value={convertMinutesToHoursAndMinutes(
-																					flightData
-																						.airOriginDestinationList[0]
-																						?.totalFlightTimeInMs
-																				)}
-																			/>
-																		</div>
-																		{/* <DialogClose> */}
-																		<button
-																			type="submit"
-																			className="bg-customBlue text-white rounded-lg py-2 px-3 cursor-pointer hover:bg-[#205063] flex items-center justify-around"
-																		>
-																			<div className="flex items-center gap-2">
-																				{isEmailSending
-																					? "Sending.."
-																					: "Send"}
-																			</div>
-																		</button>
-																		{/* </DialogClose> */}
-																	</form>
 																</DialogContent>
 															</Dialog>
 														</div>

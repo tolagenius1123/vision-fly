@@ -54,3 +54,25 @@ interface ApiResponse {
 	message: string;
 	status: string;
 }
+
+type FlightBookingInfo = {
+	title: string;
+	surname: string;
+	firstName: string;
+	middleName?: string;
+	dateOfBirth: string;
+	email: string;
+	phoneNumber: string;
+};
+
+type Country = {
+	id: number;
+	name: string;
+	code: string;
+	iso: string;
+	dialingCode: string;
+	currencyCode: string;
+	currencyName: string;
+	continent: string;
+	capital: string;
+};
