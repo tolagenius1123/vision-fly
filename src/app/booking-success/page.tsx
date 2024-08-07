@@ -37,7 +37,7 @@ const BookingSuccess = () => {
 				</div>
 				<div className="mt-2 flex flex-col text-center gap-3">
 					<h1 className="text-sm font-semibold">
-						If you haven't made payment, you can transfer to the any
+						If you havent made payment, you can transfer to the any
 						of the banks below
 					</h1>
 					<div className="flex items-center justify-around">
