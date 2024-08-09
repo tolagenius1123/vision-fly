@@ -799,7 +799,7 @@ const BookFlight = () => {
 															<DialogContent className="h-[500px] w-[300px] md:w-[500px] rounded-md overflow-y-scroll">
 																<DialogHeader>
 																	<DialogTitle>
-																		Traveller's
+																		Traveller&apos;s
 																		Information
 																	</DialogTitle>
 																	<DialogDescription>
