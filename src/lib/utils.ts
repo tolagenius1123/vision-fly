@@ -22,7 +22,13 @@ export function formatKoboToNaira(amountInKobo: number) {
 
 	const formattedAmount = amountInNaira.toLocaleString();
 
-	return `₦${formattedAmount}`;
+	return `₦ ${formattedAmount}`;
+}
+
+export function formatWithNairaSign(amount: number) {
+	const formattedAmount = amount.toLocaleString();
+
+	return `₦ ${formattedAmount}`;
 }
 
 export function convertMinutesToHoursAndMinutes(timeInMinutes: number) {
@@ -30,3 +36,20 @@ export function convertMinutesToHoursAndMinutes(timeInMinutes: number) {
 	const minutes = timeInMinutes % 60;
 	return `${hours}hr ${minutes}mins`;
 }
+
+export const generateYearOptions = () => {
+	const currentYear = new Date().getFullYear();
+	const years = [];
+	for (let year = currentYear; year >= 1900; year--) {
+		years.push(year);
+	}
+	return years;
+};
+
+export const generateMonthOptions = () => {
+	return Array.from({ length: 12 }, (_, i) => i + 1);
+};
+
+export const generateDayOptions = () => {
+	return Array.from({ length: 31 }, (_, i) => i + 1);
+};

@@ -26,9 +26,7 @@ import {
 } from "@/components/ui/dialog";
 import toast from "react-hot-toast";
 import emailjs from "@emailjs/browser";
-import { Controller, useForm } from "react-hook-form";
 import FlightBooking from "../reusesable/FlightBooking";
-import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 
 const BookFlight = () => {
@@ -39,19 +37,16 @@ const BookFlight = () => {
 	const [searchFromText, setSearchFromText] = useState("");
 	const [searchToText, setSearchToText] = useState("");
 	const [date, setDate] = useState<Date>();
-	const [dateOfBirth, setDateOfBirth] = useState<
-		dayjs.Dayjs | null | undefined
-	>();
 	const [originAirport, setOriginAirport] = useState<Airport>();
 	const [destinationAirport, setDestinationAirport] = useState<Airport>();
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingReturn, setIsLoadingReturn] = useState(false);
 	const [isEmailSending, setIsEmailSending] = useState(false);
 	const [flightsData, setFlightsData] = useState<any>();
-	const formattedDate = formatDate(date);
-	const [step, setStep] = useState(1);
-
-	const todaysDate = new Date();
+	const [selectedFlightId, setSelectedFlightId] = useState(null);
+	const [title, setTitle] = useState("");
+	const [nationality, setNationality] = useState("");
+	const [isDialogOpen, setIsDialogOpen] = useState(false);
 
 	const form = useRef<HTMLFormElement>(null);
 	const [oneWayPassengerInfo, setOneWayPassengerInfo] =
@@ -65,10 +60,8 @@ const BookFlight = () => {
 			phoneNumber: "",
 		});
 
-	const [title, setTitle] = useState("");
-	const [nationality, setNationality] = useState("");
-
-	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const formattedDate = formatDate(date);
+	const todaysDate = new Date();
 
 	const fetchAirportsFrom = async (searchText: string) => {
 		try {
@@ -111,10 +104,6 @@ const BookFlight = () => {
 		} else {
 			toast.error("Please select a date that is today or later.");
 		}
-	};
-
-	const handleDateOfBirthSelect = (selectedDate: any) => {
-		setDateOfBirth(selectedDate);
 	};
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -192,11 +181,15 @@ const BookFlight = () => {
 			return;
 		}
 
-		console.log({ ...oneWayPassengerInfo, title, nationality });
+		// console.log({ ...oneWayPassengerInfo, title, nationality });
 
 		setIsEmailSending(true);
 
 		if (form.current) {
+			const formData = new FormData(form.current);
+			formData.forEach((value, key) => {
+				console.log(key, value);
+			});
 			emailjs
 				.sendForm(
 					"service_7orcrts",
@@ -206,21 +199,24 @@ const BookFlight = () => {
 				)
 				.then(
 					() => {
-						setIsDialogOpen(false);
+						setIsEmailSending(false);
 						toast.success(
 							"Booking order has been registered successfully"
 						);
+						setIsDialogOpen(false);
 						setTimeout(() => {
 							router.push("/booking-success");
 						}, 2000);
 					},
 					(error: any) => {
+						setIsEmailSending(false);
 						console.log("FAILED...", error.text);
 					}
 				);
 		}
-
-		setIsEmailSending(false);
+		// setTimeout(() => {
+		// 	setIsEmailSending(false);
+		// }, 3000);
 	};
 
 	// ROUND TRIP STATES AND DATA
@@ -533,6 +529,178 @@ const BookFlight = () => {
 											</h1>{" "}
 										</div>
 									) : (
+										// flightsData?.map((flightData: any) => (
+										// 	<div key={flightData.id}>
+										// 		<div className="mt-4 w-[300px] md:w-[500px] rounded-xl text-customBlue bg-slate-200 shadow-md py-4 px-6">
+										// 			<h1 className="font-semibold text-lg">
+										// 				{flightData.airlineName}
+										// 			</h1>
+										// 			<div className="flex items-center gap-3 justify-around mt-2">
+										// 				<div className="text-[12px] md:text-sm">
+										// 					<p className="font-medium">
+										// 						{
+										// 							flightData
+										// 								.airOriginDestinationList[0]
+										// 								?.firstDepartureTime
+										// 						}{" "}
+										// 					</p>
+										// 					<p className="font-medium">
+										// 						{
+										// 							flightData
+										// 								.airOriginDestinationList[0]
+										// 								?.originCity
+										// 						}
+										// 					</p>
+										// 				</div>
+										// 				<div className="">
+										// 					<h2 className="font-semibold text-sm">
+										// 						{convertMinutesToHoursAndMinutes(
+										// 							flightData
+										// 								.airOriginDestinationList[0]
+										// 								?.totalFlightTimeInMs
+										// 						)}
+										// 					</h2>
+										// 					<div className="w-full h-[1px] bg-black"></div>
+										// 					<h2 className="font-semibold text-sm">
+										// 						{
+										// 							flightData.minimumNumberOfStops
+										// 						}{" "}
+										// 						Stop
+										// 					</h2>
+										// 				</div>
+										// 				<div className="text-[12px] md:text-sm">
+										// 					<p className="font-medium">
+										// 						{
+										// 							flightData
+										// 								.airOriginDestinationList[0]
+										// 								?.lastArrivalTime
+										// 						}{" "}
+										// 						{
+										// 							flightData
+										// 								.airOriginDestinationList[0]
+										// 								?.routeSegmentList[1]
+										// 								?.arrivalAirportCode
+										// 						}
+										// 					</p>
+										// 					<p className="font-medium">
+										// 						{
+										// 							flightData
+										// 								.airOriginDestinationList[0]
+										// 								?.destinationCity
+										// 						}
+										// 					</p>
+										// 				</div>
+										// 			</div>
+										// 			<div className="mt-2 flex flex-col gap-2">
+										// 				<h2 className="font-semibold">
+										// 					Price:{" "}
+										// 					{formatKoboToNaira(
+										// 						flightData.amountInKobo
+										// 					)}
+										// 				</h2>
+										// 				<Dialog
+										// 					open={isDialogOpen}
+										// 					onOpenChange={
+										// 						setIsDialogOpen
+										// 					}
+										// 				>
+										// 					<DialogTrigger
+										// 						asChild
+										// 					>
+										// 						<button className="bg-customBlue text-white rounded-lg py-2 px-3 cursor-pointer hover:bg-[#205063] flex items-center justify-around">
+										// 							<div className="flex items-center gap-2">
+										// 								Reserve
+										// 								<ArrowRight className="animate-arrow" />
+										// 							</div>
+										// 						</button>
+										// 					</DialogTrigger>
+										// 					<DialogContent
+										// 						key={
+										// 							flightData.id
+										// 						}
+										// 						className="h-[500px] max-w-[425px] rounded-md overflow-y-scroll"
+										// 					>
+										// 						<DialogHeader>
+										// 							<DialogTitle>
+										// 								Traveller's
+										// 								Information
+										// 							</DialogTitle>
+										// 							<DialogDescription>
+										// 								Passengers
+										// 								details
+										// 								must be
+										// 								entered
+										// 								as it
+										// 								appears
+										// 								on the
+										// 								passport
+										// 								or ID
+										// 							</DialogDescription>
+										// 						</DialogHeader>
+										// 						<FlightBooking
+										// 							form={form}
+										// 							handleChange={
+										// 								handleChange
+										// 							}
+										// 							sendEmail={
+										// 								sendEmail
+										// 							}
+										// 							title={
+										// 								title
+										// 							}
+										// 							setTitle={
+										// 								setTitle
+										// 							}
+										// 							nationality={
+										// 								nationality
+										// 							}
+										// 							setNationality={
+										// 								setNationality
+										// 							}
+										// 							dob={
+										// 								dateOfBirth
+										// 							}
+										// 							setDob={
+										// 								setDateOfBirth
+										// 							}
+										// 							passengerInfo={
+										// 								oneWayPassengerInfo
+										// 							}
+										// 							isLoading={
+										// 								isEmailSending
+										// 							}
+										// 							airlineName={
+										// 								flightData.airlineName
+										// 							}
+										// 							originCity={
+										// 								flightData
+										// 									.airOriginDestinationList[0]
+										// 									?.originCity
+										// 							}
+										// 							destinationCity={
+										// 								flightData
+										// 									.airOriginDestinationList[0]
+										// 									?.destinationCity
+										// 							}
+										// 							amount={
+										// 								flightData.amountInKobo
+										// 							}
+										// 							flightTime={
+										// 								flightData
+										// 									.airOriginDestinationList[0]
+										// 									?.totalFlightTimeInMs
+										// 							}
+										// 							step={step}
+										// 							setStep={
+										// 								setStep
+										// 							}
+										// 						/>
+										// 					</DialogContent>
+										// 				</Dialog>
+										// 			</div>
+										// 		</div>
+										// 	</div>
+										// ))
 										flightsData?.map((flightData: any) => (
 											<div key={flightData.id}>
 												<div className="mt-4 w-[300px] md:w-[500px] rounded-xl text-customBlue bg-slate-200 shadow-md py-4 px-6">
@@ -540,13 +708,14 @@ const BookFlight = () => {
 														{flightData.airlineName}
 													</h1>
 													<div className="flex items-center gap-3 justify-around mt-2">
+														{/* Flight Details */}
 														<div className="text-[12px] md:text-sm">
 															<p className="font-medium">
 																{
 																	flightData
 																		.airOriginDestinationList[0]
 																		?.firstDepartureTime
-																}{" "}
+																}
 															</p>
 															<p className="font-medium">
 																{
@@ -556,7 +725,7 @@ const BookFlight = () => {
 																}
 															</p>
 														</div>
-														<div className="">
+														<div>
 															<h2 className="font-semibold text-sm">
 																{convertMinutesToHoursAndMinutes(
 																	flightData
@@ -597,15 +766,24 @@ const BookFlight = () => {
 													</div>
 													<div className="mt-2 flex flex-col gap-2">
 														<h2 className="font-semibold">
-															Price:
+															Price:{" "}
 															{formatKoboToNaira(
 																flightData.amountInKobo
 															)}
 														</h2>
 														<Dialog
-															open={isDialogOpen}
-															onOpenChange={
-																setIsDialogOpen
+															open={
+																selectedFlightId ===
+																flightData.id
+															}
+															onOpenChange={(
+																open
+															) =>
+																setSelectedFlightId(
+																	open
+																		? flightData.id
+																		: null
+																)
 															}
 														>
 															<DialogTrigger
@@ -613,67 +791,83 @@ const BookFlight = () => {
 															>
 																<button className="bg-customBlue text-white rounded-lg py-2 px-3 cursor-pointer hover:bg-[#205063] flex items-center justify-around">
 																	<div className="flex items-center gap-2">
-																		Inquire
+																		Reserve
 																		<ArrowRight className="animate-arrow" />
 																	</div>
 																</button>
 															</DialogTrigger>
-															<FlightBooking
-																form={form}
-																handleChange={
-																	handleChange
-																}
-																sendEmail={
-																	sendEmail
-																}
-																title={title}
-																setTitle={
-																	setTitle
-																}
-																nationality={
-																	nationality
-																}
-																setNationality={
-																	setNationality
-																}
-																dob={
-																	dateOfBirth
-																}
-																setDob={
-																	setDateOfBirth
-																}
-																passengerInfo={
-																	oneWayPassengerInfo
-																}
-																isLoading={
-																	isEmailSending
-																}
-																airlineName={
-																	flightData.airlineName
-																}
-																originCity={
-																	flightData
-																		.airOriginDestinationList[0]
-																		?.originCity
-																}
-																destinationCity={
-																	flightData
-																		.airOriginDestinationList[0]
-																		?.destinationCity
-																}
-																amount={
-																	flightData.amountInKobo
-																}
-																flightTime={
-																	flightData
-																		.airOriginDestinationList[0]
-																		?.totalFlightTimeInMs
-																}
-																step={step}
-																setStep={
-																	setStep
-																}
-															/>
+															<DialogContent className="h-[500px] w-[300px] md:w-[500px] rounded-md overflow-y-scroll">
+																<DialogHeader>
+																	<DialogTitle>
+																		Traveller's
+																		Information
+																	</DialogTitle>
+																	<DialogDescription>
+																		Passengers
+																		details
+																		must be
+																		entered
+																		as it
+																		appears
+																		on the
+																		passport
+																		or ID
+																	</DialogDescription>
+																</DialogHeader>
+																{selectedFlightId ===
+																	flightData.id && (
+																	<FlightBooking
+																		form={
+																			form
+																		}
+																		handleChange={
+																			handleChange
+																		}
+																		sendEmail={
+																			sendEmail
+																		}
+																		title={
+																			title
+																		}
+																		setTitle={
+																			setTitle
+																		}
+																		nationality={
+																			nationality
+																		}
+																		setNationality={
+																			setNationality
+																		}
+																		passengerInfo={
+																			oneWayPassengerInfo
+																		}
+																		isLoading={
+																			isEmailSending
+																		}
+																		airlineName={
+																			flightData.airlineName
+																		}
+																		originCity={
+																			flightData
+																				.airOriginDestinationList[0]
+																				?.originCity
+																		}
+																		destinationCity={
+																			flightData
+																				.airOriginDestinationList[0]
+																				?.destinationCity
+																		}
+																		amount={
+																			flightData.amountInKobo
+																		}
+																		flightTime={
+																			flightData
+																				.airOriginDestinationList[0]
+																				?.totalFlightTimeInMs
+																		}
+																	/>
+																)}
+															</DialogContent>
 														</Dialog>
 													</div>
 												</div>

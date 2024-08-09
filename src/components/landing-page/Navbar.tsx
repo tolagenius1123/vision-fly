@@ -13,13 +13,14 @@ const Navbar = ({}: NavbarProps) => {
 	const router = useRouter();
 
 	return (
-		<div className="w-full py-2 px-10 md:px-20 flex items-center justify-between fixed top-0 z-30 shadow-lg bg-white">
+		<div className="w-full py-2 px-6 md:px-20 flex items-center justify-between fixed top-0 z-30 shadow-lg bg-white">
 			<Link href="/">
 				<Image
 					src={VisionFlyIcon}
 					alt="vision-fly-icon"
-					height={90}
-					width={90}
+					// height={90}
+					// width={90}
+					className="h-[70px] w-[70px] md:h-[80px] md:w-[80px]"
 				/>
 			</Link>
 			<div className="hidden md:flex items-center gap-14">

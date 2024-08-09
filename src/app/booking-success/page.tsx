@@ -2,6 +2,7 @@
 import { Fcmb } from "@/assets/images";
 import { Check, Copy } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const BookingSuccess = () => {
@@ -20,8 +21,8 @@ const BookingSuccess = () => {
 	};
 
 	return (
-		<div className="h-screen w-full bg-white flex items-center justify-around">
-			<div className="w-1/2 flex flex-col gap-2 items-center">
+		<div className="h-screen w-full bg-white flex items-center justify-around p-5 md:p-0">
+			<div className="w-full md:w-1/2 flex flex-col gap-2 items-center">
 				<div className="flex flex-col gap-2 items-center">
 					<div className="p-3 bg-slate-200 rounded-full">
 						<Check className="h-12 w-12 text-green-500" />
@@ -34,14 +35,20 @@ const BookingSuccess = () => {
 						You will be contacted soon by our agent as your booking
 						is being processed
 					</p>
+					<Link
+						href="/"
+						className="px-4 py-2 bg-customBlue hover:bg-[#205063] text-white rounded-lg mt-2"
+					>
+						Back Home
+					</Link>
 				</div>
 				<div className="mt-2 flex flex-col text-center gap-3">
 					<h1 className="text-sm font-semibold">
-						If you havent made payment, you can transfer to the any
-						of the banks below
+						If you haven&apos;t made payment, you can transfer to
+						the any of the banks below
 					</h1>
 					<div className="flex items-center justify-around">
-						<div className="w-1/2 bg-white border rounded-xl shadow-md px-5 py-10 flex flex-col gap-2">
+						<div className="w-full md:w-1/2 bg-white border rounded-xl shadow-md px-5 py-10 flex flex-col gap-2">
 							<div className="">
 								<Image src={Fcmb} alt="bank-logo" />
 							</div>
