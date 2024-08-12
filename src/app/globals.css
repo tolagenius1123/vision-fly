@@ -135,3 +135,27 @@
 	z-index: 1300 !important;
 	height: 20px !important;
 }
+
+/* Apply styles to the scrollbar */
+.custom-scrollbar {
+	scrollbar-width: thin; /* For Firefox */
+	scrollbar-color: #065777 #e5e7eb; /* Thumb color, track color */
+	border-radius: 10px;
+}
+
+/* For WebKit browsers (Chrome, Safari) */
+.custom-scrollbar::-webkit-scrollbar {
+	width: 8px; /* Thin scrollbar */
+	border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+	background: #e5e7eb; /* Track color (gray-200) */
+	border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+	background-color: #065777; /* Thumb color (blue-500) */
+	border-radius: 10px 10px 0 0; /* Rounded corners */
+	border: 2px solid #e5e7eb; /* Optional: add a border around the thumb */
+}

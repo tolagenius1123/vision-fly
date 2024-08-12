@@ -36,9 +36,9 @@ const Navbar = ({}: NavbarProps) => {
 						Empty Leg
 					</Link>
 					<Link
-						href="/"
+						href="/private-charter"
 						className={`custom-link font-medium text-customBlue text-sm hover:text- ${
-							pathName === "/"
+							pathName === "/private-charter"
 								? "text-customGreen"
 								: "text-customBlack"
 						}`}
