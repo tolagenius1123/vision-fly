@@ -45,7 +45,7 @@ const Navbar = ({}: NavbarProps) => {
 					>
 						Private Charter
 					</Link>
-					<Link
+					{/* <Link
 						href="/"
 						className={`custom-link font-medium text-customBlue text-sm hover:text- ${
 							pathName === "/"
@@ -54,11 +54,11 @@ const Navbar = ({}: NavbarProps) => {
 						}`}
 					>
 						Vacation Packages
-					</Link>
+					</Link> */}
 					<Link
-						href="/"
+						href="/aircraft-purchase"
 						className={`custom-link font-medium text-customBlue text-sm hover:text- ${
-							pathName === "/"
+							pathName === "/aircraft-purchase"
 								? "text-customGreen"
 								: "text-customBlack"
 						}`}

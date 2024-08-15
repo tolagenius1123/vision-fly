@@ -1,8 +1,7 @@
-// import { FooterIcon, WhiteFacebookIcon, WhiteIgIcon } from "@/assets/icons";
 import Image from "next/image";
 import Link from "next/link";
 import FooterIcon from "@/assets/icons/vision.svg";
-import { Facebook } from "lucide-react";
+import { FacebookIcon, IgIcon } from "@/assets/icons";
 
 export default function Footer() {
 	return (
@@ -26,14 +25,11 @@ export default function Footer() {
 					<h2 className="text-xl font-semibold">Follow us</h2>
 					<div className="flex text-sm gap-3 mt-2">
 						<Link href="/">
-							{/* <Image
-								src={WhiteFacebookIcon}
-								alt="facebook-icon"
-							/> */}
+							<Image src={FacebookIcon} alt="facebook-icon" />
 						</Link>
-						{/* <Link href="/">
-							<Image src={WhiteIgIcon} alt="instagram-icon" />
-						</Link> */}
+						<Link href="/">
+							<Image src={IgIcon} alt="instagram-icon" />
+						</Link>
 					</div>
 				</div>
 			</div>
