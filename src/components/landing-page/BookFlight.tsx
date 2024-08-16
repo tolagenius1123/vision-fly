@@ -354,7 +354,10 @@ const BookFlight = () => {
 	};
 
 	return (
-		<div className="w-full px-20 pt-[50px] md:pt-[100px] pb-[50px] md:pb-[150px] bg-slate-50">
+		<div
+			id="bookflight"
+			className="w-full px-20 pt-[50px] md:pt-[100px] pb-[50px] md:pb-[150px] bg-slate-50"
+		>
 			<div className="flex flex-col gap-2 text-center justify-center items-center">
 				<p className="text-customBlue text-xl md:text-2xl font-semibold">
 					FLY WITH VISION FLY

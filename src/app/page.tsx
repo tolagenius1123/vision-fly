@@ -1,4 +1,5 @@
 import BookFlight from "@/components/landing-page/BookFlight";
+import ContactUs from "@/components/landing-page/ContactUs";
 import Footer from "@/components/landing-page/Footer";
 import HeroSection from "@/components/landing-page/HeroSection";
 import Navbar from "@/components/landing-page/Navbar";
@@ -11,6 +12,7 @@ export default function Home() {
 			<HeroSection />
 			<BookFlight />
 			<Services />
+			<ContactUs />
 			<Footer />
 		</main>
 	);

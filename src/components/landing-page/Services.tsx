@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { PrivateJet, PrivateAircraft, PurchasePlane } from "@/assets/images";
+import Link from "next/link";
 
 const Services = () => {
 	const router = useRouter();
@@ -30,10 +31,13 @@ const Services = () => {
 							quality of your aircraft, safety or travel
 							experience; its your jet and its ready when you are.
 						</p>
-						<div className="flex items-center gap-3 mt-4 bg-customBlue hover:bg-[#205063] w-[205px] px-6 py-3 rounded-3xl text-white cursor-pointer">
+						<Link
+							href="/private-charter"
+							className="flex items-center gap-3 mt-4 bg-customBlue hover:bg-[#205063] w-[205px] px-6 py-3 rounded-3xl text-white cursor-pointer"
+						>
 							Charter Flights{" "}
 							<ArrowRight className="animate-arrow" />
-						</div>
+						</Link>
 					</div>
 				</div>
 				<div className="w-full flex flex-col-reverse md:flex-row">
@@ -50,10 +54,13 @@ const Services = () => {
 							mind, plus a detailed needs analysis, travel history
 							analysis, financial analysis, and much more.
 						</p>
-						<div className="flex items-center gap-3 mt-4 bg-customBlue hover:bg-[#205063] w-[205px] px-6 py-3 rounded-3xl text-white cursor-pointer">
+						<Link
+							href="/aircraft-purchase"
+							className="flex items-center gap-3 mt-4 bg-customBlue hover:bg-[#205063] w-[205px] px-6 py-3 rounded-3xl text-white cursor-pointer"
+						>
 							Purchase a jet{" "}
 							<ArrowRight className="animate-arrow" />
-						</div>
+						</Link>
 					</div>
 					<div className="w-full h-full md:w-1/2">
 						<Image
@@ -74,17 +81,20 @@ const Services = () => {
 						own
 					</h2>
 					<p className="font-medium md:font-semibold text-center">
-						Visionfly&aposs management offerings follow the same
-						standard as our travel services, and seamlessly tie into
-						them as well. It&aposs all about creating a hands-free
+						Visionfly management offerings follow the same standard
+						as our travel services, and seamlessly tie into them as
+						well. It&aposs all about creating a hands-free
 						experience for you. When we talk about our private
 						flights we like to say that they allow our customers to
 						travel on autopilot; our management services are no
 						different.
 					</p>
-					<div className="flex items-center gap-3 mt-4 bg-customBlue hover:bg-[#205063] px-6 py-3 rounded-3xl text-white cursor-pointer">
+					<Link
+						href="/"
+						className="flex items-center gap-3 mt-4 bg-customBlue hover:bg-[#205063] px-6 py-3 rounded-3xl text-white cursor-pointer"
+					>
 						Read more <ArrowRight className="animate-arrow" />
-					</div>
+					</Link>
 				</div>
 			</div>
 		</>

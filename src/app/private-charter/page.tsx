@@ -76,13 +76,13 @@ const PrivateCharter = () => {
 						experience.
 					</p>
 				</div>
-				<div className="flex  text-center justify-around items-center">
+				<div className="flex text-center justify-around items-center">
 					<Dialog
 						open={isInquiryOpen}
 						onOpenChange={() => setIsInquiryOpen(!isInquiryOpen)}
 					>
 						<DialogTrigger asChild>
-							<div className="flex w-auto text-xl md:text-2xl items-center gap-4 md:gap-6 mt-4 bg-customBlue hover:bg-blue-700 px-8 md:px-10 py-3 rounded-[50px] text-white cursor-pointer transition duration-1000 ease-in-out">
+							<div className="flex w-auto text-xl md:text-2xl items-center gap-4 md:gap-4 mt-8 bg-customBlue hover:bg-blue-700 px-8 md:px-10 py-3 rounded-[50px] text-white cursor-pointer transition duration-1000 ease-in-out">
 								Charter{" "}
 								<ArrowRight className="animate-arrow h-6 w-6 md:h-10 md:w-10" />
 							</div>

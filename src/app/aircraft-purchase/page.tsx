@@ -10,7 +10,7 @@ export default function AircraftPurchase() {
 			<div className="pt-[150px] md:pt-[100px] w-full h-[100vh] md:h-[120vh] px-5 md:px-20 bg-slate-50 flex flex-col md:flex-row items-center gap-10 md:gap-4">
 				<div className="w-full md:w-1/2">
 					<h1 className="text-[50px] md:text-[60px] leading-[50px] md:leading-[70px] font-semibold">
-						Thinking About Buying an Aircraft
+						Thinking About Buying an Aircraft ?
 					</h1>
 					<p className="text-xl md:text-[30px] mt-4 md:mt-2">
 						Let us take care of everything
