@@ -34,6 +34,9 @@ type FlightBookingProps = {
 	destinationCity: any;
 	amount: any;
 	flightTime: any;
+	returnOriginCity?: any;
+	returnDestinationCity?: any;
+	returnFlightTime?: any;
 };
 
 const FlightBooking = ({
@@ -51,6 +54,9 @@ const FlightBooking = ({
 	destinationCity,
 	amount,
 	flightTime,
+	returnOriginCity,
+	returnDestinationCity,
+	returnFlightTime,
 }: FlightBookingProps) => {
 	const { firstName, middleName, surname, email, phoneNumber } =
 		passengerInfo;
@@ -361,6 +367,28 @@ const FlightBooking = ({
 						value={convertMinutesToHoursAndMinutes(flightTime)}
 					/>
 					<input type="hidden" name="dateOfBirth" value={dob} />
+					<input
+						type="hidden"
+						name="returnAirline"
+						value={airlineName}
+					/>
+					<input
+						type="hidden"
+						name="returnOrigin"
+						value={returnOriginCity}
+					/>
+					<input
+						type="hidden"
+						name="returnDestination"
+						value={returnDestinationCity}
+					/>
+					<input
+						type="hidden"
+						name="returnFlightTime"
+						value={convertMinutesToHoursAndMinutes(
+							returnFlightTime
+						)}
+					/>
 				</div>
 			</div>
 			<div className="flex flex-col text-gray-500">

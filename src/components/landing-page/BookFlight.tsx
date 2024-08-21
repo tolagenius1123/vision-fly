@@ -44,6 +44,8 @@ const BookFlight = () => {
 	const [isEmailSending, setIsEmailSending] = useState(false);
 	const [flightsData, setFlightsData] = useState<any>();
 	const [selectedFlightId, setSelectedFlightId] = useState(null);
+	const [selectedRoundTripFlightId, setSelectedRoundTripFlightId] =
+		useState(null);
 	const [title, setTitle] = useState("");
 	const [nationality, setNationality] = useState("");
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -220,6 +222,22 @@ const BookFlight = () => {
 	};
 
 	// ROUND TRIP STATES AND DATA
+	const [roundTripTitle, setRoundTripTitle] = useState("");
+	const [isRoundTripEmailSending, setIsRoundTripEmailSending] =
+		useState(false);
+
+	const [twoWayPassengerInfo, setTwoWayPassengerInfo] =
+		useState<FlightBookingInfo>({
+			title: "",
+			surname: "",
+			firstName: "",
+			middleName: "",
+			dateOfBirth: "",
+			email: "",
+			phoneNumber: "",
+		});
+	const [roundTripNationality, setRoundTripNationality] = useState("");
+
 	const [searchFromRoundTripAirports, setSearchFromRoundTripAirports] =
 		useState("");
 	const [searchToRoundTripAirports, setSearchToRoundTripAirports] =
@@ -344,13 +362,68 @@ const BookFlight = () => {
 				}
 			);
 			const data = await response.json();
-			setIsLoadingReturn(false);
 			setFlightsReturnData(data?.data?.airPricedIternaryList);
+			setIsLoadingReturn(false);
 		} catch (error) {
 			console.log(error);
+			setIsLoadingReturn(false);
+		}
+	};
+
+	const sendRoundTripEmail = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		if (
+			!twoWayPassengerInfo.firstName ||
+			!twoWayPassengerInfo.surname ||
+			!twoWayPassengerInfo.email ||
+			!twoWayPassengerInfo.phoneNumber ||
+			!roundTripTitle ||
+			!roundTripNationality
+		) {
+			toast.error("All fields are required");
+			return;
 		}
 
-		setIsLoadingReturn(false);
+		setIsRoundTripEmailSending(true);
+
+		if (form.current) {
+			const formData = new FormData(form.current);
+			formData.forEach((value, key) => {
+				console.log(key, value);
+			});
+			emailjs
+				.sendForm(
+					"service_7orcrts",
+					"template_4hjop5w",
+					form.current,
+					"9uKWP4-VHkg3gLRx2"
+				)
+				.then(
+					() => {
+						setIsRoundTripEmailSending(false);
+						toast.success(
+							"Booking order has been registered successfully"
+						);
+						setIsDialogOpen(false);
+						setTimeout(() => {
+							router.push("/booking-success");
+						}, 2000);
+					},
+					(error: any) => {
+						setIsRoundTripEmailSending(false);
+						console.log("FAILED...", error.text);
+					}
+				);
+		}
+		setTimeout(() => {
+			setIsRoundTripEmailSending(false);
+		}, 3000);
+	};
+
+	const handleRoundTripChange = (e: ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.currentTarget;
+		setTwoWayPassengerInfo((prev) => ({ ...prev, [name]: value }));
 	};
 
 	return (
@@ -1032,16 +1105,16 @@ const BookFlight = () => {
 							</div>
 							<Button
 								btnContent={
-									isLoading
+									isLoadingReturn
 										? "Searching..."
 										: "Search for flights"
 								}
 								btnStyles={cn(
 									"w-full p-2 bg-customBlue hover:bg-[#205063] text-white rounded-lg mt-10",
-									isLoading && "opacity-20"
+									isLoadingReturn && "opacity-20"
 								)}
 								btnType="submit"
-								isDisabled={isLoading}
+								isDisabled={isLoadingReturn}
 							/>
 						</form>
 						{/* Search Two Way Trip Data */}
@@ -1144,7 +1217,7 @@ const BookFlight = () => {
 																</p>
 															</div>
 															<div className="">
-																<h2 className="font-semibold text-sm md:text-lg">
+																<h2 className="font-semibold text-sm">
 																	{convertMinutesToHoursAndMinutes(
 																		flightData
 																			.airOriginDestinationList[1]
@@ -1152,7 +1225,7 @@ const BookFlight = () => {
 																	)}
 																</h2>
 																<div className="w-10 md:w-20 h-[1px] bg-black"></div>
-																<h2 className="font-semibold text-[12px] md:text-lg">
+																<h2 className="font-semibold text-[12px] text-sm">
 																	{
 																		flightData
 																			.airOriginDestinationList[1]
@@ -1167,12 +1240,6 @@ const BookFlight = () => {
 																		flightData
 																			.airOriginDestinationList[1]
 																			?.lastArrivalTime
-																	}{" "}
-																	{
-																		flightData
-																			.airOriginDestinationList[1]
-																			?.routeSegmentList[1]
-																			?.arrivalAirportCode
 																	}
 																</p>
 																<p className="font-medium">
@@ -1193,10 +1260,17 @@ const BookFlight = () => {
 															</h2>
 															<Dialog
 																open={
-																	isDialogOpen
+																	selectedRoundTripFlightId ===
+																	flightData.id
 																}
-																onOpenChange={
-																	setIsDialogOpen
+																onOpenChange={(
+																	open
+																) =>
+																	setSelectedRoundTripFlightId(
+																		open
+																			? flightData.id
+																			: null
+																	)
 																}
 															>
 																<DialogTrigger
@@ -1204,36 +1278,101 @@ const BookFlight = () => {
 																>
 																	<button className="bg-customBlue text-white rounded-lg py-2 px-3 cursor-pointer hover:bg-[#205063] flex items-center justify-around">
 																		<div className="flex items-center gap-2">
-																			Inquire
+																			Reserve
 																			<ArrowRight className="animate-arrow" />
 																		</div>
 																	</button>
 																</DialogTrigger>
-																<DialogContent className="max-w-[425px] rounded-md">
+																<DialogContent className="h-[500px] w-[300px] md:w-[500px] rounded-md overflow-y-scroll">
 																	<DialogHeader>
 																		<DialogTitle>
-																			Let
-																			us
-																			have
-																			your
-																			details
+																			Traveller&apos;s
+																			Information
 																		</DialogTitle>
 																		<DialogDescription>
-																			We
-																			will
-																			get
-																			back
-																			to
-																			you
+																			Passengers
+																			details
+																			must
+																			be
+																			entered
+																			as
+																			it
+																			appears
 																			on
-																			your
-																			enquiry
-																			as
-																			soon
-																			as
-																			possible
+																			the
+																			passport
+																			or
+																			ID
 																		</DialogDescription>
 																	</DialogHeader>
+																	{selectedRoundTripFlightId ===
+																		flightData.id && (
+																		<FlightBooking
+																			form={
+																				form
+																			}
+																			handleChange={
+																				handleRoundTripChange
+																			}
+																			sendEmail={
+																				sendRoundTripEmail
+																			}
+																			title={
+																				roundTripTitle
+																			}
+																			setTitle={
+																				setRoundTripTitle
+																			}
+																			nationality={
+																				roundTripNationality
+																			}
+																			setNationality={
+																				setRoundTripNationality
+																			}
+																			passengerInfo={
+																				twoWayPassengerInfo
+																			}
+																			isLoading={
+																				isRoundTripEmailSending
+																			}
+																			airlineName={
+																				flightData.airlineName
+																			}
+																			originCity={
+																				flightData
+																					.airOriginDestinationList[0]
+																					?.originCity
+																			}
+																			destinationCity={
+																				flightData
+																					.airOriginDestinationList[0]
+																					?.destinationCity
+																			}
+																			amount={
+																				flightData.amountInKobo
+																			}
+																			flightTime={
+																				flightData
+																					.airOriginDestinationList[0]
+																					?.totalFlightTimeInMs
+																			}
+																			returnOriginCity={
+																				flightData
+																					.airOriginDestinationList[1]
+																					?.originCity
+																			}
+																			returnDestinationCity={
+																				flightData
+																					.airOriginDestinationList[1]
+																					?.destinationCity
+																			}
+																			returnFlightTime={
+																				flightData
+																					.airOriginDestinationList[1]
+																					?.totalFlightTimeInMs
+																			}
+																		/>
+																	)}
 																</DialogContent>
 															</Dialog>
 														</div>
