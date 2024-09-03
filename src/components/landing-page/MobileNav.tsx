@@ -39,24 +39,24 @@ export default function MobileNav() {
 							<Link
 								href="/#services"
 								className={`font-medium hover:text-lightGreen ${
-									pathName === "/"
+									pathName === "/empty-leg"
 										? "text-customBlue"
 										: "text-customBlack"
 								}`}
 							>
-								<SheetClose>About Us</SheetClose>
+								<SheetClose>Empty Leg</SheetClose>
 							</Link>
 							<Link
 								href="/"
 								className={`font-medium hover:text-lightGreen ${
-									pathName === "/"
+									pathName === "/private-charter"
 										? "text-customBlue"
 										: "text-customBlack"
 								}`}
 							>
 								<SheetClose>Private Charter</SheetClose>
 							</Link>
-							<Link
+							{/* <Link
 								href=""
 								className={`font-medium hover:text-lightGreen ${
 									pathName === "/"
@@ -65,8 +65,8 @@ export default function MobileNav() {
 								}`}
 							>
 								<SheetClose>Vacation Packages</SheetClose>
-							</Link>
-							<Link
+							</Link> */}
+							{/* <Link
 								href="/"
 								className={`font-medium hover:text-lightGreen ${
 									pathName === "/"
@@ -75,8 +75,8 @@ export default function MobileNav() {
 								}`}
 							>
 								<SheetClose>Aircraft Purchase</SheetClose>
-							</Link>
-							<Link
+							</Link> */}
+							{/* <Link
 								href="/"
 								className={`font-medium hover:text-lightGreen ${
 									pathName === "/"
@@ -85,13 +85,13 @@ export default function MobileNav() {
 								}`}
 							>
 								<SheetClose>Aircraft Management</SheetClose>
-							</Link>
+							</Link> */}
 						</div>
 						<Button
 							btnType="button"
 							btnStyles="bg-customBlue w-[150px] hover:bg-lightGreen py-2 rounded-3xl text-white cursor-pointer"
 							btnContent="Book Flight"
-							handleSubmit={() => router.push("/")}
+							handleSubmit={() => router.push("#bookflight")}
 						/>
 					</div>
 					{/* <div className="mt-5">

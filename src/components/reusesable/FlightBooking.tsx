@@ -17,7 +17,7 @@ import {
 	generateYearOptions,
 } from "@/lib/utils";
 import Image from "next/image";
-import { Fcmb } from "@/assets/images";
+import { Fcmb, Wema } from "@/assets/images";
 
 type FlightBookingProps = {
 	form: RefObject<HTMLFormElement>;
@@ -75,7 +75,7 @@ const FlightBooking = ({
 		setDateOfBirth((prev) => ({ ...prev, [name]: value }));
 	};
 
-	const accountNumber = "2086216595";
+	const accountNumber = "0125712943";
 
 	// console.log(passengerInfo);
 
@@ -399,10 +399,14 @@ const FlightBooking = ({
 			</div>
 			<div className="mt-2 border rounded-xl shadow-md px-5 py-5 flex flex-col gap-3">
 				<div className="">
-					<Image src={Fcmb} alt="bank-logo" />
+					<Image
+						src={Wema}
+						alt="bank-logo"
+						className="h-18 w-20 rounded-md"
+					/>
 				</div>
 				<div className="text-sm">
-					<h2 className="font-semibold">First City Monument Bank</h2>
+					<h2 className="font-semibold">Wema Bank</h2>
 					<p>
 						<span className="font-semibold">Account Name:</span>
 					</p>
@@ -412,7 +416,7 @@ const FlightBooking = ({
 					<div className="flex items-center justify-between">
 						<div className="">
 							<p className="font-semibold">Account Number:</p>
-							<p>2086216595</p>
+							<p>{accountNumber}</p>
 						</div>
 						<button type="button" onClick={handleCopy}>
 							<Copy className="h-4 w-4 text-gray-500" />

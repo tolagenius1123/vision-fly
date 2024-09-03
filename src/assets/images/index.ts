@@ -5,6 +5,7 @@ import EmptyLegPic from "./empty-leg.jpg";
 import EmptyLegPic2 from "./empty-leg2.jpg";
 import Fcmb from "./fcmb.png";
 import AircraftPurchase from "./aircraft-purchase.jpg";
+import Wema from "./wema.png";
 
 export {
 	PrivateJet,
@@ -14,4 +15,5 @@ export {
 	Fcmb,
 	EmptyLegPic2,
 	AircraftPurchase,
+	Wema,
 };

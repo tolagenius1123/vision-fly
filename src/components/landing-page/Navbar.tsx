@@ -24,7 +24,7 @@ const Navbar = ({}: NavbarProps) => {
 				/>
 			</Link>
 			<div className="hidden md:flex items-center gap-14">
-				<div className="flex items-center gap-8">
+				<div className="flex items-center gap-10">
 					<Link
 						href="/empty-leg"
 						className={`custom-link font-medium text-customBlue text-sm ${
@@ -55,7 +55,7 @@ const Navbar = ({}: NavbarProps) => {
 					>
 						Vacation Packages
 					</Link> */}
-					<Link
+					{/* <Link
 						href="/aircraft-purchase"
 						className={`custom-link font-medium text-customBlue text-sm hover:text- ${
 							pathName === "/aircraft-purchase"
@@ -74,7 +74,7 @@ const Navbar = ({}: NavbarProps) => {
 						}`}
 					>
 						Aircraft Manangement
-					</Link>
+					</Link> */}
 				</div>
 				<Button
 					btnStyles="bg-customBlue hover:bg-[#205063] px-4 py-2 rounded-3xl text-white cursor-pointer"
