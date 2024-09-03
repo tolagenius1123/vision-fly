@@ -37,7 +37,7 @@ export default function MobileNav() {
 								<SheetClose>Home</SheetClose>
 							</Link>
 							<Link
-								href="/#services"
+								href="/empty-leg"
 								className={`font-medium hover:text-lightGreen ${
 									pathName === "/empty-leg"
 										? "text-customBlue"
@@ -47,7 +47,7 @@ export default function MobileNav() {
 								<SheetClose>Empty Leg</SheetClose>
 							</Link>
 							<Link
-								href="/"
+								href="/private-charter"
 								className={`font-medium hover:text-lightGreen ${
 									pathName === "/private-charter"
 										? "text-customBlue"
