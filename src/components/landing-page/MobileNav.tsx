@@ -91,7 +91,7 @@ export default function MobileNav() {
 							btnType="button"
 							btnStyles="bg-customBlue w-[150px] hover:bg-lightGreen py-2 rounded-3xl text-white cursor-pointer"
 							btnContent="Book Flight"
-							handleSubmit={() => router.push("#bookflight")}
+							handleSubmit={() => router.push("/#bookflight")}
 						/>
 					</div>
 					{/* <div className="mt-5">
