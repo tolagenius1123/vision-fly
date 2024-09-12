@@ -48,12 +48,12 @@ const BookingSuccess = () => {
 						the any of the banks below
 					</h1>
 					<div className="flex items-center justify-around">
-						<div className="w-full md:w-1/2 bg-white border rounded-xl shadow-md px-5 py-10 flex flex-col gap-2">
+						<div className="w-full md:w-1/2 bg-white border rounded-xl shadow-md px-6 py-8 flex flex-col gap-2">
 							<div className="">
 								<Image
 									src={Wema}
 									alt="bank-logo"
-									className="h-18 w-20"
+									className="h-18 w-20 rounded-md"
 								/>
 							</div>
 							<div className="text-left text-sm">

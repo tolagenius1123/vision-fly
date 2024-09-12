@@ -370,7 +370,7 @@ const FlightBooking = ({
 					<input
 						type="hidden"
 						name="returnAirline"
-						value={airlineName}
+						value={returnOriginCity ? airlineName : ""}
 					/>
 					<input
 						type="hidden"
@@ -385,9 +385,13 @@ const FlightBooking = ({
 					<input
 						type="hidden"
 						name="returnFlightTime"
-						value={convertMinutesToHoursAndMinutes(
-							returnFlightTime
-						)}
+						value={
+							returnDestinationCity
+								? convertMinutesToHoursAndMinutes(
+										returnFlightTime
+								  )
+								: ""
+						}
 					/>
 				</div>
 			</div>
