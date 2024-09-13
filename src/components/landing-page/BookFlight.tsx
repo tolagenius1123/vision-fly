@@ -142,25 +142,28 @@ const BookFlight = () => {
 			arrivalCity: destinationAirport?.city,
 		};
 
-		try {
-			const response = await fetch(
-				"https://api.travelbeta.com/v1/api/flight",
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						"X-Api-Key": "24c9mti53ykc31z1t5u5",
-					},
-					body: JSON.stringify(flightSearch),
-				}
-			);
-			const data = await response.json();
+		// try {
+		// 	const response = await fetch(
+		// 		"https://api.travelbeta.com/v1/api/flight",
+		// 		{
+		// 			method: "POST",
+		// 			headers: {
+		// 				"Content-Type": "application/json",
+		// 				"X-Api-Key": "24c9mti53ykc31z1t5u5",
+		// 			},
+		// 			body: JSON.stringify(flightSearch),
+		// 		}
+		// 	);
+		// 	const data = await response.json();
+		// 	setIsLoading(false);
+		// 	setFlightsData(data?.data?.airPricedIternaryList);
+		// } catch (error) {
+		// 	console.log(error);
+		// }
+
+		setTimeout(() => {
 			setIsLoading(false);
-			setFlightsData(data?.data?.airPricedIternaryList);
-		} catch (error) {
-			console.log(error);
-		}
-		setIsLoading(false);
+		}, 3000);
 	};
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -349,25 +352,29 @@ const BookFlight = () => {
 			arrivalCity: destinationAirportRoundTrip?.city,
 		};
 
-		try {
-			const response = await fetch(
-				"https://api.travelbeta.com/v1/api/flight",
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						"X-Api-Key": "24c9mti53ykc31z1t5u5",
-					},
-					body: JSON.stringify(flightRoundSearch),
-				}
-			);
-			const data = await response.json();
-			setFlightsReturnData(data?.data?.airPricedIternaryList);
+		// try {
+		// 	const response = await fetch(
+		// 		"https://api.travelbeta.com/v1/api/flight",
+		// 		{
+		// 			method: "POST",
+		// 			headers: {
+		// 				"Content-Type": "application/json",
+		// 				"X-Api-Key": "24c9mti53ykc31z1t5u5",
+		// 			},
+		// 			body: JSON.stringify(flightRoundSearch),
+		// 		}
+		// 	);
+		// 	const data = await response.json();
+		// 	setFlightsReturnData(data?.data?.airPricedIternaryList);
+		// 	setIsLoadingReturn(false);
+		// } catch (error) {
+		// 	console.log(error);
+		// 	setIsLoadingReturn(false);
+		// }
+
+		setTimeout(() => {
 			setIsLoadingReturn(false);
-		} catch (error) {
-			console.log(error);
-			setIsLoadingReturn(false);
-		}
+		}, 3000);
 	};
 
 	const sendRoundTripEmail = (e: FormEvent<HTMLFormElement>) => {
@@ -598,185 +605,13 @@ const BookFlight = () => {
 								/>
 							) : (
 								<>
-									{flightsData === null ? (
+									{!flightsData ? (
 										<div className="mt-4 w-[300px] md:w-[500px] rounded-xl text-customBlue bg-slate-200 shadow-md py-4 px-6">
 											<h1 className="font-semibold text-lg">
 												No Available Flights
 											</h1>{" "}
 										</div>
 									) : (
-										// flightsData?.map((flightData: any) => (
-										// 	<div key={flightData.id}>
-										// 		<div className="mt-4 w-[300px] md:w-[500px] rounded-xl text-customBlue bg-slate-200 shadow-md py-4 px-6">
-										// 			<h1 className="font-semibold text-lg">
-										// 				{flightData.airlineName}
-										// 			</h1>
-										// 			<div className="flex items-center gap-3 justify-around mt-2">
-										// 				<div className="text-[12px] md:text-sm">
-										// 					<p className="font-medium">
-										// 						{
-										// 							flightData
-										// 								.airOriginDestinationList[0]
-										// 								?.firstDepartureTime
-										// 						}{" "}
-										// 					</p>
-										// 					<p className="font-medium">
-										// 						{
-										// 							flightData
-										// 								.airOriginDestinationList[0]
-										// 								?.originCity
-										// 						}
-										// 					</p>
-										// 				</div>
-										// 				<div className="">
-										// 					<h2 className="font-semibold text-sm">
-										// 						{convertMinutesToHoursAndMinutes(
-										// 							flightData
-										// 								.airOriginDestinationList[0]
-										// 								?.totalFlightTimeInMs
-										// 						)}
-										// 					</h2>
-										// 					<div className="w-full h-[1px] bg-black"></div>
-										// 					<h2 className="font-semibold text-sm">
-										// 						{
-										// 							flightData.minimumNumberOfStops
-										// 						}{" "}
-										// 						Stop
-										// 					</h2>
-										// 				</div>
-										// 				<div className="text-[12px] md:text-sm">
-										// 					<p className="font-medium">
-										// 						{
-										// 							flightData
-										// 								.airOriginDestinationList[0]
-										// 								?.lastArrivalTime
-										// 						}{" "}
-										// 						{
-										// 							flightData
-										// 								.airOriginDestinationList[0]
-										// 								?.routeSegmentList[1]
-										// 								?.arrivalAirportCode
-										// 						}
-										// 					</p>
-										// 					<p className="font-medium">
-										// 						{
-										// 							flightData
-										// 								.airOriginDestinationList[0]
-										// 								?.destinationCity
-										// 						}
-										// 					</p>
-										// 				</div>
-										// 			</div>
-										// 			<div className="mt-2 flex flex-col gap-2">
-										// 				<h2 className="font-semibold">
-										// 					Price:{" "}
-										// 					{formatKoboToNaira(
-										// 						flightData.amountInKobo
-										// 					)}
-										// 				</h2>
-										// 				<Dialog
-										// 					open={isDialogOpen}
-										// 					onOpenChange={
-										// 						setIsDialogOpen
-										// 					}
-										// 				>
-										// 					<DialogTrigger
-										// 						asChild
-										// 					>
-										// 						<button className="bg-customBlue text-white rounded-lg py-2 px-3 cursor-pointer hover:bg-[#205063] flex items-center justify-around">
-										// 							<div className="flex items-center gap-2">
-										// 								Reserve
-										// 								<ArrowRight className="animate-arrow" />
-										// 							</div>
-										// 						</button>
-										// 					</DialogTrigger>
-										// 					<DialogContent
-										// 						key={
-										// 							flightData.id
-										// 						}
-										// 						className="h-[500px] max-w-[425px] rounded-md overflow-y-scroll"
-										// 					>
-										// 						<DialogHeader>
-										// 							<DialogTitle>
-										// 								Traveller's
-										// 								Information
-										// 							</DialogTitle>
-										// 							<DialogDescription>
-										// 								Passengers
-										// 								details
-										// 								must be
-										// 								entered
-										// 								as it
-										// 								appears
-										// 								on the
-										// 								passport
-										// 								or ID
-										// 							</DialogDescription>
-										// 						</DialogHeader>
-										// 						<FlightBooking
-										// 							form={form}
-										// 							handleChange={
-										// 								handleChange
-										// 							}
-										// 							sendEmail={
-										// 								sendEmail
-										// 							}
-										// 							title={
-										// 								title
-										// 							}
-										// 							setTitle={
-										// 								setTitle
-										// 							}
-										// 							nationality={
-										// 								nationality
-										// 							}
-										// 							setNationality={
-										// 								setNationality
-										// 							}
-										// 							dob={
-										// 								dateOfBirth
-										// 							}
-										// 							setDob={
-										// 								setDateOfBirth
-										// 							}
-										// 							passengerInfo={
-										// 								oneWayPassengerInfo
-										// 							}
-										// 							isLoading={
-										// 								isEmailSending
-										// 							}
-										// 							airlineName={
-										// 								flightData.airlineName
-										// 							}
-										// 							originCity={
-										// 								flightData
-										// 									.airOriginDestinationList[0]
-										// 									?.originCity
-										// 							}
-										// 							destinationCity={
-										// 								flightData
-										// 									.airOriginDestinationList[0]
-										// 									?.destinationCity
-										// 							}
-										// 							amount={
-										// 								flightData.amountInKobo
-										// 							}
-										// 							flightTime={
-										// 								flightData
-										// 									.airOriginDestinationList[0]
-										// 									?.totalFlightTimeInMs
-										// 							}
-										// 							step={step}
-										// 							setStep={
-										// 								setStep
-										// 							}
-										// 						/>
-										// 					</DialogContent>
-										// 				</Dialog>
-										// 			</div>
-										// 		</div>
-										// 	</div>
-										// ))
 										flightsData?.map((flightData: any) => (
 											<div key={flightData.id}>
 												<div className="mt-4 w-[300px] md:w-[500px] rounded-xl text-customBlue bg-slate-200 shadow-md py-4 px-6">
@@ -1127,7 +962,7 @@ const BookFlight = () => {
 								/>
 							) : (
 								<>
-									{flightsReturnData === null ? (
+									{!flightsReturnData ? (
 										<div className="mt-4 w-[300px] md:w-[500px] rounded-xl text-customBlue bg-slate-200 shadow-md py-4 px-6">
 											<h1 className="font-semibold text-lg">
 												No Available Flights
