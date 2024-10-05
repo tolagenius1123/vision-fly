@@ -142,24 +142,24 @@ const BookFlight = () => {
 			arrivalCity: destinationAirport?.city,
 		};
 
-		// try {
-		// 	const response = await fetch(
-		// 		"https://api.travelbeta.com/v1/api/flight",
-		// 		{
-		// 			method: "POST",
-		// 			headers: {
-		// 				"Content-Type": "application/json",
-		// 				"X-Api-Key": "24c9mti53ykc31z1t5u5",
-		// 			},
-		// 			body: JSON.stringify(flightSearch),
-		// 		}
-		// 	);
-		// 	const data = await response.json();
-		// 	setIsLoading(false);
-		// 	setFlightsData(data?.data?.airPricedIternaryList);
-		// } catch (error) {
-		// 	console.log(error);
-		// }
+		try {
+			const response = await fetch(
+				"https://api.travelbeta.com/v1/api/flight",
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						"X-Api-Key": "24c9mti53ykc31z1t5u5",
+					},
+					body: JSON.stringify(flightSearch),
+				}
+			);
+			const data = await response.json();
+			setIsLoading(false);
+			setFlightsData(data?.data?.airPricedIternaryList);
+		} catch (error) {
+			console.log(error);
+		}
 
 		setTimeout(() => {
 			setIsLoading(false);
@@ -352,25 +352,25 @@ const BookFlight = () => {
 			arrivalCity: destinationAirportRoundTrip?.city,
 		};
 
-		// try {
-		// 	const response = await fetch(
-		// 		"https://api.travelbeta.com/v1/api/flight",
-		// 		{
-		// 			method: "POST",
-		// 			headers: {
-		// 				"Content-Type": "application/json",
-		// 				"X-Api-Key": "24c9mti53ykc31z1t5u5",
-		// 			},
-		// 			body: JSON.stringify(flightRoundSearch),
-		// 		}
-		// 	);
-		// 	const data = await response.json();
-		// 	setFlightsReturnData(data?.data?.airPricedIternaryList);
-		// 	setIsLoadingReturn(false);
-		// } catch (error) {
-		// 	console.log(error);
-		// 	setIsLoadingReturn(false);
-		// }
+		try {
+			const response = await fetch(
+				"https://api.travelbeta.com/v1/api/flight",
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						"X-Api-Key": "24c9mti53ykc31z1t5u5",
+					},
+					body: JSON.stringify(flightRoundSearch),
+				}
+			);
+			const data = await response.json();
+			setFlightsReturnData(data?.data?.airPricedIternaryList);
+			setIsLoadingReturn(false);
+		} catch (error) {
+			console.log(error);
+			setIsLoadingReturn(false);
+		}
 
 		setTimeout(() => {
 			setIsLoadingReturn(false);
