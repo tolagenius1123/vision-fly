@@ -49,6 +49,7 @@ const BookFlight = () => {
 	const [title, setTitle] = useState("");
 	const [nationality, setNationality] = useState("");
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const [hasSearched, setHasSearched] = useState(false);
 
 	const form = useRef<HTMLFormElement>(null);
 	const [oneWayPassengerInfo, setOneWayPassengerInfo] =
@@ -109,6 +110,7 @@ const BookFlight = () => {
 	};
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+		setHasSearched(true);
 		e.preventDefault();
 
 		if (!searchFromText || !searchToText) {
@@ -142,24 +144,24 @@ const BookFlight = () => {
 			arrivalCity: destinationAirport?.city,
 		};
 
-		try {
-			const response = await fetch(
-				"https://api.travelbeta.com/v1/api/flight",
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						"X-Api-Key": "24c9mti53ykc31z1t5u5",
-					},
-					body: JSON.stringify(flightSearch),
-				}
-			);
-			const data = await response.json();
-			setIsLoading(false);
-			setFlightsData(data?.data?.airPricedIternaryList);
-		} catch (error) {
-			console.log(error);
-		}
+		// try {
+		// 	const response = await fetch(
+		// 		"https://api.travelbeta.com/v1/api/flight",
+		// 		{
+		// 			method: "POST",
+		// 			headers: {
+		// 				"Content-Type": "application/json",
+		// 				"X-Api-Key": "24c9mti53ykc31z1t5u5",
+		// 			},
+		// 			body: JSON.stringify(flightSearch),
+		// 		}
+		// 	);
+		// 	const data = await response.json();
+		// 	setIsLoading(false);
+		// 	setFlightsData(data?.data?.airPricedIternaryList);
+		// } catch (error) {
+		// 	console.log(error);
+		// }
 
 		setTimeout(() => {
 			setIsLoading(false);
@@ -445,6 +447,7 @@ const BookFlight = () => {
 				<h1 className="text-customBlue text-2xl md:text-4xl font-bold mt-2">
 					Search & Book Flights
 				</h1>
+				{/* TABS */}
 				<div className="mt-3">
 					<div className="w-[300px] md:w-[500px] flex items-center gap-2 p-2 rounded-lg shadow-sm bg-slate-200">
 						<div
@@ -605,13 +608,16 @@ const BookFlight = () => {
 								/>
 							) : (
 								<>
-									{!flightsData ? (
-										<div className="mt-4 w-[300px] md:w-[500px] rounded-xl text-customBlue bg-slate-200 shadow-md py-4 px-6">
-											<h1 className="font-semibold text-lg">
-												No Available Flights
-											</h1>{" "}
-										</div>
-									) : (
+									{!flightsData ||
+										(hasSearched && (
+											<div className="mt-4 w-[300px] md:w-[500px] rounded-xl text-customBlue bg-slate-200 shadow-md py-4 px-6">
+												<h1 className="font-semibold text-lg">
+													No Available Flights
+												</h1>
+											</div>
+										))}
+
+									{flightsData &&
 										flightsData?.map((flightData: any) => (
 											<div key={flightData.id}>
 												<div className="mt-4 w-[300px] md:w-[500px] rounded-xl text-customBlue bg-slate-200 shadow-md py-4 px-6">
@@ -783,439 +789,7 @@ const BookFlight = () => {
 													</div>
 												</div>
 											</div>
-										))
-									)}
-								</>
-							)}
-						</div>
-					</>
-				)}
-				{tab === 2 && (
-					<>
-						<form
-							onSubmit={handleSubmitRoundTrip}
-							className="h-auto bg-slate-200 w-[300px] md:w-[500px] rounded-xl shadow-lg py-8 px-6 relative"
-						>
-							<div className="flex flex-col gap-2 ">
-								<label className="text-left font-bold text-customBlue">
-									FLYING FROM
-								</label>
-								<input
-									value={searchFromRoundTripAirports}
-									onChange={(e) =>
-										setSearchFromRoundTripAirports(
-											e.target.value
-										)
-									}
-									name="currentAirport"
-									type="text"
-									placeholder="Enter a City or Airport..."
-									className="text-sm rounded-lg h-[35px] md:h-[40px] border border-customBlue px-2 placeholder:text-sm focus:border-2 focus:border-customBlue focus:outline-none"
-									autoComplete="off"
-								/>
-								{airportsFromRoundTrip.length > 1 && (
-									<div className="absolute z-10 top-[110px] w-[80%] max-h-[300px] p-2 flex flex-col gap-2 overflow-y-scroll bg-white rounded-lg">
-										{airportsFromRoundTrip?.map(
-											(airportFrom: Airport) => (
-												<div
-													key={airportFrom._id}
-													className="bg-slate-200 text-sm text-customBlue p-2 rounded-lg cursor-pointer hover:bg-slate-300"
-													onClick={() => {
-														setOriginAirportRoundTrip(
-															airportFrom
-														);
-														setSearchFromRoundTripAirports(
-															airportFrom.title
-														);
-													}}
-												>
-													{airportFrom.title}
-												</div>
-											)
-										)}
-									</div>
-								)}
-							</div>
-							<div className="flex flex-col gap-2 mt-5">
-								<label className="text-left font-bold text-customBlue">
-									FLYING TO
-								</label>
-								<input
-									value={searchToRoundTripAirports}
-									onChange={(e) =>
-										setSearchToRoundTripAirports(
-											e.target.value
-										)
-									}
-									name="currentAirport"
-									type="text"
-									placeholder="Enter a City or Airport..."
-									className="text-sm rounded-lg h-[35px] md:h-[40px] border border-customBlue px-2 placeholder:text-sm focus:border-2 focus:border-customBlue focus:outline-none"
-									autoComplete="off"
-								/>
-								{airportsToRoundTrip.length > 0 && (
-									<div className="absolute z-10 top-[195px] w-[80%] max-h-[300px] p-2 flex flex-col gap-2 overflow-y-scroll bg-white rounded-lg">
-										{airportsToRoundTrip?.map(
-											(airportTo) => (
-												<div
-													key={airportTo._id}
-													className="bg-slate-200 text-sm text-customBlue p-2 rounded-lg cursor-pointer hover:bg-slate-300"
-													onClick={() => {
-														setDestinationAirportRoundTrip(
-															airportTo
-														);
-														setSearchToRoundTripAirports(
-															airportTo.title
-														);
-													}}
-												>
-													{airportTo.title}
-												</div>
-											)
-										)}
-									</div>
-								)}
-							</div>
-							<div className="mt-5 flex flex-col gap-2">
-								<label className="text-left font-bold text-customBlue">
-									DATE
-								</label>
-								<Popover>
-									<PopoverTrigger asChild>
-										<div
-											className={cn(
-												"w-full bg-white text-customBlue cursor-pointer flex items-center gap-2 p-2 justify-start text-left font-normal border border-customBlue rounded-lg",
-												!startDate &&
-													"text-muted-foreground"
-											)}
-										>
-											<CalendarIcon className="mr-2 h-4 w-4" />
-											{startDate ? (
-												format(startDate, "PPP")
-											) : (
-												<span>Pick a date</span>
-											)}
-										</div>
-									</PopoverTrigger>
-									<PopoverContent className="w-auto p-0">
-										<Calendar
-											mode="single"
-											selected={startDate}
-											onSelect={handleStartDateSelect}
-											initialFocus
-										/>
-									</PopoverContent>
-								</Popover>
-							</div>
-							<div className="mt-5 flex flex-col gap-2">
-								<label className="text-left font-bold text-customBlue">
-									RETURN DATE
-								</label>
-								<Popover>
-									<PopoverTrigger asChild>
-										<div
-											className={cn(
-												"w-full bg-white text-customBlue cursor-pointer flex items-center gap-2 p-2 justify-start text-left font-normal border border-customBlue rounded-lg",
-												!returnDate &&
-													"text-muted-foreground"
-											)}
-										>
-											<CalendarIcon className="mr-2 h-4 w-4" />
-											{returnDate ? (
-												format(returnDate, "PPP")
-											) : (
-												<span>Pick a date</span>
-											)}
-										</div>
-									</PopoverTrigger>
-									<PopoverContent className="w-auto p-0">
-										<Calendar
-											mode="single"
-											selected={returnDate}
-											onSelect={handleReturnDateSelect}
-											initialFocus
-										/>
-									</PopoverContent>
-								</Popover>
-							</div>
-							<Button
-								btnContent={
-									isLoadingReturn
-										? "Searching..."
-										: "Search for flights"
-								}
-								btnStyles={cn(
-									"w-full p-2 bg-customBlue hover:bg-[#205063] text-white rounded-lg mt-10",
-									isLoadingReturn && "opacity-20"
-								)}
-								btnType="submit"
-								isDisabled={isLoadingReturn}
-							/>
-						</form>
-						{/* Search Two Way Trip Data */}
-						<div className="mt-5">
-							{isLoadingReturn ? (
-								<TailSpin
-									color="#065777"
-									height="50px"
-									width="50px"
-								/>
-							) : (
-								<>
-									{!flightsReturnData ? (
-										<div className="mt-4 w-[300px] md:w-[500px] rounded-xl text-customBlue bg-slate-200 shadow-md py-4 px-6">
-											<h1 className="font-semibold text-lg">
-												No Available Flights
-											</h1>
-										</div>
-									) : (
-										flightsReturnData?.map(
-											(flightData: any) => (
-												<div key={flightData.id}>
-													<div className="mt-4 w-[300px] md:w-[500px] rounded-xl text-customBlue bg-slate-200 shadow-md py-4 px-6">
-														<h1 className="font-semibold text-lg">
-															{
-																flightData.airlineName
-															}
-														</h1>
-														<div className="flex items-center gap-3 justify-around mt-2">
-															<div className="text-[12px] md:text-sm">
-																<p className="font-medium">
-																	{
-																		flightData
-																			.airOriginDestinationList[0]
-																			?.firstDepartureTime
-																	}{" "}
-																</p>
-																<p className="font-medium">
-																	{
-																		flightData
-																			.airOriginDestinationList[0]
-																			?.originCity
-																	}
-																</p>
-															</div>
-															<div className="">
-																<h2 className="font-semibold text-sm">
-																	{convertMinutesToHoursAndMinutes(
-																		flightData
-																			.airOriginDestinationList[0]
-																			?.totalFlightTimeInMs
-																	)}
-																</h2>
-																<div className="w-full h-[1px] bg-black"></div>
-																<h2 className="font-semibold text-sm">
-																	{
-																		flightData.minimumNumberOfStops
-																	}{" "}
-																	Stop
-																</h2>
-															</div>
-															<div className="text-[12px] md:text-sm">
-																<p className="font-medium">
-																	{
-																		flightData
-																			.airOriginDestinationList[0]
-																			?.lastArrivalTime
-																	}{" "}
-																	{
-																		flightData
-																			.airOriginDestinationList[0]
-																			?.routeSegmentList[1]
-																			?.arrivalAirportCode
-																	}
-																</p>
-																<p className="font-medium">
-																	{
-																		flightData
-																			.airOriginDestinationList[0]
-																			?.destinationCity
-																	}
-																</p>
-															</div>
-														</div>
-														<div className="flex items-center gap-3 justify-around mt-2">
-															<div className="text-[12px] md:text-sm">
-																<p className="font-medium">
-																	{
-																		flightData
-																			.airOriginDestinationList[1]
-																			?.firstDepartureTime
-																	}{" "}
-																</p>
-																<p className="font-medium">
-																	{
-																		flightData
-																			.airOriginDestinationList[1]
-																			?.originCity
-																	}
-																</p>
-															</div>
-															<div className="">
-																<h2 className="font-semibold text-sm">
-																	{convertMinutesToHoursAndMinutes(
-																		flightData
-																			.airOriginDestinationList[1]
-																			?.totalFlightTimeInMs
-																	)}
-																</h2>
-																<div className="w-10 md:w-20 h-[1px] bg-black"></div>
-																<h2 className="font-semibold text-[12px] text-sm">
-																	{
-																		flightData
-																			.airOriginDestinationList[1]
-																			?.totalStop
-																	}{" "}
-																	Stop
-																</h2>
-															</div>
-															<div className="text-[12px] md:text-sm">
-																<p className="font-medium">
-																	{
-																		flightData
-																			.airOriginDestinationList[1]
-																			?.lastArrivalTime
-																	}
-																</p>
-																<p className="font-medium">
-																	{
-																		flightData
-																			.airOriginDestinationList[1]
-																			?.destinationCity
-																	}
-																</p>
-															</div>
-														</div>
-														<div className="mt-2 flex flex-col gap-2">
-															<h2 className="font-semibold">
-																Price:
-																{formatKoboToNaira(
-																	flightData.amountInKobo
-																)}
-															</h2>
-															<Dialog
-																open={
-																	selectedRoundTripFlightId ===
-																	flightData.id
-																}
-																onOpenChange={(
-																	open
-																) =>
-																	setSelectedRoundTripFlightId(
-																		open
-																			? flightData.id
-																			: null
-																	)
-																}
-															>
-																<DialogTrigger
-																	asChild
-																>
-																	<button className="bg-customBlue text-white rounded-lg py-2 px-3 cursor-pointer hover:bg-[#205063] flex items-center justify-around">
-																		<div className="flex items-center gap-2">
-																			Reserve
-																			<ArrowRight className="animate-arrow" />
-																		</div>
-																	</button>
-																</DialogTrigger>
-																<DialogContent className="h-[500px] w-[300px] md:w-[500px] rounded-md overflow-y-scroll">
-																	<DialogHeader>
-																		<DialogTitle>
-																			Traveller&apos;s
-																			Information
-																		</DialogTitle>
-																		<DialogDescription>
-																			Passengers
-																			details
-																			must
-																			be
-																			entered
-																			as
-																			it
-																			appears
-																			on
-																			the
-																			passport
-																			or
-																			ID
-																		</DialogDescription>
-																	</DialogHeader>
-																	{selectedRoundTripFlightId ===
-																		flightData.id && (
-																		<FlightBooking
-																			form={
-																				form
-																			}
-																			handleChange={
-																				handleRoundTripChange
-																			}
-																			sendEmail={
-																				sendRoundTripEmail
-																			}
-																			title={
-																				roundTripTitle
-																			}
-																			setTitle={
-																				setRoundTripTitle
-																			}
-																			nationality={
-																				roundTripNationality
-																			}
-																			setNationality={
-																				setRoundTripNationality
-																			}
-																			passengerInfo={
-																				twoWayPassengerInfo
-																			}
-																			isLoading={
-																				isRoundTripEmailSending
-																			}
-																			airlineName={
-																				flightData.airlineName
-																			}
-																			originCity={
-																				flightData
-																					.airOriginDestinationList[0]
-																					?.originCity
-																			}
-																			destinationCity={
-																				flightData
-																					.airOriginDestinationList[0]
-																					?.destinationCity
-																			}
-																			amount={
-																				flightData.amountInKobo
-																			}
-																			flightTime={
-																				flightData
-																					.airOriginDestinationList[0]
-																					?.totalFlightTimeInMs
-																			}
-																			returnOriginCity={
-																				flightData
-																					.airOriginDestinationList[1]
-																					?.originCity
-																			}
-																			returnDestinationCity={
-																				flightData
-																					.airOriginDestinationList[1]
-																					?.destinationCity
-																			}
-																			returnFlightTime={
-																				flightData
-																					.airOriginDestinationList[1]
-																					?.totalFlightTimeInMs
-																			}
-																		/>
-																	)}
-																</DialogContent>
-															</Dialog>
-														</div>
-													</div>
-												</div>
-											)
-										)
-									)}
+										))}
 								</>
 							)}
 						</div>
@@ -1227,3 +801,439 @@ const BookFlight = () => {
 };
 
 export default BookFlight;
+
+// {
+// 	tab === 2 && (
+// 		<>
+// 			<form
+// 				onSubmit={handleSubmitRoundTrip}
+// 				className="h-auto bg-slate-200 w-[300px] md:w-[500px] rounded-xl shadow-lg py-8 px-6 relative"
+// 			>
+// 				<div className="flex flex-col gap-2 ">
+// 					<label className="text-left font-bold text-customBlue">
+// 						FLYING FROM
+// 					</label>
+// 					<input
+// 						value={searchFromRoundTripAirports}
+// 						onChange={(e) =>
+// 							setSearchFromRoundTripAirports(
+// 								e.target.value
+// 							)
+// 						}
+// 						name="currentAirport"
+// 						type="text"
+// 						placeholder="Enter a City or Airport..."
+// 						className="text-sm rounded-lg h-[35px] md:h-[40px] border border-customBlue px-2 placeholder:text-sm focus:border-2 focus:border-customBlue focus:outline-none"
+// 						autoComplete="off"
+// 					/>
+// 					{airportsFromRoundTrip.length > 1 && (
+// 						<div className="absolute z-10 top-[110px] w-[80%] max-h-[300px] p-2 flex flex-col gap-2 overflow-y-scroll bg-white rounded-lg">
+// 							{airportsFromRoundTrip?.map(
+// 								(airportFrom: Airport) => (
+// 									<div
+// 										key={airportFrom._id}
+// 										className="bg-slate-200 text-sm text-customBlue p-2 rounded-lg cursor-pointer hover:bg-slate-300"
+// 										onClick={() => {
+// 											setOriginAirportRoundTrip(
+// 												airportFrom
+// 											);
+// 											setSearchFromRoundTripAirports(
+// 												airportFrom.title
+// 											);
+// 										}}
+// 									>
+// 										{airportFrom.title}
+// 									</div>
+// 								)
+// 							)}
+// 						</div>
+// 					)}
+// 				</div>
+// 				<div className="flex flex-col gap-2 mt-5">
+// 					<label className="text-left font-bold text-customBlue">
+// 						FLYING TO
+// 					</label>
+// 					<input
+// 						value={searchToRoundTripAirports}
+// 						onChange={(e) =>
+// 							setSearchToRoundTripAirports(
+// 								e.target.value
+// 							)
+// 						}
+// 						name="currentAirport"
+// 						type="text"
+// 						placeholder="Enter a City or Airport..."
+// 						className="text-sm rounded-lg h-[35px] md:h-[40px] border border-customBlue px-2 placeholder:text-sm focus:border-2 focus:border-customBlue focus:outline-none"
+// 						autoComplete="off"
+// 					/>
+// 					{airportsToRoundTrip.length > 0 && (
+// 						<div className="absolute z-10 top-[195px] w-[80%] max-h-[300px] p-2 flex flex-col gap-2 overflow-y-scroll bg-white rounded-lg">
+// 							{airportsToRoundTrip?.map(
+// 								(airportTo) => (
+// 									<div
+// 										key={airportTo._id}
+// 										className="bg-slate-200 text-sm text-customBlue p-2 rounded-lg cursor-pointer hover:bg-slate-300"
+// 										onClick={() => {
+// 											setDestinationAirportRoundTrip(
+// 												airportTo
+// 											);
+// 											setSearchToRoundTripAirports(
+// 												airportTo.title
+// 											);
+// 										}}
+// 									>
+// 										{airportTo.title}
+// 									</div>
+// 								)
+// 							)}
+// 						</div>
+// 					)}
+// 				</div>
+// 				<div className="mt-5 flex flex-col gap-2">
+// 					<label className="text-left font-bold text-customBlue">
+// 						DATE
+// 					</label>
+// 					<Popover>
+// 						<PopoverTrigger asChild>
+// 							<div
+// 								className={cn(
+// 									"w-full bg-white text-customBlue cursor-pointer flex items-center gap-2 p-2 justify-start text-left font-normal border border-customBlue rounded-lg",
+// 									!startDate &&
+// 										"text-muted-foreground"
+// 								)}
+// 							>
+// 								<CalendarIcon className="mr-2 h-4 w-4" />
+// 								{startDate ? (
+// 									format(startDate, "PPP")
+// 								) : (
+// 									<span>Pick a date</span>
+// 								)}
+// 							</div>
+// 						</PopoverTrigger>
+// 						<PopoverContent className="w-auto p-0">
+// 							<Calendar
+// 								mode="single"
+// 								selected={startDate}
+// 								onSelect={handleStartDateSelect}
+// 								initialFocus
+// 							/>
+// 						</PopoverContent>
+// 					</Popover>
+// 				</div>
+// 				<div className="mt-5 flex flex-col gap-2">
+// 					<label className="text-left font-bold text-customBlue">
+// 						RETURN DATE
+// 					</label>
+// 					<Popover>
+// 						<PopoverTrigger asChild>
+// 							<div
+// 								className={cn(
+// 									"w-full bg-white text-customBlue cursor-pointer flex items-center gap-2 p-2 justify-start text-left font-normal border border-customBlue rounded-lg",
+// 									!returnDate &&
+// 										"text-muted-foreground"
+// 								)}
+// 							>
+// 								<CalendarIcon className="mr-2 h-4 w-4" />
+// 								{returnDate ? (
+// 									format(returnDate, "PPP")
+// 								) : (
+// 									<span>Pick a date</span>
+// 								)}
+// 							</div>
+// 						</PopoverTrigger>
+// 						<PopoverContent className="w-auto p-0">
+// 							<Calendar
+// 								mode="single"
+// 								selected={returnDate}
+// 								onSelect={
+// 									handleReturnDateSelect
+// 								}
+// 								initialFocus
+// 							/>
+// 						</PopoverContent>
+// 					</Popover>
+// 				</div>
+// 				<Button
+// 					btnContent={
+// 						isLoadingReturn
+// 							? "Searching..."
+// 							: "Search for flights"
+// 					}
+// 					btnStyles={cn(
+// 						"w-full p-2 bg-customBlue hover:bg-[#205063] text-white rounded-lg mt-10",
+// 						isLoadingReturn && "opacity-20"
+// 					)}
+// 					btnType="submit"
+// 					isDisabled={isLoadingReturn}
+// 				/>
+// 			</form>
+// 			{/* Search Two Way Trip Data */}
+// 			<div className="mt-5">
+// 				{isLoadingReturn ? (
+// 					<TailSpin
+// 						color="#065777"
+// 						height="50px"
+// 						width="50px"
+// 					/>
+// 				) : (
+// 					<>
+// 						{!flightsReturnData ? (
+// 							<div className="mt-4 w-[300px] md:w-[500px] rounded-xl text-customBlue bg-slate-200 shadow-md py-4 px-6">
+// 								<h1 className="font-semibold text-lg">
+// 									No Available Flights
+// 								</h1>
+// 							</div>
+// 						) : (
+// 							flightsReturnData?.map(
+// 								(flightData: any) => (
+// 									<div key={flightData.id}>
+// 										<div className="mt-4 w-[300px] md:w-[500px] rounded-xl text-customBlue bg-slate-200 shadow-md py-4 px-6">
+// 											<h1 className="font-semibold text-lg">
+// 												{
+// 													flightData.airlineName
+// 												}
+// 											</h1>
+// 											<div className="flex items-center gap-3 justify-around mt-2">
+// 												<div className="text-[12px] md:text-sm">
+// 													<p className="font-medium">
+// 														{
+// 															flightData
+// 																.airOriginDestinationList[0]
+// 																?.firstDepartureTime
+// 														}{" "}
+// 													</p>
+// 													<p className="font-medium">
+// 														{
+// 															flightData
+// 																.airOriginDestinationList[0]
+// 																?.originCity
+// 														}
+// 													</p>
+// 												</div>
+// 												<div className="">
+// 													<h2 className="font-semibold text-sm">
+// 														{convertMinutesToHoursAndMinutes(
+// 															flightData
+// 																.airOriginDestinationList[0]
+// 																?.totalFlightTimeInMs
+// 														)}
+// 													</h2>
+// 													<div className="w-full h-[1px] bg-black"></div>
+// 													<h2 className="font-semibold text-sm">
+// 														{
+// 															flightData.minimumNumberOfStops
+// 														}{" "}
+// 														Stop
+// 													</h2>
+// 												</div>
+// 												<div className="text-[12px] md:text-sm">
+// 													<p className="font-medium">
+// 														{
+// 															flightData
+// 																.airOriginDestinationList[0]
+// 																?.lastArrivalTime
+// 														}{" "}
+// 														{
+// 															flightData
+// 																.airOriginDestinationList[0]
+// 																?.routeSegmentList[1]
+// 																?.arrivalAirportCode
+// 														}
+// 													</p>
+// 													<p className="font-medium">
+// 														{
+// 															flightData
+// 																.airOriginDestinationList[0]
+// 																?.destinationCity
+// 														}
+// 													</p>
+// 												</div>
+// 											</div>
+// 											<div className="flex items-center gap-3 justify-around mt-2">
+// 												<div className="text-[12px] md:text-sm">
+// 													<p className="font-medium">
+// 														{
+// 															flightData
+// 																.airOriginDestinationList[1]
+// 																?.firstDepartureTime
+// 														}{" "}
+// 													</p>
+// 													<p className="font-medium">
+// 														{
+// 															flightData
+// 																.airOriginDestinationList[1]
+// 																?.originCity
+// 														}
+// 													</p>
+// 												</div>
+// 												<div className="">
+// 													<h2 className="font-semibold text-sm">
+// 														{convertMinutesToHoursAndMinutes(
+// 															flightData
+// 																.airOriginDestinationList[1]
+// 																?.totalFlightTimeInMs
+// 														)}
+// 													</h2>
+// 													<div className="w-10 md:w-20 h-[1px] bg-black"></div>
+// 													<h2 className="font-semibold text-[12px] text-sm">
+// 														{
+// 															flightData
+// 																.airOriginDestinationList[1]
+// 																?.totalStop
+// 														}{" "}
+// 														Stop
+// 													</h2>
+// 												</div>
+// 												<div className="text-[12px] md:text-sm">
+// 													<p className="font-medium">
+// 														{
+// 															flightData
+// 																.airOriginDestinationList[1]
+// 																?.lastArrivalTime
+// 														}
+// 													</p>
+// 													<p className="font-medium">
+// 														{
+// 															flightData
+// 																.airOriginDestinationList[1]
+// 																?.destinationCity
+// 														}
+// 													</p>
+// 												</div>
+// 											</div>
+// 											<div className="mt-2 flex flex-col gap-2">
+// 												<h2 className="font-semibold">
+// 													Price:
+// 													{formatKoboToNaira(
+// 														flightData.amountInKobo
+// 													)}
+// 												</h2>
+// 												<Dialog
+// 													open={
+// 														selectedRoundTripFlightId ===
+// 														flightData.id
+// 													}
+// 													onOpenChange={(
+// 														open
+// 													) =>
+// 														setSelectedRoundTripFlightId(
+// 															open
+// 																? flightData.id
+// 																: null
+// 														)
+// 													}
+// 												>
+// 													<DialogTrigger
+// 														asChild
+// 													>
+// 														<button className="bg-customBlue text-white rounded-lg py-2 px-3 cursor-pointer hover:bg-[#205063] flex items-center justify-around">
+// 															<div className="flex items-center gap-2">
+// 																Reserve
+// 																<ArrowRight className="animate-arrow" />
+// 															</div>
+// 														</button>
+// 													</DialogTrigger>
+// 													<DialogContent className="h-[500px] w-[300px] md:w-[500px] rounded-md overflow-y-scroll">
+// 														<DialogHeader>
+// 															<DialogTitle>
+// 																Traveller&apos;s
+// 																Information
+// 															</DialogTitle>
+// 															<DialogDescription>
+// 																Passengers
+// 																details
+// 																must
+// 																be
+// 																entered
+// 																as
+// 																it
+// 																appears
+// 																on
+// 																the
+// 																passport
+// 																or
+// 																ID
+// 															</DialogDescription>
+// 														</DialogHeader>
+// 														{selectedRoundTripFlightId ===
+// 															flightData.id && (
+// 															<FlightBooking
+// 																form={
+// 																	form
+// 																}
+// 																handleChange={
+// 																	handleRoundTripChange
+// 																}
+// 																sendEmail={
+// 																	sendRoundTripEmail
+// 																}
+// 																title={
+// 																	roundTripTitle
+// 																}
+// 																setTitle={
+// 																	setRoundTripTitle
+// 																}
+// 																nationality={
+// 																	roundTripNationality
+// 																}
+// 																setNationality={
+// 																	setRoundTripNationality
+// 																}
+// 																passengerInfo={
+// 																	twoWayPassengerInfo
+// 																}
+// 																isLoading={
+// 																	isRoundTripEmailSending
+// 																}
+// 																airlineName={
+// 																	flightData.airlineName
+// 																}
+// 																originCity={
+// 																	flightData
+// 																		.airOriginDestinationList[0]
+// 																		?.originCity
+// 																}
+// 																destinationCity={
+// 																	flightData
+// 																		.airOriginDestinationList[0]
+// 																		?.destinationCity
+// 																}
+// 																amount={
+// 																	flightData.amountInKobo
+// 																}
+// 																flightTime={
+// 																	flightData
+// 																		.airOriginDestinationList[0]
+// 																		?.totalFlightTimeInMs
+// 																}
+// 																returnOriginCity={
+// 																	flightData
+// 																		.airOriginDestinationList[1]
+// 																		?.originCity
+// 																}
+// 																returnDestinationCity={
+// 																	flightData
+// 																		.airOriginDestinationList[1]
+// 																		?.destinationCity
+// 																}
+// 																returnFlightTime={
+// 																	flightData
+// 																		.airOriginDestinationList[1]
+// 																		?.totalFlightTimeInMs
+// 																}
+// 															/>
+// 														)}
+// 													</DialogContent>
+// 												</Dialog>
+// 											</div>
+// 										</div>
+// 									</div>
+// 								)
+// 							)
+// 						)}
+// 					</>
+// 				)}
+// 			</div>
+// 		</>
+// 	);
+// }
