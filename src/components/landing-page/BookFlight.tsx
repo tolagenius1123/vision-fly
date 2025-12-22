@@ -54,6 +54,11 @@ const BookFlight = () => {
         const [adults, setAdults] = useState(1);
         const [children, setChildren] = useState(0);
         const [showPassengerDropdown, setShowPassengerDropdown] = useState(false);
+        const [returnDate, setReturnDate] = useState<Date>();
+        const [showBookingModal, setShowBookingModal] = useState(false);
+        const [passengerNames, setPassengerNames] = useState<string[]>([]);
+        const [bookingEmail, setBookingEmail] = useState("");
+        const [bookingPhone, setBookingPhone] = useState("");
 
         const form = useRef<HTMLFormElement>(null);
         const [oneWayPassengerInfo, setOneWayPassengerInfo] =
@@ -122,6 +127,8 @@ const BookFlight = () => {
                         return;
                 }
 
+                setShowBookingModal(true);
+                setPassengerNames(Array(adults + children).fill(""));
                 setIsLoading(true);
 
                 const flightSearch = {
@@ -262,10 +269,10 @@ const BookFlight = () => {
         const [destinationAirportRoundTrip, setDestinationAirportRoundTrip] =
                 useState<Airport>();
         const [startDate, setStartDate] = useState<Date>();
-        const [returnDate, setReturnDate] = useState<Date>();
+        const [roundTripReturnDate, setRoundTripReturnDate] = useState<Date>();
 
         const formattedStartDate = formatDate(startDate);
-        const formattedReturnDate = formatDate(returnDate);
+        const formattedReturnDate = formatDate(roundTripReturnDate);
 
         const [flightsReturnData, setFlightsReturnData] = useState<any>();
 
@@ -553,10 +560,10 @@ const BookFlight = () => {
                                                                 </div>
                                                         </div>
 
-                                                        {/* Main Search Row */}
-                                                        <div className="flex items-center gap-4 mb-4">
+                                                        {/* Main Search Row - Mobile Responsive */}
+                                                        <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
                                                                 {/* Departure Airport */}
-                                                                <div className="flex-1 relative">
+                                                                <div className="w-full md:flex-1 relative">
                                                                         <div className="border-2 border-gray-200 rounded-lg p-4 min-h-24 flex flex-col justify-center hover:border-customBlue transition relative bg-gray-50">
                                                                                 {originAirport?.iata ? (
                                                                                         <>
@@ -605,11 +612,15 @@ const BookFlight = () => {
                                                                         }}
                                                                         className="p-2 text-customBlue hover:bg-gray-100 rounded-full transition"
                                                                 >
-                                                                        <ArrowLeftRight size={24} />
+                                                                        {tripType === "one-way" ? (
+                                                                                <ArrowRight size={24} />
+                                                                        ) : (
+                                                                                <ArrowLeftRight size={24} />
+                                                                        )}
                                                                 </button>
 
                                                                 {/* Arrival Airport */}
-                                                                <div className="flex-1 relative">
+                                                                <div className="w-full md:flex-1 relative">
                                                                         <div className="border-2 border-gray-200 rounded-lg p-4 min-h-24 flex flex-col justify-center hover:border-customBlue transition relative bg-gray-50">
                                                                                 {destinationAirport?.iata ? (
                                                                                         <>
@@ -645,37 +656,115 @@ const BookFlight = () => {
                                                                 )}
                                                                 </div>
 
-                                                                {/* Date Field */}
-                                                                <div className="w-40">
-                                                                        <Popover>
-                                                                                <PopoverTrigger asChild>
-                                                                                        <div className="text-center cursor-pointer pb-2 border-b-2 border-gray-300 hover:border-customBlue transition">
-                                                                                                <div className="text-xs text-gray-600 mb-1">Departure</div>
-                                                                                                <div className="text-sm font-semibold text-customBlue">
-                                                                                                        {date ? format(date, "MMM dd") : "Select date"}
+                                                                {/* Date Fields */}
+                                                                <div className="flex gap-4">
+                                                                        <div className="w-40">
+                                                                                <Popover>
+                                                                                        <PopoverTrigger asChild>
+                                                                                                <div className="text-center cursor-pointer pb-2 border-b-2 border-gray-300 hover:border-customBlue transition">
+                                                                                                        <div className="text-xs text-gray-600 mb-1">Departure</div>
+                                                                                                        <div className="text-sm font-semibold text-customBlue">
+                                                                                                                {date ? format(date, "MMM dd") : "Select date"}
+                                                                                                        </div>
                                                                                                 </div>
-                                                                                        </div>
-                                                                                </PopoverTrigger>
-                                                                                <PopoverContent className="w-auto p-0">
-                                                                                        <Calendar
-                                                                                                mode="single"
-                                                                                                selected={date}
-                                                                                                onSelect={handleDateSelect}
-                                                                                                initialFocus
-                                                                                        />
-                                                                                </PopoverContent>
+                                                                                        </PopoverTrigger>
+                                                                                        <PopoverContent className="w-auto p-0">
+                                                                                                <Calendar
+                                                                                                        mode="single"
+                                                                                                        selected={date}
+                                                                                                        onSelect={handleDateSelect}
+                                                                                                        initialFocus
+                                                                                                />
+                                                                                        </PopoverContent>
                                                                         </Popover>
+                                                                        </div>
+                                                                        {tripType === "round-trip" && (
+                                                                                <div className="w-40">
+                                                                                        <Popover>
+                                                                                                <PopoverTrigger asChild>
+                                                                                                        <div className="text-center cursor-pointer pb-2 border-b-2 border-gray-300 hover:border-customBlue transition">
+                                                                                                                <div className="text-xs text-gray-600 mb-1">Return</div>
+                                                                                                                <div className="text-sm font-semibold text-customBlue">
+                                                                                                                        {returnDate ? format(returnDate, "MMM dd") : "Select date"}
+                                                                                                                </div>
+                                                                                                        </div>
+                                                                                                </PopoverTrigger>
+                                                                                                <PopoverContent className="w-auto p-0">
+                                                                                                        <Calendar
+                                                                                                                mode="single"
+                                                                                                                selected={returnDate}
+                                                                                                                onSelect={setReturnDate}
+                                                                                                                initialFocus
+                                                                                                        />
+                                                                                                </PopoverContent>
+                                                                        </Popover>
+                                                                        </div>
+                                                                        )}
                                                                 </div>
 
                                                                 {/* Search Button */}
                                                                 <button
                                                                         type="submit"
                                                                         disabled={isLoading}
-                                                                        className="px-8 py-3 bg-customBlue text-white rounded-full font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+                                                                        className="w-full md:w-auto px-8 py-3 bg-customBlue text-white rounded-full font-semibold hover:bg-blue-700 transition disabled:opacity-50"
                                                                 >
                                                                         {isLoading ? "Searching..." : "Search"}
                                                                 </button>
                                                         </div>
+
+                                                        {/* Booking Inquiry Modal */}
+                                                        <Dialog open={showBookingModal} onOpenChange={setShowBookingModal}>
+                                                                <DialogContent className="w-[90vw] max-w-2xl max-h-96 overflow-y-auto">
+                                                                        <DialogHeader>
+                                                                                <DialogTitle className="text-customBlue">Flight Booking Inquiry</DialogTitle>
+                                                                                <DialogDescription>
+                                                                                        Please provide details for all {adults + children} passenger(s)
+                                                                                </DialogDescription>
+                                                                        </DialogHeader>
+                                                                        <div className="grid grid-cols-1 gap-4">
+                                                                                {passengerNames.map((_, idx) => (
+                                                                                        <input
+                                                                                                key={idx}
+                                                                                                type="text"
+                                                                                                placeholder={`Passenger ${idx + 1} Full Name`}
+                                                                                                value={passengerNames[idx]}
+                                                                                                onChange={(e) => {
+                                                                                                        const newNames = [...passengerNames];
+                                                                                                        newNames[idx] = e.target.value;
+                                                                                                        setPassengerNames(newNames);
+                                                                                                }}
+                                                                                                className="px-3 py-2 border border-customBlue rounded-lg text-sm focus:outline-none focus:border-blue-700"
+                                                                                        />
+                                                                                ))}
+                                                                                <input
+                                                                                        type="email"
+                                                                                        placeholder="Email Address"
+                                                                                        value={bookingEmail}
+                                                                                        onChange={(e) => setBookingEmail(e.target.value)}
+                                                                                        className="px-3 py-2 border border-customBlue rounded-lg text-sm focus:outline-none focus:border-blue-700"
+                                                                                />
+                                                                                <input
+                                                                                        type="tel"
+                                                                                        placeholder="Phone Number"
+                                                                                        value={bookingPhone}
+                                                                                        onChange={(e) => setBookingPhone(e.target.value)}
+                                                                                        className="px-3 py-2 border border-customBlue rounded-lg text-sm focus:outline-none focus:border-blue-700"
+                                                                                />
+                                                                                <p className="text-xs text-gray-600 mt-2">
+                                                                                        Thank you for your inquiry. Our team will process your request and email you the best available rates shortly. Please check your promotion or spam folder if you do not receive a confirmation within the next few minutes.
+                                                                                </p>
+                                                                        </div>
+                                                                        <button
+                                                                                onClick={() => {
+                                                                                        setShowBookingModal(false);
+                                                                                        toast.success("Your inquiry has been submitted successfully!");
+                                                                                }}
+                                                                                className="w-full mt-4 px-4 py-2 bg-customBlue text-white rounded-lg hover:bg-blue-700 transition"
+                                                                        >
+                                                                                Submit Inquiry
+                                                                        </button>
+                                                                </DialogContent>
+                                                        </Dialog>
                                                 </form>
                                                 {/* Search One Way Trip Data */}
                                                 <div className="mt-5">
