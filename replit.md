@@ -97,8 +97,26 @@ src/
 - ✅ Enhanced Empty Leg with Full Name and consent checkbox
 - ✅ Added button disabled state when consent not checked
 
+## Recent Changes (Turn 6 - Visual & UX Refinements)
+- ✅ **Removed obsolete buttons**: Deleted 'One Way' and 'Round Trip' toggle buttons from top of search card
+- ✅ **Unified dropdown styling**: 
+  - Trip Type dropdown now uses customBlue (#065777) background with white text
+  - Passenger button styled to match with customBlue background, white text, rounded corners
+  - Both components are now visually consistent primary interactive elements
+- ✅ **Enabled input editing**: 
+  - Airport fields (Departing from / Arriving in) now fully editable
+  - Selected airports display with "Click to change" hint
+  - Clicking on selected airport clears it and allows new search
+  - User can type/backspace/delete freely in input mode
+- ✅ **Preserved state management**:
+  - Trip Type dropdown still correctly toggles Return Date visibility
+  - One-way trips: Show only Departure date
+  - Round-trip: Show both Departure and Return dates
+- ✅ **Mobile responsive layout**: Top row (Trip Type & Passengers) now stacks on mobile with gap adjustments
+
 ## TypeScript Status
 ✅ No LSP errors - all code compiles successfully
+✅ All components render correctly with Fast Refresh enabled
 
 ## Next Steps (If Needed)
 - Backend API integration for flight search

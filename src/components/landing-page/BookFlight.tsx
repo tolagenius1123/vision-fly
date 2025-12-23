@@ -458,33 +458,6 @@ const BookFlight = () => {
                                 <h1 className="text-customBlue text-2xl md:text-4xl font-bold mt-2">
                                         Search & Book Flights
                                 </h1>
-                                {/* TABS */}
-                                <div className="mt-3">
-                                        <div className="w-[300px] md:w-[500px] flex items-center gap-2 p-2 rounded-lg shadow-sm bg-slate-200">
-                                                <div
-                                                        className={cn(
-                                                                "px-2 w-1/2 py-2 font-semibold rounded-sm cursor-pointer hover:bg-customBlue hover:text-white",
-                                                                tab === 1
-                                                                        ? "bg-customBlue text-white"
-                                                                        : "bg-white"
-                                                        )}
-                                                        onClick={() => setTab(1)}
-                                                >
-                                                        One Way
-                                                </div>
-                                                <div
-                                                        className={cn(
-                                                                "px-2 w-1/2 py-2 font-semibold rounded-sm cursor-pointer hover:bg-customBlue hover:text-white",
-                                                                tab === 2
-                                                                        ? "bg-customBlue text-white"
-                                                                        : "bg-white"
-                                                        )}
-                                                        onClick={() => setTab(2)}
-                                                >
-                                                        Round Trip
-                                                </div>
-                                        </div>
-                                </div>
                                 {tab === 1 && (
                                         <>
                                                 <form
@@ -492,24 +465,22 @@ const BookFlight = () => {
                                                         className="w-full max-w-6xl bg-white rounded-2xl shadow-lg py-6 px-8 relative"
                                                 >
                                                         {/* Top Row: Trip Type & Passengers */}
-                                                        <div className="flex items-center gap-6 mb-6 pb-4 border-b border-gray-200">
-                                                                <div className="flex items-center gap-2">
-                                                                        <label className="text-sm font-semibold text-customBlue">Trip Type:</label>
+                                                        <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6 mb-6 pb-4 border-b border-gray-200">
+                                                                <div className="flex items-center gap-3">
                                                                         <select
                                                                                 value={tripType}
                                                                                 onChange={(e) => setTripType(e.target.value as "one-way" | "round-trip")}
-                                                                                className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:border-customBlue"
+                                                                                className="px-4 py-2 bg-customBlue text-white rounded-lg text-sm font-semibold focus:outline-none hover:bg-blue-700 transition cursor-pointer"
                                                                         >
                                                                                 <option value="one-way">One-Way</option>
                                                                                 <option value="round-trip">Round-Trip</option>
                                                                         </select>
                                                                 </div>
                                                                 <div className="flex items-center gap-2 relative">
-                                                                        <label className="text-sm font-semibold text-customBlue">Passengers:</label>
                                                                         <button
                                                                                 type="button"
                                                                                 onClick={() => setShowPassengerDropdown(!showPassengerDropdown)}
-                                                                                className="px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none hover:border-customBlue cursor-pointer"
+                                                                                className="px-4 py-2 bg-customBlue text-white rounded-lg text-sm font-semibold focus:outline-none hover:bg-blue-700 transition cursor-pointer"
                                                                         >
                                                                                 {adults + children} {adults + children === 1 ? "Passenger" : "Passengers"}
                                                                         </button>
@@ -564,12 +535,19 @@ const BookFlight = () => {
                                                         <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
                                                                 {/* Departure Airport */}
                                                                 <div className="w-full md:flex-1 relative">
-                                                                        <div className="border-2 border-gray-200 rounded-lg p-4 min-h-24 flex flex-col justify-center hover:border-customBlue transition relative bg-gray-50">
-                                                                                {originAirport?.iata ? (
-                                                                                        <>
+                                                                        <div className="border-2 border-gray-200 rounded-lg p-4 min-h-24 flex flex-col justify-center hover:border-customBlue transition relative bg-gray-50 cursor-text">
+                                                                                {originAirport?.iata && !searchFromText ? (
+                                                                                        <div
+                                                                                                onClick={() => {
+                                                                                                        setOriginAirport(undefined);
+                                                                                                        setSearchFromText("");
+                                                                                                }}
+                                                                                                className="cursor-pointer hover:opacity-70 transition"
+                                                                                        >
                                                                                                 <div className="text-3xl font-bold text-customBlue">{originAirport.iata}</div>
                                                                                                 <div className="text-sm text-gray-600">{originAirport.city}</div>
-                                                                                        </>
+                                                                                                <div className="text-xs text-gray-400 mt-1">Click to change</div>
+                                                                                        </div>
                                                                                 ) : (
                                                                                         <input
                                                                                                 value={searchFromText}
@@ -621,12 +599,19 @@ const BookFlight = () => {
 
                                                                 {/* Arrival Airport */}
                                                                 <div className="w-full md:flex-1 relative">
-                                                                        <div className="border-2 border-gray-200 rounded-lg p-4 min-h-24 flex flex-col justify-center hover:border-customBlue transition relative bg-gray-50">
-                                                                                {destinationAirport?.iata ? (
-                                                                                        <>
+                                                                        <div className="border-2 border-gray-200 rounded-lg p-4 min-h-24 flex flex-col justify-center hover:border-customBlue transition relative bg-gray-50 cursor-text">
+                                                                                {destinationAirport?.iata && !searchToText ? (
+                                                                                        <div
+                                                                                                onClick={() => {
+                                                                                                        setDestinationAirport(undefined);
+                                                                                                        setSearchToText("");
+                                                                                                }}
+                                                                                                className="cursor-pointer hover:opacity-70 transition"
+                                                                                        >
                                                                                                 <div className="text-3xl font-bold text-customBlue">{destinationAirport.iata}</div>
                                                                                                 <div className="text-sm text-gray-600">{destinationAirport.city}</div>
-                                                                                        </>
+                                                                                                <div className="text-xs text-gray-400 mt-1">Click to change</div>
+                                                                                        </div>
                                                                                 ) : (
                                                                                         <input
                                                                                                 value={searchToText}
