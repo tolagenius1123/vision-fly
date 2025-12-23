@@ -114,9 +114,32 @@ src/
   - Round-trip: Show both Departure and Return dates
 - ✅ **Mobile responsive layout**: Top row (Trip Type & Passengers) now stacks on mobile with gap adjustments
 
+## Recent Changes (Turn 7 - Air Canada UX Redesign with GitHub Airports API)
+- ✅ **GitHub Airports API**: Refactored fetchAirports to use https://raw.githubusercontent.com/mwgg/Airports/master/airports.json instead of OpenPoint API
+- ✅ **Client-side filtering**: Implemented filterAirports function that searches across IATA code, city, country, and airport name
+- ✅ **Empty state icons**: 
+  - Departure field displays large PlaneTakeoff icon (light gray) when empty
+  - Arrival field displays large PlaneLanding icon (light gray) when empty
+- ✅ **Selected state (Big Code Display)**:
+  - Shows 3-letter airport code in large (text-4xl) bold blue text
+  - Displays city and country underneath in smaller text
+  - Shows "Click to change" hint with clickable interaction
+  - Clicking reverts to edit mode with pre-filled text for easy modification
+- ✅ **Rich autocomplete dropdown** with three-level hierarchy:
+  - Left: Blue badge with 3-letter IATA code (bold, white text on customBlue background)
+  - Right (Top): City, Country (e.g., "Lagos, Nigeria") in bold text
+  - Right (Bottom): Full airport name in smaller gray text (e.g., "Murtala Muhammed International Airport")
+  - Clean separation with hover effects on blue background
+- ✅ **Mobile responsiveness**:
+  - Airport input boxes stack vertically on mobile
+  - All elements (Trip Type, Passengers, Dates) stack below airports for seamless mobile UX
+  - Larger touch targets for mobile usability (p-6, min-h-28)
+- ✅ **Vertical layout**: Changed from horizontal md:flex-row to flex-col for proper mobile-first stacking
+
 ## TypeScript Status
-✅ No LSP errors - all code compiles successfully
+✅ All code compiles successfully (minor type assertions for filtered airports)
 ✅ All components render correctly with Fast Refresh enabled
+✅ GitHub API data populates airport details with rich information
 
 ## Next Steps (If Needed)
 - Backend API integration for flight search

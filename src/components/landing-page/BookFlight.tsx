@@ -7,7 +7,7 @@ import {
 } from "@/lib/utils";
 import { FormEvent, useEffect, useState, useRef, ChangeEvent } from "react";
 import { format } from "date-fns";
-import { ArrowRight, Calendar as CalendarIcon, ArrowLeftRight, Plus, Minus } from "lucide-react";
+import { ArrowRight, Calendar as CalendarIcon, ArrowLeftRight, Plus, Minus, PlaneTakeoff, PlaneLanding } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import {
         Popover,
@@ -59,6 +59,9 @@ const BookFlight = () => {
         const [passengerNames, setPassengerNames] = useState<string[]>([]);
         const [bookingEmail, setBookingEmail] = useState("");
         const [bookingPhone, setBookingPhone] = useState("");
+        const [editingOrigin, setEditingOrigin] = useState(false);
+        const [editingDestination, setEditingDestination] = useState(false);
+        const [allAirports, setAllAirports] = useState<any[]>([]);
 
         const form = useRef<HTMLFormElement>(null);
         const [oneWayPassengerInfo, setOneWayPassengerInfo] =
@@ -75,37 +78,49 @@ const BookFlight = () => {
         const formattedDate = formatDate(date);
         const todaysDate = new Date();
 
-        const fetchAirportsFrom = async (searchText: string) => {
-                try {
-                        let response = await fetch(
-                                `https://openpoint.co/airports?text=${searchText}&useSstr=1`
-                        );
-                        let data = await response.json();
-                        setAirportsFrom(data.airports);
-                } catch (error) {
-                        console.log(error);
-                }
-        };
+        useEffect(() => {
+                const fetchAllAirports = async () => {
+                        try {
+                                const response = await fetch(
+                                        "https://raw.githubusercontent.com/mwgg/Airports/master/airports.json"
+                                );
+                                const data = await response.json();
+                                setAllAirports(data);
+                        } catch (error) {
+                                console.log("Error fetching airports:", error);
+                        }
+                };
+                fetchAllAirports();
+        }, []);
 
-        const fetchAirportsTo = async (searchText: string) => {
-                try {
-                        let response = await fetch(
-                                `https://openpoint.co/airports?text=${searchText}&useSstr=1`
-                        );
-                        let data = await response.json();
-                        setAirportsTo(data.airports);
-                } catch (error) {
-                        console.log(error);
-                }
+        const filterAirports = (searchText: string) => {
+                if (!searchText || searchText.length < 1) return [];
+                const lowerSearch = searchText.toLowerCase();
+                return allAirports
+                        .filter((airport: any) => {
+                                const iataMatch = airport.iata?.toLowerCase().includes(lowerSearch);
+                                const cityMatch = airport.city?.toLowerCase().includes(lowerSearch);
+                                const nameMatch = airport.name?.toLowerCase().includes(lowerSearch);
+                                const countryMatch = airport.country?.toLowerCase().includes(lowerSearch);
+                                return iataMatch || cityMatch || nameMatch || countryMatch;
+                        })
+                        .slice(0, 10)
+                        .map((airport: any) => ({
+                                _id: airport.iata,
+                                iata: airport.iata,
+                                city: airport.city,
+                                country: airport.country,
+                                title: airport.name,
+                        }));
         };
 
         useEffect(() => {
-                fetchAirportsFrom(searchFromText);
-        }, [searchFromText]);
+                setAirportsFrom(filterAirports(searchFromText) as any);
+        }, [searchFromText, allAirports]);
 
         useEffect(() => {
-                fetchAirportsTo(searchToText);
-        }, [searchToText]);
+                setAirportsTo(filterAirports(searchToText) as any);
+        }, [searchToText, allAirports]);
 
         const handleDateSelect = (selectedDate: any) => {
                 const selectedDateOnly = new Date(selectedDate.setHours(0, 0, 0, 0));
@@ -532,45 +547,65 @@ const BookFlight = () => {
                                                         </div>
 
                                                         {/* Main Search Row - Mobile Responsive */}
-                                                        <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
+                                                        <div className="flex flex-col gap-4 mb-4">
                                                                 {/* Departure Airport */}
-                                                                <div className="w-full md:flex-1 relative">
-                                                                        <div className="border-2 border-gray-200 rounded-lg p-4 min-h-24 flex flex-col justify-center hover:border-customBlue transition relative bg-gray-50 cursor-text">
-                                                                                {originAirport?.iata && !searchFromText ? (
+                                                                <div className="w-full relative">
+                                                                        <div className="border-2 border-gray-200 rounded-lg p-6 min-h-28 flex flex-col justify-center items-center hover:border-customBlue transition relative bg-gray-50 cursor-text">
+                                                                                {originAirport?.iata && !editingOrigin ? (
                                                                                         <div
                                                                                                 onClick={() => {
-                                                                                                        setOriginAirport(undefined);
-                                                                                                        setSearchFromText("");
+                                                                                                        setEditingOrigin(true);
+                                                                                                        setSearchFromText(originAirport.iata);
                                                                                                 }}
-                                                                                                className="cursor-pointer hover:opacity-70 transition"
+                                                                                                className="cursor-pointer text-center w-full"
                                                                                         >
-                                                                                                <div className="text-3xl font-bold text-customBlue">{originAirport.iata}</div>
-                                                                                                <div className="text-sm text-gray-600">{originAirport.city}</div>
-                                                                                                <div className="text-xs text-gray-400 mt-1">Click to change</div>
+                                                                                                <div className="text-4xl font-bold text-customBlue">{originAirport.iata}</div>
+                                                                                                <div className="text-sm text-gray-600 mt-1">{originAirport.city}, {originAirport.country}</div>
+                                                                                                <div className="text-xs text-gray-400 mt-2">Click to change</div>
+                                                                                        </div>
+                                                                                ) : !originAirport?.iata ? (
+                                                                                        <div className="flex flex-col items-center gap-3 w-full">
+                                                                                                <PlaneTakeoff size={48} className="text-gray-300" />
+                                                                                                <input
+                                                                                                        value={searchFromText}
+                                                                                                        onChange={(e) => setSearchFromText(e.target.value)}
+                                                                                                        onFocus={() => setEditingOrigin(true)}
+                                                                                                        placeholder="Departing from"
+                                                                                                        className="text-sm bg-transparent focus:outline-none placeholder:text-gray-400 text-center w-full"
+                                                                                                        autoComplete="off"
+                                                                                                />
                                                                                         </div>
                                                                                 ) : (
                                                                                         <input
                                                                                                 value={searchFromText}
                                                                                                 onChange={(e) => setSearchFromText(e.target.value)}
                                                                                                 placeholder="Departing from"
-                                                                                                className="text-sm bg-transparent focus:outline-none placeholder:text-gray-400"
+                                                                                                className="text-sm bg-transparent focus:outline-none placeholder:text-gray-400 text-center w-full"
                                                                                                 autoComplete="off"
                                                                                         />
                                                                                 )}
                                                                         </div>
-                                                                        {airportsFrom.length > 1 && (
-                                                                                <div className="absolute z-10 top-full left-0 mt-1 w-full max-h-64 p-2 flex flex-col gap-1 overflow-y-auto bg-white border border-gray-300 rounded-lg">
-                                                                                        {airportsFrom?.map((airportFrom: Airport) => (
+                                                                        {editingOrigin && airportsFrom.length > 0 && (
+                                                                                <div className="absolute z-10 top-full left-0 mt-1 w-full max-h-72 flex flex-col gap-1 overflow-y-auto bg-white border border-gray-300 rounded-lg shadow-lg">
+                                                                                        {airportsFrom?.map((airportFrom: any) => (
                                                                                                 <div
                                                                                                         key={airportFrom._id}
-                                                                                                        className="text-sm text-customBlue p-2 rounded cursor-pointer hover:bg-gray-100"
+                                                                                                        className="px-4 py-3 cursor-pointer hover:bg-blue-50 border-b border-gray-100 last:border-b-0"
                                                                                                         onClick={() => {
                                                                                                                 setOriginAirport(airportFrom);
-                                                                                                                setSearchFromText(airportFrom.title);
+                                                                                                                setSearchFromText("");
+                                                                                                                setEditingOrigin(false);
                                                                                                         }}
                                                                                                 >
-                                                                                                        <div className="font-semibold">{airportFrom.iata} {airportFrom.city}</div>
-                                                                                                        <div className="text-xs text-gray-500">{airportFrom.title}</div>
+                                                                                                        <div className="flex items-start justify-between gap-3">
+                                                                                                                <div className="bg-customBlue text-white px-2 py-1 rounded font-bold text-sm min-w-12 text-center">
+                                                                                                                        {airportFrom.iata}
+                                                                                                                </div>
+                                                                                                                <div className="flex-1">
+                                                                                                                        <div className="font-semibold text-customBlue text-sm">{airportFrom.city}, {airportFrom.country}</div>
+                                                                                                                        <div className="text-xs text-gray-500 mt-1">{airportFrom.title}</div>
+                                                                                                                </div>
+                                                                                                        </div>
                                                                                                 </div>
                                                                                         ))}
                                                                                 </div>
@@ -578,67 +613,89 @@ const BookFlight = () => {
                                                                 </div>
 
                                                                 {/* Swap Button */}
-                                                                <button
-                                                                        type="button"
-                                                                        onClick={() => {
-                                                                                const temp = originAirport;
-                                                                                setOriginAirport(destinationAirport);
-                                                                                setDestinationAirport(temp);
-                                                                                const tempText = searchFromText;
-                                                                                setSearchFromText(searchToText);
-                                                                                setSearchToText(tempText);
-                                                                        }}
-                                                                        className="p-2 text-customBlue hover:bg-gray-100 rounded-full transition"
-                                                                >
-                                                                        {tripType === "one-way" ? (
-                                                                                <ArrowRight size={24} />
-                                                                        ) : (
-                                                                                <ArrowLeftRight size={24} />
-                                                                        )}
-                                                                </button>
+                                                                <div className="flex justify-center py-2">
+                                                                        <button
+                                                                                type="button"
+                                                                                onClick={() => {
+                                                                                        const temp = originAirport;
+                                                                                        setOriginAirport(destinationAirport);
+                                                                                        setDestinationAirport(temp);
+                                                                                        const tempText = searchFromText;
+                                                                                        setSearchFromText(searchToText);
+                                                                                        setSearchToText(tempText);
+                                                                                }}
+                                                                                className="p-2 text-customBlue hover:bg-gray-100 rounded-full transition"
+                                                                        >
+                                                                                {tripType === "one-way" ? (
+                                                                                        <ArrowRight size={24} />
+                                                                                ) : (
+                                                                                        <ArrowLeftRight size={24} />
+                                                                                )}
+                                                                        </button>
+                                                                </div>
 
                                                                 {/* Arrival Airport */}
-                                                                <div className="w-full md:flex-1 relative">
-                                                                        <div className="border-2 border-gray-200 rounded-lg p-4 min-h-24 flex flex-col justify-center hover:border-customBlue transition relative bg-gray-50 cursor-text">
-                                                                                {destinationAirport?.iata && !searchToText ? (
+                                                                <div className="w-full relative">
+                                                                        <div className="border-2 border-gray-200 rounded-lg p-6 min-h-28 flex flex-col justify-center items-center hover:border-customBlue transition relative bg-gray-50 cursor-text">
+                                                                                {destinationAirport?.iata && !editingDestination ? (
                                                                                         <div
                                                                                                 onClick={() => {
-                                                                                                        setDestinationAirport(undefined);
-                                                                                                        setSearchToText("");
+                                                                                                        setEditingDestination(true);
+                                                                                                        setSearchToText(destinationAirport.iata);
                                                                                                 }}
-                                                                                                className="cursor-pointer hover:opacity-70 transition"
+                                                                                                className="cursor-pointer text-center w-full"
                                                                                         >
-                                                                                                <div className="text-3xl font-bold text-customBlue">{destinationAirport.iata}</div>
-                                                                                                <div className="text-sm text-gray-600">{destinationAirport.city}</div>
-                                                                                                <div className="text-xs text-gray-400 mt-1">Click to change</div>
+                                                                                                <div className="text-4xl font-bold text-customBlue">{destinationAirport.iata}</div>
+                                                                                                <div className="text-sm text-gray-600 mt-1">{destinationAirport.city}, {destinationAirport.country}</div>
+                                                                                                <div className="text-xs text-gray-400 mt-2">Click to change</div>
+                                                                                        </div>
+                                                                                ) : !destinationAirport?.iata ? (
+                                                                                        <div className="flex flex-col items-center gap-3 w-full">
+                                                                                                <PlaneLanding size={48} className="text-gray-300" />
+                                                                                                <input
+                                                                                                        value={searchToText}
+                                                                                                        onChange={(e) => setSearchToText(e.target.value)}
+                                                                                                        onFocus={() => setEditingDestination(true)}
+                                                                                                        placeholder="Arriving in"
+                                                                                                        className="text-sm bg-transparent focus:outline-none placeholder:text-gray-400 text-center w-full"
+                                                                                                        autoComplete="off"
+                                                                                                />
                                                                                         </div>
                                                                                 ) : (
                                                                                         <input
                                                                                                 value={searchToText}
                                                                                                 onChange={(e) => setSearchToText(e.target.value)}
                                                                                                 placeholder="Arriving in"
-                                                                                                className="text-sm bg-transparent focus:outline-none placeholder:text-gray-400"
+                                                                                                className="text-sm bg-transparent focus:outline-none placeholder:text-gray-400 text-center w-full"
                                                                                                 autoComplete="off"
                                                                                         />
                                                                                 )}
                                                                         </div>
-                                                                        {airportsTo.length > 0 && (
-                                                                                <div className="absolute z-10 top-full left-0 mt-1 w-full max-h-64 p-2 flex flex-col gap-1 overflow-y-auto bg-white border border-gray-300 rounded-lg">
-                                                                                        {airportsTo?.map((airportTo) => (
+                                                                        {editingDestination && airportsTo.length > 0 && (
+                                                                                <div className="absolute z-10 top-full left-0 mt-1 w-full max-h-72 flex flex-col gap-1 overflow-y-auto bg-white border border-gray-300 rounded-lg shadow-lg">
+                                                                                        {airportsTo?.map((airportTo: any) => (
                                                                                                 <div
                                                                                                         key={airportTo._id}
-                                                                                                        className="text-sm text-customBlue p-2 rounded cursor-pointer hover:bg-gray-100"
+                                                                                                        className="px-4 py-3 cursor-pointer hover:bg-blue-50 border-b border-gray-100 last:border-b-0"
                                                                                                         onClick={() => {
                                                                                                                 setDestinationAirport(airportTo);
-                                                                                                                setSearchToText(airportTo.title);
-                                                                                                        }}
+                                                                                                                setSearchToText("");
+                                                                                                                setEditingDestination(false);
+                                                                                        }}
                                                                                                 >
-                                                                                                        <div className="font-semibold">{airportTo.iata} {airportTo.city}</div>
-                                                                                                        <div className="text-xs text-gray-500">{airportTo.title}</div>
+                                                                                                        <div className="flex items-start justify-between gap-3">
+                                                                                                                <div className="bg-customBlue text-white px-2 py-1 rounded font-bold text-sm min-w-12 text-center">
+                                                                                                                        {airportTo.iata}
+                                                                                                                </div>
+                                                                                                                <div className="flex-1">
+                                                                                                                        <div className="font-semibold text-customBlue text-sm">{airportTo.city}, {airportTo.country}</div>
+                                                                                                                        <div className="text-xs text-gray-500 mt-1">{airportTo.title}</div>
+                                                                                                                </div>
+                                                                                                        </div>
                                                                                                 </div>
-                                                                                ))}
-                                                                        </div>
-                                                                )}
+                                                                                        ))}
+                                                                                </div>
+                                                                        )}
                                                                 </div>
 
                                                                 {/* Date Fields */}
