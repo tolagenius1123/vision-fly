@@ -1,0 +1,37 @@
+Refine the Flight Search, Private Charter, and Subscription components with the following specific visual and functional updates:
+
+1. Arrow Logic & Round-Trip Layout:
+
+One-Way Tab: Change the icon between the 'Departing From' and 'Arriving In' boxes to a single right-pointing arrow (ArrowRight from Lucide) to visually indicate a one-way trip.
+
+Round-Trip Tab: Use the double-ended swap arrow (ArrowLeftRight). Crucially, ensure the Return Date picker is visible and active next to the Departure Date when this tab is selected, matching the Air Canada layout style.
+
+2. Mobile Responsiveness (Vertical Stack):
+
+Update the CSS so that on mobile devices (max-width: 768px), the flight search card transforms into a vertical stack layout.
+
+Mobile Order: Stack the inputs vertically: Origin (top), Destination, Trip Type/Passenger selectors, Date inputs, and finally the Search Button at the bottom. Ensure inputs are full-width for mobile readability.
+
+3. Private Charter Page Redesign:
+
+Update the Private Charter page to match the new booking layout (horizontal on desktop, vertical on mobile).
+
+Add a large 'Special Requests & Route Notes' text area at the bottom of the form for users to describe complex routes or specific needs.
+
+4. Booking Inquiry Modal (Search & Charter):
+
+On submit, trigger a popup modal that dynamically generates 'Full Name' inputs for each passenger (based on the passenger count selected).
+
+Include fields for Email Address and Phone Number.
+
+Confirmation Message: Display this professional text at the bottom: 'Thank you for your inquiry. Our team will process your request and email you the best available rates shortly. Please check your promotion or spam folder if you do not receive a confirmation within the next few minutes.'
+
+5. Empty Leg Subscription Modal:
+
+Update the 'Subscribe' popup to request Full Name and Email Address.
+
+Add a mandatory checkbox that must be ticked to enable the 'Subscribe' button.
+
+Checkbox Text: 'I consent to subscribing to the Vision Fly mailing list to receive updates on exclusive empty leg routes and special offers.'
+
+Styling: Use Tailwind CSS to match the existing white card design with customBlue accents
