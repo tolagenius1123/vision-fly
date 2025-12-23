@@ -85,7 +85,9 @@ const BookFlight = () => {
                                         "https://raw.githubusercontent.com/mwgg/Airports/master/airports.json"
                                 );
                                 const data = await response.json();
-                                setAllAirports(data);
+                                // Convert object to array and filter only entries with IATA codes
+                                const airportsArray = Object.values(data).filter((airport: any) => airport.iata);
+                                setAllAirports(airportsArray);
                         } catch (error) {
                                 console.log("Error fetching airports:", error);
                         }
@@ -577,6 +579,7 @@ const BookFlight = () => {
                                                                                         </div>
                                                                                 ) : (
                                                                                         <input
+                                                                                                autoFocus
                                                                                                 value={searchFromText}
                                                                                                 onChange={(e) => setSearchFromText(e.target.value)}
                                                                                                 placeholder="Departing from"
@@ -663,6 +666,7 @@ const BookFlight = () => {
                                                                                         </div>
                                                                                 ) : (
                                                                                         <input
+                                                                                                autoFocus
                                                                                                 value={searchToText}
                                                                                                 onChange={(e) => setSearchToText(e.target.value)}
                                                                                                 placeholder="Arriving in"
