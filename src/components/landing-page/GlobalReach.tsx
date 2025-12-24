@@ -17,7 +17,10 @@ const AnimatedStat = ({ value, suffix, label, inView }: StatProps) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    if (!inView) return;
+    if (!inView) {
+      setCount(0);
+      return;
+    }
     
     const duration = 2000;
     const steps = 60;
@@ -73,7 +76,7 @@ const arcsData = [
 const GlobalReach = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const globeRef = useRef<any>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
+  const isInView = useInView(sectionRef, { once: false, amount: 0.3 });
   const [mounted, setMounted] = useState(false);
   const [globeReady, setGlobeReady] = useState(false);
 
