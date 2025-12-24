@@ -46,7 +46,7 @@ const Services = () => {
                                                         Led by Aviators
                                                 </h1>
                                                 <p className="mt-4 text-slate-600 leading-relaxed">
-                                                        Vision Fly is founded and operated by licensed commercial pilots and engineers. We don&apos;t just compare prices; we understand the technical side of aviation, ensuring every flight we recommend meets the highest professional standards.
+                                                        Vision Fly is founded and operated by licensed commercial pilots and engineers. We don't just compare prices; we understand the technical side of aviation, ensuring every flight we recommend meets the highest professional standards.
                                                 </p>
                                         </div>
                                         <div className="w-full h-full md:w-1/2">
