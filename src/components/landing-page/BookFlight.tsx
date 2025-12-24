@@ -62,6 +62,8 @@ const BookFlight = () => {
         const [editingOrigin, setEditingOrigin] = useState(false);
         const [editingDestination, setEditingDestination] = useState(false);
         const [allAirports, setAllAirports] = useState<any[]>([]);
+        const [departureDateOpen, setDepartureDateOpen] = useState(false);
+        const [returnDateOpen, setReturnDateOpen] = useState(false);
 
         const form = useRef<HTMLFormElement>(null);
         const [oneWayPassengerInfo, setOneWayPassengerInfo] =
@@ -127,14 +129,25 @@ const BookFlight = () => {
         const handleDateSelect = (selectedDate: any) => {
                 if (!selectedDate) return;
                 
-                const selectedDateOnly = new Date(selectedDate.setHours(0, 0, 0, 0));
-                const todaysDateOnly = new Date(todaysDate.setHours(0, 0, 0, 0));
+                const selectedDateOnly = new Date(new Date(selectedDate).setHours(0, 0, 0, 0));
+                const todaysDateOnly = new Date(new Date().setHours(0, 0, 0, 0));
 
                 if (selectedDateOnly >= todaysDateOnly) {
                         setDate(selectedDate);
+                        setDepartureDateOpen(false);
+                        
+                        if (returnDate && selectedDateOnly > new Date(returnDate.setHours(0, 0, 0, 0))) {
+                                setReturnDate(undefined);
+                        }
                 } else {
                         toast.error("Please select a date that is today or later.");
                 }
+        };
+
+        const handleReturnDateSelectWithClose = (selectedDate: any) => {
+                if (!selectedDate) return;
+                setReturnDate(selectedDate);
+                setReturnDateOpen(false);
         };
 
         const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -760,7 +773,7 @@ const BookFlight = () => {
                                                                 {/* Date Fields */}
                                                                 <div className="grid grid-cols-2 gap-4 mb-4">
                                                                         <div>
-                                                                                <Popover>
+                                                                                <Popover open={departureDateOpen} onOpenChange={setDepartureDateOpen}>
                                                                                         <PopoverTrigger asChild>
                                                                                                 <div className="text-center cursor-pointer p-3 border-2 border-gray-200 rounded-lg bg-gray-50 hover:border-gray-400 hover:bg-gray-100 transition">
                                                                                                         <div className="text-xs text-gray-600 mb-1">Departure</div>
@@ -774,6 +787,7 @@ const BookFlight = () => {
                                                                                                         mode="single"
                                                                                                         selected={date}
                                                                                                         onSelect={handleDateSelect}
+                                                                                                        disabled={{ before: new Date() }}
                                                                                                         initialFocus
                                                                                                 />
                                                                                         </PopoverContent>
@@ -781,7 +795,7 @@ const BookFlight = () => {
                                                                         </div>
                                                                         {tripType === "round-trip" && (
                                                                                 <div>
-                                                                                        <Popover>
+                                                                                        <Popover open={returnDateOpen} onOpenChange={setReturnDateOpen}>
                                                                                                 <PopoverTrigger asChild>
                                                                                                         <div className="text-center cursor-pointer p-3 border-2 border-gray-200 rounded-lg bg-gray-50 hover:border-gray-400 hover:bg-gray-100 transition">
                                                                                                                 <div className="text-xs text-gray-600 mb-1">Return</div>
@@ -794,7 +808,8 @@ const BookFlight = () => {
                                                                                                         <Calendar
                                                                                                                 mode="single"
                                                                                                                 selected={returnDate}
-                                                                                                                onSelect={setReturnDate}
+                                                                                                                onSelect={handleReturnDateSelectWithClose}
+                                                                                                                disabled={{ before: date || new Date() }}
                                                                                                                 initialFocus
                                                                                                         />
                                                                                                 </PopoverContent>
