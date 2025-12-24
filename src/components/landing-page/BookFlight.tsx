@@ -524,15 +524,18 @@ const BookFlight = () => {
                 setIsSubmittingInquiry(true);
 
                 const templateParams = {
+                        inquiry_type: "Flight Booking Inquiry",
                         trip_type: tripType === "one-way" ? "One-Way" : "Round-Trip",
                         origin: originAirport ? `${originAirport.iata} - ${originAirport.city}, ${originAirport.country}` : "N/A",
                         destination: destinationAirport ? `${destinationAirport.iata} - ${destinationAirport.city}, ${destinationAirport.country}` : "N/A",
                         departure_date: date ? format(date, "MMMM dd, yyyy") : "N/A",
                         return_date: returnDate ? format(returnDate, "MMMM dd, yyyy") : "N/A",
+                        contact_name: passengerNames[0] || "N/A",
+                        contact_email: bookingEmail,
+                        contact_phone: bookingPhone,
                         passenger_count: adults + children,
-                        passenger_names: passengerNames.join(", "),
-                        user_email: bookingEmail,
-                        phone_number: bookingPhone,
+                        passenger_list: passengerNames.join("\n"),
+                        message: `Flight Booking Inquiry from ${passengerNames[0] || "Customer"}`,
                 };
 
                 try {

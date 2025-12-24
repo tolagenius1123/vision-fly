@@ -164,6 +164,20 @@ src/
   - All buttons now display correctly on both mobile and desktop
 - ✅ **Mobile responsive button text**: Request Charter button shows "Request" on mobile
 
+## Recent Changes (Turn 9 - EmailJS Multiple Passenger Support)
+- ✅ **Updated EmailJS template variables** for both BookFlight and Private Charter:
+  - `contact_name`: Main contact's full name (first passenger in BookFlight, form fullName in Charter)
+  - `contact_email`: Main contact's email address
+  - `contact_phone`: Main contact's phone number
+  - `passenger_count`: Total number of passengers (adults + children)
+  - `passenger_list`: Newline-separated list of ALL passenger names for Passenger Manifest
+- ✅ **Added Passenger Manifest to Private Charter modal**:
+  - Dynamically generates input fields based on passenger count
+  - Each passenger gets their own named input field
+  - Validation ensures all passenger names are filled before submission
+  - Clear labeling with "Passenger Manifest *" section
+- ✅ **Unified template structure**: Both BookFlight and Private Charter now use consistent variable naming
+
 ## TypeScript Status
 ✅ All code compiles successfully (minor type assertions for filtered airports)
 ✅ All components render correctly with Fast Refresh enabled
