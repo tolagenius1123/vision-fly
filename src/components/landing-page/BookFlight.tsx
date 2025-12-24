@@ -492,7 +492,7 @@ const BookFlight = () => {
         return (
                 <div
                         id="bookflight"
-                        className="w-full px-20 pt-[50px] md:pt-[100px] pb-[50px] md:pb-[150px] bg-slate-50"
+                        className="w-full px-4 md:px-20 pt-[50px] md:pt-[100px] pb-[50px] md:pb-[150px] bg-slate-50"
                 >
                         <div className="flex flex-col gap-2 text-center justify-center items-center">
                                 <p className="text-customBlue text-xl md:text-2xl font-semibold">
@@ -582,10 +582,10 @@ const BookFlight = () => {
                                                                 </div>
                                                         </div>
 
-                                                        {/* Main Search Row - Horizontal Layout */}
-                                                        <div className="grid grid-cols-[1fr_auto_1fr] gap-4 mb-4 items-center">
+                                                        {/* Main Search Row - Responsive Layout */}
+                                                        <div className="flex flex-col gap-4 md:flex-row md:gap-2 md:items-center">
                                                                 {/* Departure Airport */}
-                                                                <div className="relative">
+                                                                <div className="relative w-full md:w-[300px]">
                                                                         <div 
                                                                                 onClick={() => {
                                                                                         if (!editingOrigin) {
@@ -678,7 +678,7 @@ const BookFlight = () => {
                                                                                         setSearchFromText(searchToText);
                                                                                         setSearchToText(tempText);
                                                                                 }}
-                                                                                className="p-2 text-customBlue hover:bg-gray-100 rounded-full transition"
+                                                                                className="p-2 text-customBlue hover:bg-gray-100 rounded-full transition rotate-90 md:rotate-0"
                                                                         >
                                                                                 {tripType === "one-way" ? (
                                                                                         <ArrowRight size={24} />
@@ -689,7 +689,7 @@ const BookFlight = () => {
                                                                 </div>
 
                                                                 {/* Arrival Airport */}
-                                                                <div className="relative">
+                                                                <div className="relative w-full md:w-[300px]">
                                                                         <div 
                                                                                 onClick={() => {
                                                                                         if (!editingDestination) {
@@ -771,59 +771,57 @@ const BookFlight = () => {
                                                                 </div>
 
                                                                 {/* Date Fields */}
-                                                                <div className="grid grid-cols-2 gap-4 mb-4">
-                                                                        <div>
-                                                                                <Popover open={departureDateOpen} onOpenChange={setDepartureDateOpen}>
+                                                                <div className="w-full md:w-auto">
+                                                                        <Popover open={departureDateOpen} onOpenChange={setDepartureDateOpen}>
+                                                                                <PopoverTrigger asChild>
+                                                                                        <div className="text-center cursor-pointer p-3 border-2 border-gray-200 rounded-lg bg-gray-50 hover:border-gray-400 hover:bg-gray-100 transition min-h-28 flex flex-col justify-center">
+                                                                                                <div className="text-xs text-gray-600 mb-1">Departure</div>
+                                                                                                <div className="text-sm font-semibold text-customBlue">
+                                                                                                        {date ? format(date, "MMM dd") : "Select date"}
+                                                                                                </div>
+                                                                                        </div>
+                                                                                </PopoverTrigger>
+                                                                                <PopoverContent className="w-auto p-0">
+                                                                                        <Calendar
+                                                                                                mode="single"
+                                                                                                selected={date}
+                                                                                                onSelect={handleDateSelect}
+                                                                                                disabled={{ before: new Date() }}
+                                                                                                initialFocus
+                                                                                        />
+                                                                                </PopoverContent>
+                                                                        </Popover>
+                                                                </div>
+                                                                {tripType === "round-trip" && (
+                                                                        <div className="w-full md:w-auto">
+                                                                                <Popover open={returnDateOpen} onOpenChange={setReturnDateOpen}>
                                                                                         <PopoverTrigger asChild>
-                                                                                                <div className="text-center cursor-pointer p-3 border-2 border-gray-200 rounded-lg bg-gray-50 hover:border-gray-400 hover:bg-gray-100 transition">
-                                                                                                        <div className="text-xs text-gray-600 mb-1">Departure</div>
+                                                                                                <div className="text-center cursor-pointer p-3 border-2 border-gray-200 rounded-lg bg-gray-50 hover:border-gray-400 hover:bg-gray-100 transition min-h-28 flex flex-col justify-center">
+                                                                                                        <div className="text-xs text-gray-600 mb-1">Return</div>
                                                                                                         <div className="text-sm font-semibold text-customBlue">
-                                                                                                                {date ? format(date, "MMM dd") : "Select date"}
+                                                                                                                {returnDate ? format(returnDate, "MMM dd") : "Select date"}
                                                                                                         </div>
                                                                                                 </div>
                                                                                         </PopoverTrigger>
                                                                                         <PopoverContent className="w-auto p-0">
                                                                                                 <Calendar
                                                                                                         mode="single"
-                                                                                                        selected={date}
-                                                                                                        onSelect={handleDateSelect}
-                                                                                                        disabled={{ before: new Date() }}
+                                                                                                        selected={returnDate}
+                                                                                                        onSelect={handleReturnDateSelectWithClose}
+                                                                                                        disabled={{ before: date || new Date() }}
                                                                                                         initialFocus
                                                                                                 />
                                                                                         </PopoverContent>
-                                                                        </Popover>
+                                                                                </Popover>
                                                                         </div>
-                                                                        {tripType === "round-trip" && (
-                                                                                <div>
-                                                                                        <Popover open={returnDateOpen} onOpenChange={setReturnDateOpen}>
-                                                                                                <PopoverTrigger asChild>
-                                                                                                        <div className="text-center cursor-pointer p-3 border-2 border-gray-200 rounded-lg bg-gray-50 hover:border-gray-400 hover:bg-gray-100 transition">
-                                                                                                                <div className="text-xs text-gray-600 mb-1">Return</div>
-                                                                                                                <div className="text-sm font-semibold text-customBlue">
-                                                                                                                        {returnDate ? format(returnDate, "MMM dd") : "Select date"}
-                                                                                                                </div>
-                                                                                                        </div>
-                                                                                                </PopoverTrigger>
-                                                                                                <PopoverContent className="w-auto p-0">
-                                                                                                        <Calendar
-                                                                                                                mode="single"
-                                                                                                                selected={returnDate}
-                                                                                                                onSelect={handleReturnDateSelectWithClose}
-                                                                                                                disabled={{ before: date || new Date() }}
-                                                                                                                initialFocus
-                                                                                                        />
-                                                                                                </PopoverContent>
-                                                                        </Popover>
-                                                                        </div>
-                                                                        )}
-                                                                </div>
+                                                                )}
 
                                                                 {/* Search Button */}
-                                                                <div className="flex justify-center">
+                                                                <div className="w-full md:w-auto">
                                                                         <button
                                                                                 type="submit"
                                                                                 disabled={isLoading}
-                                                                                className="w-full px-8 py-3 bg-customBlue text-white rounded-full font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+                                                                                className="w-full md:w-auto px-8 py-3 bg-customBlue text-white rounded-full font-semibold hover:bg-blue-700 transition disabled:opacity-50 min-h-28 flex items-center justify-center"
                                                                         >
                                                                                 {isLoading ? "Searching..." : "Search"}
                                                                         </button>
