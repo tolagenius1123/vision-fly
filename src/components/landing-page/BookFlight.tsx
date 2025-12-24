@@ -56,6 +56,12 @@ const BookFlight = () => {
         const [showPassengerDropdown, setShowPassengerDropdown] = useState(false);
         const [showTripTypeDropdown, setShowTripTypeDropdown] = useState(false);
         const [returnDate, setReturnDate] = useState<Date>();
+        const [fieldErrors, setFieldErrors] = useState({
+                origin: false,
+                destination: false,
+                departureDate: false,
+                returnDate: false,
+        });
         const [showBookingModal, setShowBookingModal] = useState(false);
         const [passengerNames, setPassengerNames] = useState<string[]>([]);
         const [bookingEmail, setBookingEmail] = useState("");
@@ -156,9 +162,18 @@ const BookFlight = () => {
                 setHasSearched(true);
                 e.preventDefault();
 
-                // Validate one-way trip: origin, destination, and departure date required
-                if (!originAirport || !destinationAirport || !date) {
-                        toast.error("Please select departing airport, arriving airport, and departure date");
+                const errors = {
+                        origin: !originAirport,
+                        destination: !destinationAirport,
+                        departureDate: !date,
+                        returnDate: tripType === "round-trip" && !returnDate,
+                };
+
+                setFieldErrors(errors);
+
+                if (errors.origin || errors.destination || errors.departureDate || errors.returnDate) {
+                        toast.error("All fields must be completed", { position: "top-right" });
+                        setTimeout(() => setFieldErrors({ origin: false, destination: false, departureDate: false, returnDate: false }), 2000);
                         return;
                 }
 
@@ -373,9 +388,18 @@ const BookFlight = () => {
         const handleSubmitRoundTrip = async (e: FormEvent<HTMLFormElement>) => {
                 e.preventDefault();
 
-                // Validate round-trip: origin, destination, departure date, and return date required
-                if (!originAirportRoundTrip || !destinationAirportRoundTrip || !startDate || !roundTripReturnDate) {
-                        toast.error("Please select departing airport, arriving airport, departure date, and return date");
+                const errors = {
+                        origin: !originAirportRoundTrip,
+                        destination: !destinationAirportRoundTrip,
+                        departureDate: !startDate,
+                        returnDate: !roundTripReturnDate,
+                };
+
+                setFieldErrors(errors);
+
+                if (errors.origin || errors.destination || errors.departureDate || errors.returnDate) {
+                        toast.error("All fields must be completed", { position: "top-right" });
+                        setTimeout(() => setFieldErrors({ origin: false, destination: false, departureDate: false, returnDate: false }), 2000);
                         return;
                 }
 
@@ -664,9 +688,11 @@ const BookFlight = () => {
                                                                                         }
                                                                                 }}
                                                                                 className={`border-2 rounded-lg p-6 min-h-28 flex flex-col justify-center items-start transition relative cursor-text ${
-                                                                                        editingOrigin 
-                                                                                                ? 'border-customBlue bg-white shadow-md' 
-                                                                                                : 'border-gray-200 bg-gray-50 hover:border-gray-400 hover:bg-gray-100'
+                                                                                        fieldErrors.origin
+                                                                                                ? 'border-red-500 bg-red-50 animate-pulse'
+                                                                                                : editingOrigin 
+                                                                                                        ? 'border-customBlue bg-white shadow-md' 
+                                                                                                        : 'border-gray-200 bg-gray-50 hover:border-gray-400 hover:bg-gray-100'
                                                                                 }`}
                                                                         >
                                                                                 {editingOrigin ? (
@@ -768,9 +794,11 @@ const BookFlight = () => {
                                                                                         }
                                                                                 }}
                                                                                 className={`border-2 rounded-lg p-6 min-h-28 flex flex-col justify-center items-start transition relative cursor-text ${
-                                                                                        editingDestination 
-                                                                                                ? 'border-customBlue bg-white shadow-md' 
-                                                                                                : 'border-gray-200 bg-gray-50 hover:border-gray-400 hover:bg-gray-100'
+                                                                                        fieldErrors.destination
+                                                                                                ? 'border-red-500 bg-red-50 animate-pulse'
+                                                                                                : editingDestination 
+                                                                                                        ? 'border-customBlue bg-white shadow-md' 
+                                                                                                        : 'border-gray-200 bg-gray-50 hover:border-gray-400 hover:bg-gray-100'
                                                                                 }`}
                                                                         >
                                                                                 {editingDestination ? (
@@ -842,7 +870,11 @@ const BookFlight = () => {
                                                                 <div className="w-full md:w-auto">
                                                                         <Popover open={departureDateOpen} onOpenChange={setDepartureDateOpen}>
                                                                                 <PopoverTrigger asChild>
-                                                                                        <div className="text-center cursor-pointer p-3 border-2 border-gray-200 rounded-lg bg-gray-50 hover:border-gray-400 hover:bg-gray-100 transition min-h-28 flex flex-col justify-center">
+                                                                                        <div className={`text-center cursor-pointer p-3 border-2 rounded-lg transition min-h-28 flex flex-col justify-center ${
+                                                                                                fieldErrors.departureDate
+                                                                                                        ? 'border-red-500 bg-red-50 animate-pulse'
+                                                                                                        : 'border-gray-200 bg-gray-50 hover:border-gray-400 hover:bg-gray-100'
+                                                                                        }`}>
                                                                                                 <div className="text-xs text-gray-600 mb-1">Departure</div>
                                                                                                 <div className="text-sm font-semibold text-customBlue">
                                                                                                         {date ? format(date, "MMM dd") : "Select date"}
@@ -864,7 +896,11 @@ const BookFlight = () => {
                                                                         <div className="w-full md:w-auto">
                                                                                 <Popover open={returnDateOpen} onOpenChange={setReturnDateOpen}>
                                                                                         <PopoverTrigger asChild>
-                                                                                                <div className="text-center cursor-pointer p-3 border-2 border-gray-200 rounded-lg bg-gray-50 hover:border-gray-400 hover:bg-gray-100 transition min-h-28 flex flex-col justify-center">
+                                                                                                <div className={`text-center cursor-pointer p-3 border-2 rounded-lg transition min-h-28 flex flex-col justify-center ${
+                                                                                                        fieldErrors.returnDate
+                                                                                                                ? 'border-red-500 bg-red-50 animate-pulse'
+                                                                                                                : 'border-gray-200 bg-gray-50 hover:border-gray-400 hover:bg-gray-100'
+                                                                                                }`}>
                                                                                                         <div className="text-xs text-gray-600 mb-1">Return</div>
                                                                                                         <div className="text-sm font-semibold text-customBlue">
                                                                                                                 {returnDate ? format(returnDate, "MMM dd") : "Select date"}
