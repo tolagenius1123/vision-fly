@@ -1,0 +1,57 @@
+Completely redesign the 'Empty Leg' page (src/app/empty-leg/page.tsx) to replicate the professional, high-end table layout seen on AirSprint.com. Replace the current dark card grid entirely.
+
+1. Define Rich Mock Data (TypeScript): First, define a robust TypeScript interface and a dataset of at least 8 diverse flight examples at the top of the file to populate the new design:
+
+TypeScript
+
+interface EmptyLegFlight {
+  id: string;
+  date: string;
+  route: { from: string; fromCode: string; to: string; toCode: string };
+  aircraft: string;
+  seats: number;
+  price: string;
+}
+// Use this mock data: const emptyLegs: EmptyLegFlight[] = [ { id: 'EL001', date: 'Oct 25, 2025', route: { from: 'Lagos', fromCode: 'LOS', to: 'Abuja', toCode: 'ABV' }, aircraft: 'Challenger 605', seats: 9, price: '$4,500' }, { id: 'EL002', date: 'Oct 27, 2025', route: { from: 'Abuja', fromCode: 'ABV', to: 'Port Harcourt', toCode: 'PHC' }, aircraft: 'Learjet 45XR', seats: 8, price: '$3,200' }, { id: 'EL003', date: 'Nov 01, 2025', route: { from: 'Lagos', fromCode: 'LOS', to: 'London', toCode: 'LTN' }, aircraft: 'Gulfstream G650', seats: 14, price: '$28,000' }, { id: 'EL004', date: 'Nov 03, 2025', route: { from: 'Kano', fromCode: 'KAN', to: 'Lagos', toCode: 'LOS' }, aircraft: 'Hawker 800XP', seats: 8, price: '$3,800' }, { id: 'EL005', date: 'Nov 05, 2025', route: { from: 'Accra', fromCode: 'ACC', to: 'Lagos', toCode: 'LOS' }, aircraft: 'Citation XLS', seats: 7, price: '$2,500' }, { id: 'EL006', date: 'Nov 10, 2025', route: { from: 'Dubai', fromCode: 'DWC', to: 'Abuja', toCode: 'ABV' }, aircraft: 'Global 6000', seats: 13, price: '$32,000' }, { id: 'EL007', date: 'Nov 12, 2025', route: { from: 'Lagos', fromCode: 'LOS', to: 'Enugu', toCode: 'ENU' }, aircraft: 'King Air 350i', seats: 6, price: '$1,800' }, { id: 'EL008', date: 'Nov 15, 2025', route: { from: 'Paris', fromCode: 'LBG', to: 'Lagos', toCode: 'LOS' }, aircraft: 'Falcon 2000LX', seats: 10, price: '$24,000' }, ];
+
+
+**2. Premium Hero Section:**
+Replace the current hero with a clean, bright design. Use a high-quality placeholder image of a private jet interior.
+
+Overlay Text: White/Dark text on a subtle gradient. Headline: "Private Aviation, Simplified." Subtext: "Browse exclusive empty leg opportunities at highly preferred rates."
+
+3. Clean Subscription Banner:
+
+Between the hero and the flight list, add a clean, light-gray banner strip (bg-slate-50).
+
+Text: "Never miss an opportunity. Get real-time alerts for routes matching your preferences."
+
+Action: Place the existing 'Subscribe' button here.
+
+4. The Flight Schedule (Desktop Table View):
+
+Create a responsive container using a white background (bg-white) with a subtle shadow.
+
+Header Row: Create a header with uppercase, gray text (text-sm font-semibold text-slate-500): DATE, ROUTE, AIRCRAFT, AVAILABLE SEATS, ESTIMATED PRICE, and an empty header for the action button.
+
+Data Rows: Map through the emptyLegs data. Each row should have a clean border bottom (border-b border-slate-100) and a subtle hover effect (hover:bg-slate-50).
+
+Styling Details:
+
+Route: Use bold text for airports with a subtle arrow icon between them (e.g., LOS → ABV).
+
+Price: Emphasize the price with a darker color or bold weight.
+
+Button: Add a small, pill-shaped 'Inquire' button (customBlue background) at the end of each row.
+
+5. Mobile Stacked View:
+
+On screens smaller than md (768px), hide the table headers.
+
+Transform each data row into a compact, stacked card.
+
+Top Line: Date | Route
+
+Middle Line: Aircraft | Seats
+
+Bottom Line: Price (Bold) and the 'Inquire' button floating to the right.
