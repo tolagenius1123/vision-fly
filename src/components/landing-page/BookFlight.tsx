@@ -54,6 +54,7 @@ const BookFlight = () => {
         const [adults, setAdults] = useState(1);
         const [children, setChildren] = useState(0);
         const [showPassengerDropdown, setShowPassengerDropdown] = useState(false);
+        const [showTripTypeDropdown, setShowTripTypeDropdown] = useState(false);
         const [returnDate, setReturnDate] = useState<Date>();
         const [showBookingModal, setShowBookingModal] = useState(false);
         const [passengerNames, setPassengerNames] = useState<string[]>([]);
@@ -550,14 +551,40 @@ const BookFlight = () => {
                                                 >
                                                         {/* Top Row: Trip Type & Passengers */}
                                                         <div className="flex flex-col md:flex-row md:items-center justify-center gap-6 mb-6 pb-4 border-b border-gray-200">
-                                                                <select
-                                                                        value={tripType}
-                                                                        onChange={(e) => setTripType(e.target.value as "one-way" | "round-trip")}
-                                                                        className="w-full md:w-auto px-4 py-2 bg-customBlue text-white rounded-lg text-sm font-semibold focus:outline-none hover:bg-blue-700 transition cursor-pointer text-center"
-                                                                >
-                                                                        <option value="one-way">One-Way</option>
-                                                                        <option value="round-trip">Round-Trip</option>
-                                                                </select>
+                                                                <div className="relative w-full md:w-auto">
+                                                                        <button
+                                                                                type="button"
+                                                                                onClick={() => setShowTripTypeDropdown(!showTripTypeDropdown)}
+                                                                                className="w-full md:w-auto flex flex-row items-center justify-center gap-2 px-4 py-2 bg-customBlue text-white rounded-lg text-sm font-semibold focus:outline-none hover:bg-blue-700 transition cursor-pointer"
+                                                                        >
+                                                                                <span>{tripType === "one-way" ? "One-Way" : "Round-Trip"}</span>
+                                                                                <ChevronDown size={16} className="text-white" />
+                                                                        </button>
+                                                                        {showTripTypeDropdown && (
+                                                                                <div className="absolute top-full left-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg py-2 w-full md:w-40 z-50">
+                                                                                        <button
+                                                                                                type="button"
+                                                                                                onClick={() => {
+                                                                                                        setTripType("one-way");
+                                                                                                        setShowTripTypeDropdown(false);
+                                                                                                }}
+                                                                                                className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${tripType === "one-way" ? "text-customBlue font-semibold" : "text-gray-700"}`}
+                                                                                        >
+                                                                                                One-Way
+                                                                                        </button>
+                                                                                        <button
+                                                                                                type="button"
+                                                                                                onClick={() => {
+                                                                                                        setTripType("round-trip");
+                                                                                                        setShowTripTypeDropdown(false);
+                                                                                                }}
+                                                                                                className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${tripType === "round-trip" ? "text-customBlue font-semibold" : "text-gray-700"}`}
+                                                                                        >
+                                                                                                Round-Trip
+                                                                                        </button>
+                                                                                </div>
+                                                                        )}
+                                                                </div>
                                                                 <div className="relative w-full md:w-auto">
                                                                         <button
                                                                                 type="button"
