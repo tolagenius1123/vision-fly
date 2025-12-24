@@ -64,6 +64,7 @@ const BookFlight = () => {
         const [allAirports, setAllAirports] = useState<any[]>([]);
         const [departureDateOpen, setDepartureDateOpen] = useState(false);
         const [returnDateOpen, setReturnDateOpen] = useState(false);
+        const [isSubmittingInquiry, setIsSubmittingInquiry] = useState(false);
 
         const form = useRef<HTMLFormElement>(null);
         const [oneWayPassengerInfo, setOneWayPassengerInfo] =
@@ -489,6 +490,46 @@ const BookFlight = () => {
                 setTwoWayPassengerInfo((prev) => ({ ...prev, [name]: value }));
         };
 
+        const handleSubmitInquiry = async () => {
+                if (!bookingEmail || !bookingPhone || passengerNames.some(name => !name.trim())) {
+                        toast.error("Please fill in all passenger names, email, and phone number");
+                        return;
+                }
+
+                setIsSubmittingInquiry(true);
+
+                const templateParams = {
+                        trip_type: tripType === "one-way" ? "One-Way" : "Round-Trip",
+                        origin: originAirport ? `${originAirport.iata} - ${originAirport.city}, ${originAirport.country}` : "N/A",
+                        destination: destinationAirport ? `${destinationAirport.iata} - ${destinationAirport.city}, ${destinationAirport.country}` : "N/A",
+                        departure_date: date ? format(date, "MMMM dd, yyyy") : "N/A",
+                        return_date: returnDate ? format(returnDate, "MMMM dd, yyyy") : "N/A",
+                        passenger_count: adults + children,
+                        passenger_names: passengerNames.join(", "),
+                        user_email: bookingEmail,
+                        phone_number: bookingPhone,
+                };
+
+                try {
+                        await emailjs.send(
+                                process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "service_uahoo9j",
+                                process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "template_x3fcfzs",
+                                templateParams,
+                                process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "urvsHSWcfAcTFhHpQ"
+                        );
+                        setIsSubmittingInquiry(false);
+                        setShowBookingModal(false);
+                        toast.success("Your inquiry has been submitted successfully!");
+                        setPassengerNames([]);
+                        setBookingEmail("");
+                        setBookingPhone("");
+                } catch (error) {
+                        setIsSubmittingInquiry(false);
+                        console.error("EmailJS error:", error);
+                        toast.error("Failed to send inquiry. Please try again.");
+                }
+        };
+
         return (
                 <div
                         id="bookflight"
@@ -871,13 +912,18 @@ const BookFlight = () => {
                                                                                 </p>
                                                                         </div>
                                                                         <button
-                                                                                onClick={() => {
-                                                                                        setShowBookingModal(false);
-                                                                                        toast.success("Your inquiry has been submitted successfully!");
-                                                                                }}
-                                                                                className="w-full mt-4 px-4 py-2 bg-customBlue text-white rounded-lg hover:bg-blue-700 transition"
+                                                                                onClick={handleSubmitInquiry}
+                                                                                disabled={isSubmittingInquiry}
+                                                                                className="w-full mt-4 px-4 py-2 bg-customBlue text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                                                                         >
-                                                                                Submit Inquiry
+                                                                                {isSubmittingInquiry ? (
+                                                                                        <>
+                                                                                                <TailSpin color="#ffffff" height="20" width="20" />
+                                                                                                Sending...
+                                                                                        </>
+                                                                                ) : (
+                                                                                        "Submit Inquiry"
+                                                                                )}
                                                                         </button>
                                                                 </DialogContent>
                                                         </Dialog>

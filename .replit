@@ -37,3 +37,10 @@ externalPort = 80
 deploymentTarget = "autoscale"
 run = ["npm", "run", "start"]
 build = ["npm", "run", "build"]
+
+[userenv]
+
+[userenv.shared]
+NEXT_PUBLIC_EMAILJS_SERVICE_ID = "service_uahoo9j"
+NEXT_PUBLIC_EMAILJS_TEMPLATE_ID = "template_x3fcfzs"
+NEXT_PUBLIC_EMAILJS_PUBLIC_KEY = "urvsHSWcfAcTFhHpQ"
