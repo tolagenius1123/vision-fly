@@ -563,42 +563,59 @@ const BookFlight = () => {
                                                         <div className="grid grid-cols-[1fr_auto_1fr] gap-4 mb-4 items-center">
                                                                 {/* Departure Airport */}
                                                                 <div className="relative">
-                                                                        <div className="border-2 border-gray-200 rounded-lg p-6 min-h-28 flex flex-col justify-center items-center hover:border-customBlue transition relative bg-gray-50 cursor-text">
-                                                                                {originAirport?.iata && !editingOrigin ? (
-                                                                                        <div
-                                                                                                onClick={() => {
-                                                                                                        setEditingOrigin(true);
+                                                                        <div 
+                                                                                onClick={() => {
+                                                                                        if (!editingOrigin) {
+                                                                                                setEditingOrigin(true);
+                                                                                                if (originAirport?.iata) {
                                                                                                         setSearchFromText(originAirport.iata);
-                                                                                                }}
-                                                                                                className="cursor-pointer text-center w-full"
-                                                                                        >
+                                                                                                }
+                                                                                        }
+                                                                                }}
+                                                                                className={`border-2 rounded-lg p-6 min-h-28 flex flex-col justify-center items-start transition relative cursor-text ${
+                                                                                        editingOrigin 
+                                                                                                ? 'border-customBlue bg-white shadow-md' 
+                                                                                                : 'border-gray-200 bg-gray-50 hover:border-gray-400 hover:bg-gray-100'
+                                                                                }`}
+                                                                        >
+                                                                                {editingOrigin ? (
+                                                                                        <div className="w-full">
+                                                                                                <div className="text-xs text-gray-500 mb-1">From</div>
+                                                                                                <input
+                                                                                                        autoFocus
+                                                                                                        value={searchFromText}
+                                                                                                        onChange={(e) => setSearchFromText(e.target.value)}
+                                                                                                        onBlur={() => {
+                                                                                                                setTimeout(() => {
+                                                                                                                        if (!searchFromText && !originAirport?.iata) {
+                                                                                                                                setEditingOrigin(false);
+                                                                                                                        }
+                                                                                                                }, 200);
+                                                                                                        }}
+                                                                                                        placeholder=""
+                                                                                                        className="text-lg font-medium bg-transparent focus:outline-none text-customBlue w-full"
+                                                                                                        autoComplete="off"
+                                                                                                />
+                                                                                        </div>
+                                                                                ) : originAirport?.iata ? (
+                                                                                        <div className="text-center w-full">
                                                                                                 <div className="text-4xl font-bold text-customBlue">{originAirport.iata}</div>
                                                                                                 <div className="text-sm text-gray-600 mt-1">{originAirport.city}, {originAirport.country}</div>
                                                                                                 <div className="text-xs text-gray-400 mt-2">Click to change</div>
                                                                                         </div>
-                                                                                ) : !originAirport?.iata ? (
+                                                                                ) : (
                                                                                         <div className="flex flex-col items-center gap-3 w-full">
                                                                                                 <PlaneTakeoff size={48} className="text-gray-300" />
-                                                                                                <input
-                                                                                                        value={searchFromText}
-                                                                                                        onChange={(e) => setSearchFromText(e.target.value)}
-                                                                                                        onFocus={() => setEditingOrigin(true)}
-                                                                                                        placeholder="Departing from"
-                                                                                                        className="text-sm bg-transparent focus:outline-none placeholder:text-gray-400 text-center w-full"
-                                                                                                        autoComplete="off"
-                                                                                                />
+                                                                                                <span className="text-sm text-gray-400">Departing from</span>
                                                                                         </div>
-                                                                                ) : (
-                                                                                        <input
-                                                                                                autoFocus
-                                                                                                value={searchFromText}
-                                                                                                onChange={(e) => setSearchFromText(e.target.value)}
-                                                                                                placeholder="Departing from"
-                                                                                                className="text-sm bg-transparent focus:outline-none placeholder:text-gray-400 text-center w-full"
-                                                                                                autoComplete="off"
-                                                                                        />
                                                                                 )}
                                                                         </div>
+                                                                        {/* Helper Tooltip */}
+                                                                        {editingOrigin && airportsFrom.length === 0 && (
+                                                                                <div className="absolute z-20 top-full left-0 mt-2 bg-gray-900 text-white text-sm px-4 py-3 rounded-lg shadow-lg max-w-xs">
+                                                                                        Enter the city name, airport code, province or country/region.
+                                                                                </div>
+                                                                        )}
                                                                         {editingOrigin && airportsFrom.length > 0 && (
                                                                                 <div className="absolute z-10 top-full left-0 mt-1 w-full max-h-72 flex flex-col gap-1 overflow-y-auto bg-white border border-gray-300 rounded-lg shadow-lg">
                                                                                         {airportsFrom?.map((airportFrom: any) => (
@@ -650,42 +667,59 @@ const BookFlight = () => {
 
                                                                 {/* Arrival Airport */}
                                                                 <div className="relative">
-                                                                        <div className="border-2 border-gray-200 rounded-lg p-6 min-h-28 flex flex-col justify-center items-center hover:border-customBlue transition relative bg-gray-50 cursor-text">
-                                                                                {destinationAirport?.iata && !editingDestination ? (
-                                                                                        <div
-                                                                                                onClick={() => {
-                                                                                                        setEditingDestination(true);
+                                                                        <div 
+                                                                                onClick={() => {
+                                                                                        if (!editingDestination) {
+                                                                                                setEditingDestination(true);
+                                                                                                if (destinationAirport?.iata) {
                                                                                                         setSearchToText(destinationAirport.iata);
-                                                                                                }}
-                                                                                                className="cursor-pointer text-center w-full"
-                                                                                        >
+                                                                                                }
+                                                                                        }
+                                                                                }}
+                                                                                className={`border-2 rounded-lg p-6 min-h-28 flex flex-col justify-center items-start transition relative cursor-text ${
+                                                                                        editingDestination 
+                                                                                                ? 'border-customBlue bg-white shadow-md' 
+                                                                                                : 'border-gray-200 bg-gray-50 hover:border-gray-400 hover:bg-gray-100'
+                                                                                }`}
+                                                                        >
+                                                                                {editingDestination ? (
+                                                                                        <div className="w-full">
+                                                                                                <div className="text-xs text-gray-500 mb-1">To</div>
+                                                                                                <input
+                                                                                                        autoFocus
+                                                                                                        value={searchToText}
+                                                                                                        onChange={(e) => setSearchToText(e.target.value)}
+                                                                                                        onBlur={() => {
+                                                                                                                setTimeout(() => {
+                                                                                                                        if (!searchToText && !destinationAirport?.iata) {
+                                                                                                                                setEditingDestination(false);
+                                                                                                                        }
+                                                                                                                }, 200);
+                                                                                                        }}
+                                                                                                        placeholder=""
+                                                                                                        className="text-lg font-medium bg-transparent focus:outline-none text-customBlue w-full"
+                                                                                                        autoComplete="off"
+                                                                                                />
+                                                                                        </div>
+                                                                                ) : destinationAirport?.iata ? (
+                                                                                        <div className="text-center w-full">
                                                                                                 <div className="text-4xl font-bold text-customBlue">{destinationAirport.iata}</div>
                                                                                                 <div className="text-sm text-gray-600 mt-1">{destinationAirport.city}, {destinationAirport.country}</div>
                                                                                                 <div className="text-xs text-gray-400 mt-2">Click to change</div>
                                                                                         </div>
-                                                                                ) : !destinationAirport?.iata ? (
+                                                                                ) : (
                                                                                         <div className="flex flex-col items-center gap-3 w-full">
                                                                                                 <PlaneLanding size={48} className="text-gray-300" />
-                                                                                                <input
-                                                                                                        value={searchToText}
-                                                                                                        onChange={(e) => setSearchToText(e.target.value)}
-                                                                                                        onFocus={() => setEditingDestination(true)}
-                                                                                                        placeholder="Arriving in"
-                                                                                                        className="text-sm bg-transparent focus:outline-none placeholder:text-gray-400 text-center w-full"
-                                                                                                        autoComplete="off"
-                                                                                                />
+                                                                                                <span className="text-sm text-gray-400">Arriving in</span>
                                                                                         </div>
-                                                                                ) : (
-                                                                                        <input
-                                                                                                autoFocus
-                                                                                                value={searchToText}
-                                                                                                onChange={(e) => setSearchToText(e.target.value)}
-                                                                                                placeholder="Arriving in"
-                                                                                                className="text-sm bg-transparent focus:outline-none placeholder:text-gray-400 text-center w-full"
-                                                                                                autoComplete="off"
-                                                                                        />
                                                                                 )}
                                                                         </div>
+                                                                        {/* Helper Tooltip */}
+                                                                        {editingDestination && airportsTo.length === 0 && (
+                                                                                <div className="absolute z-20 top-full left-0 mt-2 bg-gray-900 text-white text-sm px-4 py-3 rounded-lg shadow-lg max-w-xs">
+                                                                                        Enter the city name, airport code, province or country/region.
+                                                                                </div>
+                                                                        )}
                                                                         {editingDestination && airportsTo.length > 0 && (
                                                                                 <div className="absolute z-10 top-full left-0 mt-1 w-full max-h-72 flex flex-col gap-1 overflow-y-auto bg-white border border-gray-300 rounded-lg shadow-lg">
                                                                                         {airportsTo?.map((airportTo: any) => (
@@ -718,7 +752,7 @@ const BookFlight = () => {
                                                                         <div>
                                                                                 <Popover>
                                                                                         <PopoverTrigger asChild>
-                                                                                                <div className="text-center cursor-pointer pb-2 border-b-2 border-gray-300 hover:border-customBlue transition">
+                                                                                                <div className="text-center cursor-pointer p-3 border-2 border-gray-200 rounded-lg bg-gray-50 hover:border-gray-400 hover:bg-gray-100 transition">
                                                                                                         <div className="text-xs text-gray-600 mb-1">Departure</div>
                                                                                                         <div className="text-sm font-semibold text-customBlue">
                                                                                                                 {date ? format(date, "MMM dd") : "Select date"}
@@ -739,7 +773,7 @@ const BookFlight = () => {
                                                                                 <div>
                                                                                         <Popover>
                                                                                                 <PopoverTrigger asChild>
-                                                                                                        <div className="text-center cursor-pointer pb-2 border-b-2 border-gray-300 hover:border-customBlue transition">
+                                                                                                        <div className="text-center cursor-pointer p-3 border-2 border-gray-200 rounded-lg bg-gray-50 hover:border-gray-400 hover:bg-gray-100 transition">
                                                                                                                 <div className="text-xs text-gray-600 mb-1">Return</div>
                                                                                                                 <div className="text-sm font-semibold text-customBlue">
                                                                                                                         {returnDate ? format(returnDate, "MMM dd") : "Select date"}
