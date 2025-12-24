@@ -9,8 +9,9 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-	title: "Vision Fly - Get Cheap Flights Around The World",
-	description: "Next Generation Aviation Service",
+	title: "Vision Fly | Most Affordable Flights and Private Jet Charters",
+	description: "Experience premium air travel for less. Vision Fly offers the most affordable Flights, private charters, empty leg flights, and seamless aviation solutions in Nigeria and beyond.",
+	keywords: "private jet, affordable flights, air charter, Vision Fly, Nigeria aviation, empty legs",
 };
 
 export default function RootLayout({
