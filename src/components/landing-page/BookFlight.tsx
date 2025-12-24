@@ -7,7 +7,7 @@ import {
 } from "@/lib/utils";
 import { FormEvent, useEffect, useState, useRef, ChangeEvent } from "react";
 import { format } from "date-fns";
-import { ArrowRight, Calendar as CalendarIcon, ArrowLeftRight, Plus, Minus, PlaneTakeoff, PlaneLanding, ChevronDown } from "lucide-react";
+import { ArrowRight, Calendar as CalendarIcon, ArrowLeftRight, Plus, Minus, PlaneTakeoff, PlaneLanding, ChevronDown, TrendingDown, Zap, Lock } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import {
         Popover,
@@ -934,14 +934,31 @@ const BookFlight = () => {
 
                                                         {/* Booking Inquiry Modal */}
                                                         <Dialog open={showBookingModal} onOpenChange={setShowBookingModal}>
-                                                                <DialogContent className="w-[90vw] max-w-2xl max-h-96 overflow-y-auto">
+                                                                <DialogContent className="w-[90vw] max-w-2xl max-h-[85vh] overflow-y-auto">
                                                                         <DialogHeader>
-                                                                                <DialogTitle className="text-customBlue">Flight Booking Inquiry</DialogTitle>
-                                                                                <DialogDescription>
-                                                                                        Please provide details for all {adults + children} passenger(s)
+                                                                                <DialogTitle className="text-customBlue text-xl md:text-2xl">Let us find your perfect flight.</DialogTitle>
+                                                                                <DialogDescription asChild>
+                                                                                        <div className="text-gray-600 mt-2">
+                                                                                                <p className="mb-3">We do more than just search. Our travel experts analyze thousands of routes to find you:</p>
+                                                                                                <ul className="space-y-2">
+                                                                                                        <li className="flex items-center gap-2">
+                                                                                                                <TrendingDown size={18} className="text-customBlue" />
+                                                                                                                <span>The absolute lowest fares</span>
+                                                                                                        </li>
+                                                                                                        <li className="flex items-center gap-2">
+                                                                                                                <CalendarIcon size={18} className="text-customBlue" />
+                                                                                                                <span>Flexible date options to save you money</span>
+                                                                                                        </li>
+                                                                                                        <li className="flex items-center gap-2">
+                                                                                                                <Zap size={18} className="text-customBlue" />
+                                                                                                                <span>The fastest routes with minimal stopovers</span>
+                                                                                                        </li>
+                                                                                                </ul>
+                                                                                        </div>
                                                                                 </DialogDescription>
                                                                         </DialogHeader>
-                                                                        <div className="grid grid-cols-1 gap-4">
+                                                                        <div className="grid grid-cols-1 gap-4 mt-4">
+                                                                                <p className="text-sm font-medium text-customBlue">Enter details for {adults + children} passenger(s):</p>
                                                                                 {passengerNames.map((_, idx) => (
                                                                                         <input
                                                                                                 key={idx}
@@ -970,14 +987,11 @@ const BookFlight = () => {
                                                                                         onChange={(e) => setBookingPhone(e.target.value)}
                                                                                         className="px-3 py-2 border border-customBlue rounded-lg text-sm focus:outline-none focus:border-blue-700"
                                                                                 />
-                                                                                <p className="text-xs text-gray-600 mt-2">
-                                                                                        Thank you for your inquiry. Our team will process your request and email you the best available rates shortly. Please check your promotion or spam folder if you do not receive a confirmation within the next few minutes.
-                                                                                </p>
                                                                         </div>
                                                                         <button
                                                                                 onClick={handleSubmitInquiry}
                                                                                 disabled={isSubmittingInquiry}
-                                                                                className="w-full mt-4 px-4 py-2 bg-customBlue text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                                                                className="w-full mt-4 px-4 py-3 bg-customBlue text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 font-semibold"
                                                                         >
                                                                                 {isSubmittingInquiry ? (
                                                                                         <>
@@ -985,9 +999,13 @@ const BookFlight = () => {
                                                                                                 Sending...
                                                                                         </>
                                                                                 ) : (
-                                                                                        "Submit Inquiry"
+                                                                                        "Send Me My Options"
                                                                                 )}
                                                                         </button>
+                                                                        <div className="flex items-center justify-center gap-2 mt-3 text-gray-400 text-xs">
+                                                                                <Lock size={14} />
+                                                                                <span>Your privacy is our priority. No spam, just deals.</span>
+                                                                        </div>
                                                                 </DialogContent>
                                                         </Dialog>
                                                 </form>
