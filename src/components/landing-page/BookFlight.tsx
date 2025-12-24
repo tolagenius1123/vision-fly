@@ -125,6 +125,8 @@ const BookFlight = () => {
         }, [searchToText, allAirports]);
 
         const handleDateSelect = (selectedDate: any) => {
+                if (!selectedDate) return;
+                
                 const selectedDateOnly = new Date(selectedDate.setHours(0, 0, 0, 0));
                 const todaysDateOnly = new Date(todaysDate.setHours(0, 0, 0, 0));
 
@@ -328,6 +330,8 @@ const BookFlight = () => {
         }, [searchToRoundTripAirports]);
 
         const handleStartDateSelect = (selectedDate: any) => {
+                if (!selectedDate) return;
+                
                 const selectedDateOnly = new Date(selectedDate.setHours(0, 0, 0, 0));
                 const todaysDateOnly = new Date(todaysDate.setHours(0, 0, 0, 0));
 
@@ -339,6 +343,8 @@ const BookFlight = () => {
         };
 
         const handleReturnDateSelect = (selectedDate: any) => {
+                if (!selectedDate) return;
+                
                 const selectedDateOnly = new Date(selectedDate.setHours(0, 0, 0, 0));
                 const todaysDateOnly = new Date(todaysDate.setHours(0, 0, 0, 0));
 
