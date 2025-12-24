@@ -16,7 +16,6 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import toast from "react-hot-toast";
 import { format } from "date-fns";
-import emailjs from "@emailjs/browser";
 
 interface Airport {
         _id: string;
@@ -148,43 +147,48 @@ const PrivateCharter = () => {
 
                 setIsSubmitting(true);
 
-                const templateParams = {
-                        inquiry_type: "Private Charter Request",
-                        trip_type: tripType === "one-way" ? "One-Way" : "Round-Trip",
+                const requestData = {
+                        tripType: tripType === "one-way" ? "One-Way" : "Round-Trip",
                         origin: originAirport ? `${originAirport.iata} - ${originAirport.city}, ${originAirport.country}` : "",
                         destination: destinationAirport ? `${destinationAirport.iata} - ${destinationAirport.city}, ${destinationAirport.country}` : "",
-                        departure_date: date ? format(date, "MMMM dd, yyyy") : "",
-                        return_date: returnDate ? format(returnDate, "MMMM dd, yyyy") : "N/A",
-                        contact_name: charterForm.fullName,
-                        contact_email: charterForm.email,
-                        contact_phone: charterForm.phone,
-                        passenger_count: adults + children,
-                        passenger_list: passengerNames.join("\n"),
-                        notes: charterForm.additionalNeeds || "None specified",
-                        message: `Private Charter Request from ${charterForm.fullName}`,
+                        departureDate: date ? format(date, "MMMM dd, yyyy") : "",
+                        returnDate: returnDate ? format(returnDate, "MMMM dd, yyyy") : "",
+                        contactName: charterForm.fullName,
+                        contactEmail: charterForm.email,
+                        contactPhone: charterForm.phone,
+                        passengerCount: adults + children,
+                        passengerList: passengerNames.join("\n"),
+                        notes: charterForm.additionalNeeds || "",
                 };
 
                 try {
-                        await emailjs.send(
-                                process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "service_uahoo9j",
-                                process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "template_x3fcfzs",
-                                templateParams,
-                                process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "urvsHSWcfAcTFhHpQ"
-                        );
+                        const response = await fetch('/api/private-charter', {
+                                method: 'POST',
+                                headers: {
+                                        'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(requestData),
+                        });
+
                         setIsSubmitting(false);
-                        setShowCharterModal(false);
-                        toast.success("Your charter request has been submitted successfully!");
-                        setCharterForm({ fullName: "", email: "", phone: "", additionalNeeds: "" });
-                        setPassengerNames([]);
-                        setOriginAirport(undefined);
-                        setDestinationAirport(undefined);
-                        setDate(undefined);
-                        setReturnDate(undefined);
-                        setSearchFromText("");
-                        setSearchToText("");
+
+                        if (response.ok) {
+                                setShowCharterModal(false);
+                                toast.success("Your charter request has been submitted successfully!");
+                                setCharterForm({ fullName: "", email: "", phone: "", additionalNeeds: "" });
+                                setPassengerNames([]);
+                                setOriginAirport(undefined);
+                                setDestinationAirport(undefined);
+                                setDate(undefined);
+                                setReturnDate(undefined);
+                                setSearchFromText("");
+                                setSearchToText("");
+                        } else {
+                                toast.error("Failed to send request. Please try again.");
+                        }
                 } catch (error) {
                         setIsSubmitting(false);
-                        console.error("EmailJS error:", error);
+                        console.error("Charter request error:", error);
                         toast.error("Failed to send request. Please try again.");
                 }
         };

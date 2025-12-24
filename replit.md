@@ -34,7 +34,7 @@ Vision Fly is a modern, Air Canada-inspired private jet charter booking website 
   - "Additional Travel Needs" textarea with placeholder for catering, pets, aircraft preference
   - "Receive Quote" submit button
   - Trust message: "Our charter team will send a bespoke quote within 2 hours"
-- **EmailJS Integration**: Unified with same service/template as BookFlight
+- **Nodemailer Integration**: Uses server-side API route for dual-email system (admin + user confirmation)
 
 ### 3. Empty Leg Subscription (empty-leg/page.tsx)
 - Enhanced subscription modal with:
@@ -60,7 +60,7 @@ Vision Fly is a modern, Air Canada-inspired private jet charter booking website 
 - **Date Handling**: date-fns, dayjs, react-day-picker
 - **Icons**: Lucide React
 - **Notifications**: React Hot Toast
-- **Email**: EmailJS integration
+- **Email**: Nodemailer (server-side) + EmailJS (client-side for BookFlight)
 
 ## File Structure
 ```
@@ -68,10 +68,14 @@ src/
 ├── app/
 │   ├── page.tsx (Home/Landing page)
 │   ├── private-charter/page.tsx
-│   └── empty-leg/page.tsx
+│   ├── empty-leg/page.tsx
+│   └── api/
+│       ├── contact/route.ts (Contact form email handler)
+│       └── private-charter/route.ts (Charter request email handler)
 ├── components/
 │   └── landing-page/
 │       ├── BookFlight.tsx (Main search component)
+│       ├── ContactUs.tsx (Contact form with API integration)
 │       └── [other components]
 ├── lib/
 │   └── utils.ts
@@ -177,6 +181,22 @@ src/
   - Validation ensures all passenger names are filled before submission
   - Clear labeling with "Passenger Manifest *" section
 - ✅ **Unified template structure**: Both BookFlight and Private Charter now use consistent variable naming
+
+## Recent Changes (Turn 10 - Dual Email System with Nodemailer)
+- ✅ **Contact Form API Route** (`/api/contact/route.ts`):
+  - Sends dual emails on form submission
+  - Email 1 (Admin): Full inquiry details to `process.env.GMAIL_USER`
+  - Email 2 (User): Confirmation with Vision Fly branding
+- ✅ **Private Charter API Route** (`/api/private-charter/route.ts`):
+  - New server-side route replacing client-side EmailJS
+  - Sends dual emails (admin notification + user confirmation)
+  - Includes passenger manifest, trip details, and notes
+- ✅ **User Confirmation Email Template**:
+  - Subject: "We received your request - Vision Fly"
+  - Body: Thank you message with flight operations scanning notification
+  - Same template used for both Contact and Private Charter
+- ✅ **Error Handling**: User confirmation email failure doesn't block admin email
+- ✅ **Removed EmailJS dependency** from Private Charter page (now uses fetch to API)
 
 ## TypeScript Status
 ✅ All code compiles successfully (minor type assertions for filtered airports)
