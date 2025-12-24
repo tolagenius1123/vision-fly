@@ -7,7 +7,7 @@ import {
 } from "@/lib/utils";
 import { FormEvent, useEffect, useState, useRef, ChangeEvent } from "react";
 import { format } from "date-fns";
-import { ArrowRight, Calendar as CalendarIcon, ArrowLeftRight, Plus, Minus, PlaneTakeoff, PlaneLanding } from "lucide-react";
+import { ArrowRight, Calendar as CalendarIcon, ArrowLeftRight, Plus, Minus, PlaneTakeoff, PlaneLanding, ChevronDown } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import {
         Popover,
@@ -504,16 +504,17 @@ const BookFlight = () => {
                                                                         <option value="one-way">One-Way</option>
                                                                         <option value="round-trip">Round-Trip</option>
                                                                 </select>
-                                                                <div className="flex items-center gap-2 relative">
+                                                                <div className="relative">
                                                                         <button
                                                                                 type="button"
                                                                                 onClick={() => setShowPassengerDropdown(!showPassengerDropdown)}
-                                                                                className="px-4 py-2 bg-customBlue text-white rounded-lg text-sm font-semibold focus:outline-none hover:bg-blue-700 transition cursor-pointer"
+                                                                                className="flex flex-row items-center gap-2 px-4 py-2 bg-customBlue text-white rounded-lg text-sm font-semibold focus:outline-none hover:bg-blue-700 transition cursor-pointer"
                                                                         >
-                                                                                {adults + children} {adults + children === 1 ? "Passenger" : "Passengers"}
+                                                                                <span>{adults + children} {adults + children === 1 ? "Passenger" : "Passengers"}</span>
+                                                                                <ChevronDown size={16} className="text-white" />
                                                                         </button>
                                                                         {showPassengerDropdown && (
-                                                                                <div className="absolute top-full left-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-48 z-50">
+                                                                                <div className="absolute top-full left-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-52 z-50">
                                                                                         <div className="flex items-center justify-between mb-3">
                                                                                                 <span className="text-sm font-medium text-customBlue">Adults (16+)</span>
                                                                                                 <div className="flex items-center gap-2">
@@ -534,7 +535,7 @@ const BookFlight = () => {
                                                                                                         </button>
                                                                                                 </div>
                                                                                         </div>
-                                                                                        <div className="flex items-center justify-between">
+                                                                                        <div className="flex items-center justify-between mb-4">
                                                                                                 <span className="text-sm font-medium text-customBlue">Children (2-15)</span>
                                                                                                 <div className="flex items-center gap-2">
                                                                                                         <button
@@ -553,6 +554,15 @@ const BookFlight = () => {
                                                                                                                 <Plus size={16} className="text-white" />
                                                                                                         </button>
                                                                                                 </div>
+                                                                                        </div>
+                                                                                        <div className="flex justify-end border-t border-gray-200 pt-3">
+                                                                                                <button
+                                                                                                        type="button"
+                                                                                                        onClick={() => setShowPassengerDropdown(false)}
+                                                                                                        className="text-customBlue text-sm font-semibold hover:underline"
+                                                                                                >
+                                                                                                        Close
+                                                                                                </button>
                                                                                         </div>
                                                                                 </div>
                                                                         )}
