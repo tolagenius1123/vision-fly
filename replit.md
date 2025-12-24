@@ -22,12 +22,19 @@ Vision Fly is a modern, Air Canada-inspired private jet charter booking website 
   - Success message
 
 ### 2. Private Charter Page (private-charter/page.tsx)
-- Complete inquiry form with fields for:
-  - Full Name, Email, Phone
-  - Number of Passengers
-  - Origin & Destination locations
-  - **Special Requests & Route Notes** textarea
-- Dialog-based submission flow
+- **Redesigned to match BookFlight style** with Air Canada-inspired UI
+- **Hero Section**: "Your Schedule, Your Rules." headline with luxury subheadline
+- **Search Card Interface**:
+  - Airport autocomplete for origin/destination (same GitHub API as BookFlight)
+  - Date picker with calendar
+  - Passengers dropdown (1-16 passengers)
+  - "Request Charter" CTA button
+- **Charter Request Modal** ("Customize Your Private Journey"):
+  - Full Name, Email, Phone fields
+  - "Additional Travel Needs" textarea with placeholder for catering, pets, aircraft preference
+  - "Receive Quote" submit button
+  - Trust message: "Our charter team will send a bespoke quote within 2 hours"
+- **EmailJS Integration**: Unified with same service/template as BookFlight
 
 ### 3. Empty Leg Subscription (empty-leg/page.tsx)
 - Enhanced subscription modal with:
@@ -36,6 +43,8 @@ Vision Fly is a modern, Air Canada-inspired private jet charter booking website 
   - **Consent checkbox** (must be checked to enable Subscribe button)
   - Clear consent message about mailing list
 - Form validation and reset on successful subscription
+- **Dynamic date generation**: Flight dates calculated relative to current date (today, tomorrow, +3 days, etc.)
+- **EmailJS Integration**: Inquiry forms now send via unified EmailJS service
 
 ### 4. Mobile Responsiveness
 - Vertical stack layout on mobile devices
