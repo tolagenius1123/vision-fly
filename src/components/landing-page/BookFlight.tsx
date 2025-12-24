@@ -482,17 +482,15 @@ const BookFlight = () => {
                                                         className="w-full max-w-6xl bg-white rounded-2xl shadow-lg py-6 px-8 relative"
                                                 >
                                                         {/* Top Row: Trip Type & Passengers */}
-                                                        <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6 mb-6 pb-4 border-b border-gray-200">
-                                                                <div className="flex items-center gap-3">
-                                                                        <select
-                                                                                value={tripType}
-                                                                                onChange={(e) => setTripType(e.target.value as "one-way" | "round-trip")}
-                                                                                className="px-4 py-2 bg-customBlue text-white rounded-lg text-sm font-semibold focus:outline-none hover:bg-blue-700 transition cursor-pointer"
-                                                                        >
-                                                                                <option value="one-way">One-Way</option>
-                                                                                <option value="round-trip">Round-Trip</option>
-                                                                        </select>
-                                                                </div>
+                                                        <div className="flex flex-col md:flex-row md:items-center justify-center gap-6 mb-6 pb-4 border-b border-gray-200">
+                                                                <select
+                                                                        value={tripType}
+                                                                        onChange={(e) => setTripType(e.target.value as "one-way" | "round-trip")}
+                                                                        className="px-4 py-2 bg-customBlue text-white rounded-lg text-sm font-semibold focus:outline-none hover:bg-blue-700 transition cursor-pointer"
+                                                                >
+                                                                        <option value="one-way">One-Way</option>
+                                                                        <option value="round-trip">Round-Trip</option>
+                                                                </select>
                                                                 <div className="flex items-center gap-2 relative">
                                                                         <button
                                                                                 type="button"
@@ -548,10 +546,10 @@ const BookFlight = () => {
                                                                 </div>
                                                         </div>
 
-                                                        {/* Main Search Row - Mobile Responsive */}
-                                                        <div className="flex flex-col gap-4 mb-4">
+                                                        {/* Main Search Row - Horizontal Layout */}
+                                                        <div className="grid grid-cols-[1fr_auto_1fr] gap-4 mb-4 items-center">
                                                                 {/* Departure Airport */}
-                                                                <div className="w-full relative">
+                                                                <div className="relative">
                                                                         <div className="border-2 border-gray-200 rounded-lg p-6 min-h-28 flex flex-col justify-center items-center hover:border-customBlue transition relative bg-gray-50 cursor-text">
                                                                                 {originAirport?.iata && !editingOrigin ? (
                                                                                         <div
@@ -616,7 +614,7 @@ const BookFlight = () => {
                                                                 </div>
 
                                                                 {/* Swap Button */}
-                                                                <div className="flex justify-center py-2">
+                                                                <div className="flex justify-center">
                                                                         <button
                                                                                 type="button"
                                                                                 onClick={() => {
@@ -638,7 +636,7 @@ const BookFlight = () => {
                                                                 </div>
 
                                                                 {/* Arrival Airport */}
-                                                                <div className="w-full relative">
+                                                                <div className="relative">
                                                                         <div className="border-2 border-gray-200 rounded-lg p-6 min-h-28 flex flex-col justify-center items-center hover:border-customBlue transition relative bg-gray-50 cursor-text">
                                                                                 {destinationAirport?.iata && !editingDestination ? (
                                                                                         <div
@@ -703,8 +701,8 @@ const BookFlight = () => {
                                                                 </div>
 
                                                                 {/* Date Fields */}
-                                                                <div className="flex gap-4">
-                                                                        <div className="w-40">
+                                                                <div className="grid grid-cols-2 gap-4 mb-4">
+                                                                        <div>
                                                                                 <Popover>
                                                                                         <PopoverTrigger asChild>
                                                                                                 <div className="text-center cursor-pointer pb-2 border-b-2 border-gray-300 hover:border-customBlue transition">
@@ -725,7 +723,7 @@ const BookFlight = () => {
                                                                         </Popover>
                                                                         </div>
                                                                         {tripType === "round-trip" && (
-                                                                                <div className="w-40">
+                                                                                <div>
                                                                                         <Popover>
                                                                                                 <PopoverTrigger asChild>
                                                                                                         <div className="text-center cursor-pointer pb-2 border-b-2 border-gray-300 hover:border-customBlue transition">
@@ -749,13 +747,15 @@ const BookFlight = () => {
                                                                 </div>
 
                                                                 {/* Search Button */}
-                                                                <button
-                                                                        type="submit"
-                                                                        disabled={isLoading}
-                                                                        className="w-full md:w-auto px-8 py-3 bg-customBlue text-white rounded-full font-semibold hover:bg-blue-700 transition disabled:opacity-50"
-                                                                >
-                                                                        {isLoading ? "Searching..." : "Search"}
-                                                                </button>
+                                                                <div className="flex justify-center">
+                                                                        <button
+                                                                                type="submit"
+                                                                                disabled={isLoading}
+                                                                                className="w-full px-8 py-3 bg-customBlue text-white rounded-full font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+                                                                        >
+                                                                                {isLoading ? "Searching..." : "Search"}
+                                                                        </button>
+                                                                </div>
                                                         </div>
 
                                                         {/* Booking Inquiry Modal */}
