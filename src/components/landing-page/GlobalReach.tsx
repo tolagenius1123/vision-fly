@@ -157,7 +157,7 @@ const GlobalReach = () => {
                   width={400}
                   height={400}
                   backgroundColor="rgba(0,0,0,0)"
-                  globeImageUrl=""
+                  globeImageUrl="//cdn.jsdelivr.net/npm/three-globe/example/img/earth-night.jpg"
                   showGlobe={true}
                   showAtmosphere={true}
                   atmosphereColor="#065777"
