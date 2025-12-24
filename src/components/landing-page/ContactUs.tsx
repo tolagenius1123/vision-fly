@@ -24,13 +24,36 @@ export default function ContactUs() {
 		resolver: zodResolver(schema),
 	});
 
-	const onSubmit = (data: any) => {
-		console.log(data);
+	const onSubmit = async (data: any) => {
+		const loadingToast = toast.loading("Sending your message...");
 
-		toast.success("Message sent successfully");
-		setTimeout(() => {
-			reset();
-		}, 2000);
+		try {
+			const response = await fetch('/api/contact', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					name: data.fullName,
+					email: data.email,
+					subject: data.subjectOfMail,
+					message: data.message,
+				}),
+			});
+
+			toast.dismiss(loadingToast);
+
+			if (response.ok) {
+				toast.success("Message sent successfully!");
+				reset();
+			} else {
+				toast.error("Something went wrong. Please try again.");
+			}
+		} catch (error) {
+			toast.dismiss(loadingToast);
+			toast.error("Failed to send message.");
+			console.error(error);
+		}
 	};
 
 	return (
