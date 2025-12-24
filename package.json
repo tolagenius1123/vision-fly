@@ -30,6 +30,7 @@
     "react": "^18",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
+    "react-globe.gl": "^2.37.0",
     "react-hook-form": "^7.52.2",
     "react-hot-toast": "^2.4.1",
     "react-loader-spinner": "^6.1.6",
