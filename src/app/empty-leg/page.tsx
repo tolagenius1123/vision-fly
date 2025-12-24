@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { cn, generateMonthOptions } from "@/lib/utils";
 import toast from "react-hot-toast";
+import emailjs from "@emailjs/browser";
 
 interface EmptyLegFlight {
         id: string;
@@ -92,20 +93,49 @@ export default function EmptyLeg() {
                 toast.success("You have successfully subscribed to our mail list");
         };
 
-        const inquireEmptyLeg = () => {
+        const [isSubmittingInquiry, setIsSubmittingInquiry] = useState(false);
+
+        const inquireEmptyLeg = async () => {
                 if (!userInquiryInfo.fullName || !userInquiryInfo.emailAddress || !userInquiryInfo.phoneNumber) {
                         toast.error("Please fill in all required fields");
                         return;
                 }
-                console.log({ ...userInquiryInfo, flight: selectedFlight });
-                setIsInquiryOpen(false);
-                setUserInquiryInfo({
-                        fullName: "",
-                        emailAddress: "",
-                        phoneNumber: "",
-                        numberOfPassengers: "",
-                });
-                toast.success("Your inquiry was sent successfully");
+
+                setIsSubmittingInquiry(true);
+
+                const templateParams = {
+                        inquiry_type: "Empty Leg Inquiry",
+                        origin: selectedFlight ? `${selectedFlight.route.fromCode} - ${selectedFlight.route.from}` : "N/A",
+                        destination: selectedFlight ? `${selectedFlight.route.toCode} - ${selectedFlight.route.to}` : "N/A",
+                        departure_date: selectedFlight?.date || "N/A",
+                        passenger_count: userInquiryInfo.numberOfPassengers || "Not specified",
+                        passenger_names: userInquiryInfo.fullName,
+                        user_email: userInquiryInfo.emailAddress,
+                        phone_number: userInquiryInfo.phoneNumber,
+                        additional_notes: `Aircraft: ${selectedFlight?.aircraft || "N/A"}, Price: ${selectedFlight?.price || "N/A"}`,
+                };
+
+                try {
+                        await emailjs.send(
+                                process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "service_uahoo9j",
+                                process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "template_x3fcfzs",
+                                templateParams,
+                                process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "urvsHSWcfAcTFhHpQ"
+                        );
+                        setIsSubmittingInquiry(false);
+                        setIsInquiryOpen(false);
+                        setUserInquiryInfo({
+                                fullName: "",
+                                emailAddress: "",
+                                phoneNumber: "",
+                                numberOfPassengers: "",
+                        });
+                        toast.success("Your inquiry was sent successfully!");
+                } catch (error) {
+                        setIsSubmittingInquiry(false);
+                        console.error("EmailJS error:", error);
+                        toast.error("Failed to send inquiry. Please try again.");
+                }
         };
 
         const openInquiry = (flight: EmptyLegFlight) => {
@@ -138,6 +168,7 @@ export default function EmptyLeg() {
                                                         href="#flights"
                                                         className="inline-flex items-center gap-2 bg-customBlue hover:bg-blue-700 text-white px-8 py-4 rounded-full font-semibold transition"
                                                 >
+                                                        {isSubmittingInquiry ? "Sending..." : "Send Inquiry"}
                                                         View Available Flights
                                                         <ArrowRight size={20} />
                                                 </a>
@@ -214,6 +245,7 @@ export default function EmptyLeg() {
                                                                         )}
                                                                         onClick={subscribe}
                                                                 >
+                                                        {isSubmittingInquiry ? "Sending..." : "Send Inquiry"}
                                                                         Subscribe
                                                                 </button>
                                                         </DialogFooter>
@@ -290,6 +322,7 @@ export default function EmptyLeg() {
                                                                 key={flight.id}
                                                                 className="bg-white rounded-xl shadow-md border border-slate-100 p-4"
                                                         >
+                                                        {isSubmittingInquiry ? "Sending..." : "Send Inquiry"}
                                                                 <div className="flex items-center justify-between mb-2">
                                                                         <span className="text-sm text-gray-500">{flight.date}</span>
                                                                         <div className="flex items-center gap-2">
@@ -311,6 +344,7 @@ export default function EmptyLeg() {
                                                                                 onClick={() => openInquiry(flight)}
                                                                                 className="bg-customBlue hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2 rounded-full transition"
                                                                         >
+                                                        {isSubmittingInquiry ? "Sending..." : "Send Inquiry"}
                                                                                 Inquire
                                                                         </button>
                                                                 </div>
@@ -402,10 +436,11 @@ export default function EmptyLeg() {
                                         <DialogFooter className="mt-4">
                                                 <button
                                                         type="button"
-                                                        className="w-full bg-customBlue text-white rounded-lg py-3 px-4 font-semibold cursor-pointer hover:bg-blue-700 transition"
+                                                        className="w-full bg-customBlue text-white rounded-lg py-3 px-4 font-semibold cursor-pointer hover:bg-blue-700 transition disabled:opacity-50"
                                                         onClick={inquireEmptyLeg}
+                                                        disabled={isSubmittingInquiry}
                                                 >
-                                                        Send Inquiry
+                                                        {isSubmittingInquiry ? "Sending..." : "Send Inquiry"}
                                                 </button>
                                         </DialogFooter>
                                 </DialogContent>
