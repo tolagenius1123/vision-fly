@@ -160,7 +160,7 @@ const PrivateCharter = () => {
                         contact_phone: charterForm.phone,
                         passenger_count: adults + children,
                         passenger_list: passengerNames.join("\n"),
-                        additional_notes: charterForm.additionalNeeds || "None specified",
+                        notes: charterForm.additionalNeeds || "None specified",
                         message: `Private Charter Request from ${charterForm.fullName}`,
                 };
 
