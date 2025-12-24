@@ -145,6 +145,25 @@ src/
   - Larger touch targets for mobile usability (p-6, min-h-28)
 - ✅ **Vertical layout**: Changed from horizontal md:flex-row to flex-col for proper mobile-first stacking
 
+## Recent Changes (Turn 8 - Private Charter Redesign & Bug Fixes)
+- ✅ **Completely redesigned Private Charter page** to match BookFlight component:
+  - Added One-Way/Round-Trip toggle dropdown
+  - Added passenger counter with +/- controls for Adults and Children
+  - PlaneTakeoff icon for departure field when empty
+  - PlaneLanding icon for arrival field when empty
+  - Large 3-letter IATA code display when airport selected
+  - "Click to change" hint on selected airports
+  - Blue badge autocomplete dropdown with city, country, and airport name
+  - Swap button (ArrowRight for one-way, ArrowLeftRight for round-trip)
+  - Conditional Return Date picker (only shows for round-trip)
+  - Uses same GitHub Airports API as BookFlight
+- ✅ **Fixed duplicate button text bug** on Empty Leg page:
+  - Removed duplicate "Send Inquiry" text from hero CTA button
+  - Removed duplicate "Send Inquiry" text from Subscribe button
+  - Removed duplicate "Send Inquiry" text from mobile flight cards
+  - All buttons now display correctly on both mobile and desktop
+- ✅ **Mobile responsive button text**: Request Charter button shows "Request" on mobile
+
 ## TypeScript Status
 ✅ All code compiles successfully (minor type assertions for filtered airports)
 ✅ All components render correctly with Fast Refresh enabled

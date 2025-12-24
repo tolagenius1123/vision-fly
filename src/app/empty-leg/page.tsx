@@ -168,7 +168,6 @@ export default function EmptyLeg() {
                                                         href="#flights"
                                                         className="inline-flex items-center gap-2 bg-customBlue hover:bg-blue-700 text-white px-8 py-4 rounded-full font-semibold transition"
                                                 >
-                                                        {isSubmittingInquiry ? "Sending..." : "Send Inquiry"}
                                                         View Available Flights
                                                         <ArrowRight size={20} />
                                                 </a>
@@ -245,7 +244,6 @@ export default function EmptyLeg() {
                                                                         )}
                                                                         onClick={subscribe}
                                                                 >
-                                                        {isSubmittingInquiry ? "Sending..." : "Send Inquiry"}
                                                                         Subscribe
                                                                 </button>
                                                         </DialogFooter>
@@ -322,7 +320,6 @@ export default function EmptyLeg() {
                                                                 key={flight.id}
                                                                 className="bg-white rounded-xl shadow-md border border-slate-100 p-4"
                                                         >
-                                                        {isSubmittingInquiry ? "Sending..." : "Send Inquiry"}
                                                                 <div className="flex items-center justify-between mb-2">
                                                                         <span className="text-sm text-gray-500">{flight.date}</span>
                                                                         <div className="flex items-center gap-2">
@@ -344,7 +341,6 @@ export default function EmptyLeg() {
                                                                                 onClick={() => openInquiry(flight)}
                                                                                 className="bg-customBlue hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2 rounded-full transition"
                                                                         >
-                                                        {isSubmittingInquiry ? "Sending..." : "Send Inquiry"}
                                                                                 Inquire
                                                                         </button>
                                                                 </div>
