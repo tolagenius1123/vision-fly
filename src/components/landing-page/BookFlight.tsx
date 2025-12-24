@@ -553,16 +553,16 @@ const BookFlight = () => {
                                                                 <select
                                                                         value={tripType}
                                                                         onChange={(e) => setTripType(e.target.value as "one-way" | "round-trip")}
-                                                                        className="px-4 py-2 bg-customBlue text-white rounded-lg text-sm font-semibold focus:outline-none hover:bg-blue-700 transition cursor-pointer"
+                                                                        className="w-full md:w-auto px-4 py-2 bg-customBlue text-white rounded-lg text-sm font-semibold focus:outline-none hover:bg-blue-700 transition cursor-pointer text-center"
                                                                 >
                                                                         <option value="one-way">One-Way</option>
                                                                         <option value="round-trip">Round-Trip</option>
                                                                 </select>
-                                                                <div className="relative">
+                                                                <div className="relative w-full md:w-auto">
                                                                         <button
                                                                                 type="button"
                                                                                 onClick={() => setShowPassengerDropdown(!showPassengerDropdown)}
-                                                                                className="flex flex-row items-center gap-2 px-4 py-2 bg-customBlue text-white rounded-lg text-sm font-semibold focus:outline-none hover:bg-blue-700 transition cursor-pointer"
+                                                                                className="w-full md:w-auto flex flex-row items-center justify-center gap-2 px-4 py-2 bg-customBlue text-white rounded-lg text-sm font-semibold focus:outline-none hover:bg-blue-700 transition cursor-pointer"
                                                                         >
                                                                                 <span>{adults + children} {adults + children === 1 ? "Passenger" : "Passengers"}</span>
                                                                                 <ChevronDown size={16} className="text-white" />
