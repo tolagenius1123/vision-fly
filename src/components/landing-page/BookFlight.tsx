@@ -139,11 +139,13 @@ const BookFlight = () => {
                 setHasSearched(true);
                 e.preventDefault();
 
-                if (!searchFromText || !searchToText) {
-                        toast.error("All fields are required");
+                // Validate one-way trip: origin, destination, and departure date required
+                if (!originAirport || !destinationAirport || !date) {
+                        toast.error("Please select departing airport, arriving airport, and departure date");
                         return;
                 }
 
+                // Validation passed - open booking modal immediately
                 setShowBookingModal(true);
                 setPassengerNames(Array(adults + children).fill(""));
                 setIsLoading(true);
@@ -350,10 +352,15 @@ const BookFlight = () => {
         const handleSubmitRoundTrip = async (e: FormEvent<HTMLFormElement>) => {
                 e.preventDefault();
 
-                if (!searchFromRoundTripAirports || !searchToRoundTripAirports) {
-                        toast.error("All fields are required");
+                // Validate round-trip: origin, destination, departure date, and return date required
+                if (!originAirportRoundTrip || !destinationAirportRoundTrip || !startDate || !roundTripReturnDate) {
+                        toast.error("Please select departing airport, arriving airport, departure date, and return date");
                         return;
                 }
+
+                // Validation passed - open booking modal immediately
+                setShowBookingModal(true);
+                setPassengerNames(Array(adults + children).fill(""));
 
                 setIsLoadingReturn(true);
 
