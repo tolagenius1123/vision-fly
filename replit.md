@@ -70,6 +70,7 @@ src/
 │   ├── private-charter/page.tsx
 │   ├── empty-leg/page.tsx
 │   └── api/
+│       ├── booking/route.ts (Booking inquiry email handler)
 │       ├── contact/route.ts (Contact form email handler)
 │       └── private-charter/route.ts (Charter request email handler)
 ├── components/
@@ -191,12 +192,16 @@ src/
   - New server-side route replacing client-side EmailJS
   - Sends dual emails (admin notification + user confirmation)
   - Includes passenger manifest, trip details, and notes
+- ✅ **Booking Inquiry API Route** (`/api/booking/route.ts`):
+  - New server-side route for BookFlight component
+  - Sends dual emails (admin notification + user confirmation)
+  - Includes flight details and passenger manifest
 - ✅ **User Confirmation Email Template**:
   - Subject: "We received your request - Vision Fly"
   - Body: Thank you message with flight operations scanning notification
-  - Same template used for both Contact and Private Charter
+  - Same template used for Contact, Private Charter, and Booking
 - ✅ **Error Handling**: User confirmation email failure doesn't block admin email
-- ✅ **Removed EmailJS dependency** from Private Charter page (now uses fetch to API)
+- ✅ **Removed EmailJS dependency** from Private Charter and BookFlight (now uses fetch to API)
 
 ## TypeScript Status
 ✅ All code compiles successfully (minor type assertions for filtered airports)

@@ -523,37 +523,42 @@ const BookFlight = () => {
 
                 setIsSubmittingInquiry(true);
 
-                const templateParams = {
-                        inquiry_type: "Flight Booking Inquiry",
-                        trip_type: tripType === "one-way" ? "One-Way" : "Round-Trip",
+                const requestData = {
+                        tripType: tripType === "one-way" ? "One-Way" : "Round-Trip",
                         origin: originAirport ? `${originAirport.iata} - ${originAirport.city}, ${originAirport.country}` : "N/A",
                         destination: destinationAirport ? `${destinationAirport.iata} - ${destinationAirport.city}, ${destinationAirport.country}` : "N/A",
-                        departure_date: date ? format(date, "MMMM dd, yyyy") : "N/A",
-                        return_date: returnDate ? format(returnDate, "MMMM dd, yyyy") : "N/A",
-                        contact_name: passengerNames[0] || "N/A",
-                        contact_email: bookingEmail,
-                        contact_phone: bookingPhone,
-                        passenger_count: adults + children,
-                        passenger_list: passengerNames.join("\n"),
-                        message: `Flight Booking Inquiry from ${passengerNames[0] || "Customer"}`,
+                        departureDate: date ? format(date, "MMMM dd, yyyy") : "N/A",
+                        returnDate: returnDate ? format(returnDate, "MMMM dd, yyyy") : "",
+                        contactName: passengerNames[0] || "N/A",
+                        contactEmail: bookingEmail,
+                        contactPhone: bookingPhone,
+                        passengerCount: adults + children,
+                        passengerList: passengerNames.join("\n"),
                 };
 
                 try {
-                        await emailjs.send(
-                                process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "service_uahoo9j",
-                                process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "template_x3fcfzs",
-                                templateParams,
-                                process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "urvsHSWcfAcTFhHpQ"
-                        );
+                        const response = await fetch('/api/booking', {
+                                method: 'POST',
+                                headers: {
+                                        'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(requestData),
+                        });
+
                         setIsSubmittingInquiry(false);
-                        setShowBookingModal(false);
-                        toast.success("Your inquiry has been submitted successfully!");
-                        setPassengerNames([]);
-                        setBookingEmail("");
-                        setBookingPhone("");
+
+                        if (response.ok) {
+                                setShowBookingModal(false);
+                                toast.success("Your inquiry has been submitted successfully!");
+                                setPassengerNames([]);
+                                setBookingEmail("");
+                                setBookingPhone("");
+                        } else {
+                                toast.error("Failed to send inquiry. Please try again.");
+                        }
                 } catch (error) {
                         setIsSubmittingInquiry(false);
-                        console.error("EmailJS error:", error);
+                        console.error("Booking inquiry error:", error);
                         toast.error("Failed to send inquiry. Please try again.");
                 }
         };
