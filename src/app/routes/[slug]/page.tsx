@@ -1,6 +1,3 @@
-"use client";
-
-import { useParams } from "next/navigation";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getRouteBySlug, nigerianRoutes } from "@/lib/routesData";
@@ -8,16 +5,18 @@ import Navbar from "@/components/landing-page/Navbar";
 import Footer from "@/components/landing-page/Footer";
 import { Plane, Clock, MapPin, ArrowRight, Phone, Mail } from "lucide-react";
 
-export default function RoutePage() {
-  const params = useParams();
-  const slug = params.slug as string;
-  const route = getRouteBySlug(slug);
+type Props = {
+  params: { slug: string };
+};
+
+export default function RoutePage({ params }: Props) {
+  const route = getRouteBySlug(params.slug);
 
   if (!route) {
     notFound();
   }
 
-  const otherRoutes = nigerianRoutes.filter(r => r.slug !== slug).slice(0, 6);
+  const otherRoutes = nigerianRoutes.filter(r => r.slug !== params.slug).slice(0, 6);
 
   return (
     <main className="min-h-screen bg-slate-50">
