@@ -1,6 +1,7 @@
 "use client";
 import Navbar from "@/components/landing-page/Navbar";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { Calendar as CalendarIcon, ChevronDown, ArrowRight, ArrowLeftRight, Plane, Shield, PlaneTakeoff, PlaneLanding, Plus, Minus } from "lucide-react";
 import Footer from "@/components/landing-page/Footer";
 import {
@@ -26,7 +27,8 @@ interface Airport {
         title: string;
 }
 
-const PrivateCharter = () => {
+function PrivateCharterContent() {
+        const searchParams = useSearchParams();
         const [allAirports, setAllAirports] = useState<any[]>([]);
         const [airportsFrom, setAirportsFrom] = useState<Airport[]>([]);
         const [airportsTo, setAirportsTo] = useState<Airport[]>([]);
@@ -61,6 +63,7 @@ const PrivateCharter = () => {
         });
         const [passengerNames, setPassengerNames] = useState<string[]>([]);
         const [isSubmitting, setIsSubmitting] = useState(false);
+        const [paramsApplied, setParamsApplied] = useState(false);
 
         useEffect(() => {
                 const fetchAllAirports = async () => {
@@ -77,6 +80,41 @@ const PrivateCharter = () => {
                 };
                 fetchAllAirports();
         }, []);
+
+        useEffect(() => {
+                if (paramsApplied) return;
+                
+                const origin = searchParams.get("origin");
+                const originCode = searchParams.get("originCode");
+                const destination = searchParams.get("destination");
+                const destinationCode = searchParams.get("destinationCode");
+
+                if (origin && originCode) {
+                        setOriginAirport({
+                                _id: originCode,
+                                iata: originCode,
+                                city: origin,
+                                country: "",
+                                title: `${origin} Airport`,
+                                name: `${origin} Airport`,
+                        });
+                }
+
+                if (destination && destinationCode) {
+                        setDestinationAirport({
+                                _id: destinationCode,
+                                iata: destinationCode,
+                                city: destination,
+                                country: "",
+                                title: `${destination} Airport`,
+                                name: `${destination} Airport`,
+                        });
+                }
+
+                if (origin || destination) {
+                        setParamsApplied(true);
+                }
+        }, [searchParams, paramsApplied]);
 
         const filterAirports = (searchText: string) => {
                 if (!searchText || searchText.length < 1) return [];
@@ -705,6 +743,22 @@ const PrivateCharter = () => {
 
                         <Footer />
                 </main>
+        );
+}
+
+const PrivateCharter = () => {
+        return (
+                <Suspense fallback={
+                        <main className="h-auto w-full bg-slate-50">
+                                <Navbar />
+                                <div className="min-h-screen flex items-center justify-center">
+                                        <div className="text-customBlue text-lg">Loading...</div>
+                                </div>
+                                <Footer />
+                        </main>
+                }>
+                        <PrivateCharterContent />
+                </Suspense>
         );
 };
 

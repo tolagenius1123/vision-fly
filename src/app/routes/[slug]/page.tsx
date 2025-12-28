@@ -51,7 +51,7 @@ export default function RoutePage({ params }: Props) {
               <p className="text-4xl font-bold text-customBlue mb-4">{route.price}</p>
               <p className="text-gray-600 text-sm mb-6">per flight (one-way)</p>
               <Link 
-                href="/#contact"
+                href={`/private-charter?origin=${encodeURIComponent(route.origin)}&originCode=${route.originCode}&destination=${encodeURIComponent(route.destination)}&destinationCode=${route.destinationCode}`}
                 className="block w-full bg-customBlue text-white text-center py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition"
               >
                 Request Quote
@@ -180,7 +180,7 @@ export default function RoutePage({ params }: Props) {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
-              href="/#contact"
+              href={`/private-charter?origin=${encodeURIComponent(route.origin)}&originCode=${route.originCode}&destination=${encodeURIComponent(route.destination)}&destinationCode=${route.destinationCode}`}
               className="bg-white text-customBlue py-3 px-8 rounded-xl font-semibold hover:bg-gray-100 transition"
             >
               Request Quote Now

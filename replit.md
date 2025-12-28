@@ -183,6 +183,21 @@ src/
   - Clear labeling with "Passenger Manifest *" section
 - ✅ **Unified template structure**: Both BookFlight and Private Charter now use consistent variable naming
 
+## Recent Changes (Turn 12 - Request Quote Auto-Fill Integration)
+- ✅ **Updated Route Page Buttons**:
+  - "Request Quote" button now links to /private-charter with query params
+  - Passes origin, originCode, destination, destinationCode in URL
+  - "Request Quote Now" CTA section also updated with same linking
+- ✅ **Private Charter URL Param Reading**:
+  - Added useSearchParams hook to read URL parameters
+  - Wrapped component in Suspense boundary for Next.js compliance
+  - Auto-fills origin and destination airports from URL params
+  - Uses paramsApplied state to prevent re-applying on re-renders
+- ✅ **Seamless User Flow**:
+  - User clicks "Request Quote" on any route page (e.g., Lagos to Abuja)
+  - Redirected to Private Charter with origin/destination pre-filled
+  - User only needs to select date, passengers, and submit
+
 ## Recent Changes (Turn 11 - Programmatic SEO for Nigerian Routes)
 - ✅ **Routes Data Source** (`lib/routesData.ts`):
   - 12 popular Nigerian flight routes with SEO-optimized descriptions
