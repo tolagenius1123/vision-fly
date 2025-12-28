@@ -11,7 +11,7 @@ export default function NotFound() {
           Route Not Found
         </h1>
         <p className="text-gray-600 text-lg mb-8 max-w-xl mx-auto">
-          The flight route you're looking for doesn't exist. Browse our popular routes below or contact us for a custom charter quote.
+          The flight route you&apos;re looking for doesn&apos;t exist. Browse our popular routes below or contact us for a custom charter quote.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link 
